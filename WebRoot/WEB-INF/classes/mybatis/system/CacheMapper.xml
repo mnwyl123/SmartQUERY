@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CacheMapper">
+	<!--把数据插入到缓存 -->
+	<select id="findCache" parameterType="map" resultType="map">
+		select 
+			DIC_CODE,
+			DIC_DES,
+			DIC_TYPE,
+			DIC_TBLNAME,
+			DIC_ID_COLNAME,
+			DIC_IDVALUE,
+			DIC_VAL_COLNAME,
+			DIC_DES_COLNAME,
+			REMARK,
+			DIC_SORT_COLNAME,
+			DIC_DYNAMIC_SIGN
+		from 
+			sys_dict
+	</select>
+	<!--读取数据字典表 -->
+	<select id="findDictionaries" parameterType="map" resultType="pd">
+		select 
+			${codeColName} CODE ,${valueColName} VALUE,ORDER_BY
+		from 
+			${targeTableName}
+		where 1=1
+		<if test="dicValColname != null and dicValColname != '' and dicIdvalue != null and dicIdvalue != ''">
+			and ${dicValColname} = #{dicIdvalue}
+		</if>
+	</select>
+	<!--读取其他表中没有order_by字段的 -->
+	<select id="QueryDictionaries" parameterType="map" resultType="pd">
+		select 
+			${codeColName} CODE ,${valueColName} VALUE
+		from 
+			${targeTableName}
+		where 1=1
+		<if test="dicValColname != null and dicValColname != '' and dicIdvalue != null and dicIdvalue != ''">
+			and ${dicValColname} = #{dicIdvalue}
+		</if>
+	</select>
+</mapper>

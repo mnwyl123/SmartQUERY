@@ -1,0 +1,65 @@
+ table.regularTable {  
+	background: #fff; overflow: hidden; -webkit-border-radius: 1px;
+	 -moz-border-radius: 1px; 
+	border-radius: 1px; 
+	border-collapse: collapse; text-align: left; width: 100%; 
+	border:solid 1px red;
+} 
+
+ table.regularTable td,  table.regularTable th { 
+	padding: 4px 0px; 
+}
+
+ table.regularTable th {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );
+	background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');
+	background-color:#006699; 
+	color:#FFFFFF; font-size: 15px; font-weight: bold; border: 1px solid #0070A8; 
+} 
+
+
+
+ table.regularTable tbody td { 
+	color: #00557F; border: 1px solid #E1EEF4;font-size: 12px;font-weight: normal; 
+}
+
+ table.regularTable tbody .alt td { 
+	background: #E1EEf4; color: #00557F; 
+
+}
+
+
+ table.regularTable tfoot td div { 
+	border-top: 1px solid #006699;background: #E1EEf4;
+
+} 
+
+ table.regularTable tfoot td { 
+	padding: 0; font-size: 12px 
+} 
+
+ table.regularTable tfoot td div{ 
+	padding: 2px; 
+}
+
+ table.regularTable tfoot td ul { 
+	margin: 0; padding:0; list-style: none; text-align: right; 
+}
+
+ table.regularTable tfoot  li { 
+	display: inline; 
+}
+ table.regularTable tfoot li a { 
+	text-decoration: none; display: inline-block;  padding: 2px 8px; margin: 1px;color: #FFFFFF;border: 1px solid #006699;-webkit-border-radius: 3px; 
+	-moz-border-radius: 3px; 
+	border-radius: 3px; 
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );
+	background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');
+	background-color:#006699; 
+}
+
+ table.regularTable tfoot ul.active,  table.regularTable tfoot ul a:hover { 
+	text-decoration: none;border-color: #00557F; color: #FFFFFF; background: none; background-color:#006699;
+}

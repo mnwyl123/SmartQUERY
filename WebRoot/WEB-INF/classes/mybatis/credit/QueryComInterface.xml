@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QueryComInterface">
+	<!-- 查询征信账户信息 -->
+	<select id="queryAccByUserName" parameterType="pd" resultType="pd">
+		SELECT 
+				A.CREDIT_NAME USERCODE,
+				A.CURRENT_PASSWORD PASSWORD 
+		FROM  
+				CIFM_CREDIT_ACCT_MANAGE A 
+		WHERE 
+				A.CREDIT_CODE = (SELECT T.USERNAME_PERBANK_ORG FROM SYS_USER T WHERE T.USERNAME = #{USERNAME})
+	</select>
+	<!-- 查询用户信息-->
+	<select id="queryUserByUserName" parameterType="pd" resultType="pd" >
+		SELECT
+			USER_ID,
+			IP,
+			MAC
+        FROM
+           SYS_USER 
+        WHERE
+			USERNAME = #{USERNAME}
+	</select>
+	<!-- 新增流程信息 -->
+	<insert id="saveRequestInfo" parameterType="pd">
+		INSERT INTO CIFM_FLOW_STATUS
+			(
+			    ID,
+				USER_SYS_ID,
+				IP,
+				MAC,
+				ORG_ID,
+				CLIENT_TYPE,
+				STATUS,
+				CHECK_SYS_ID,
+				APPLICATION_TIME,
+				QUERY_TIME
+			)
+		VALUES
+			(
+				#{ID},
+				#{USER_ID},
+				#{IP},
+				#{MAC},
+				#{ORG_ID},
+				#{CLIENT_TYPE},
+				#{STATUS},
+				#{CHECK_SYS_ID},
+				TO_DATE(#{APPLICATION_TIME},'YYYY-MM-DD HH24:MI:SS'),
+				TO_DATE(#{QUERY_TIME},'YYYY-MM-DD HH24:MI:SS')
+			)
+	</insert>
+		<!-- 保存企业信息-->
+	<insert id="saveEntInfo" parameterType="pd"  >
+		INSERT INTO CIFM_COMPANY_INFO
+			(
+			    ID,
+				COMPANY_NAME,
+				CREDENTIALS_NO_TYPE,
+				CHINA_CREDIT_CODE,
+				QUERY_REASON,
+				SERVICECODE
+			)
+		VALUES
+			(
+				#{ID},
+				ENCRYPT_DEC(#{ENTNAME}),
+				#{ENTCERTTYPE},
+				ENCRYPT_DEC(#{ENTCERTNUM}),
+				#{QUERYREASON},
+				#{SERVICECODE}
+			)
+	</insert>
+	<!-- 更新流程信息 --> 
+	<update id="updateFlowTable" parameterType="pd" >
+		UPDATE
+				CIFM_FLOW_STATUS
+			set 
+				QUERY_TIME 		= TO_DATE(#{QUERY_TIME},'YYYY-MM-DD HH24:MI:SS'),
+				STATUS		    = #{STATUS}, 
+				RESULTCODE		= #{RESULTCODE}, 
+				RESULTDESC		= #{RESULTDESC},
+				REPORT_ID		= #{REPORT_ID},
+				INTERNAL		= #{INTERNAL}
+			where 
+				ID = #{ID}
+	</update>
+	<!-- 将人行返回数据落库 -->
+	<update id="updateComInfo" parameterType="pd"  >
+		UPDATE 
+				CIFM_COMPANY_INFO
+		SET
+				REPORTNAME = #{REPORTNAME}
+		WHERE 
+				ID = #{ID}	
+	</update>
+</mapper>

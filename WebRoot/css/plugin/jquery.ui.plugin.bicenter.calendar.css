@@ -1,0 +1,39 @@
+@CHARSET "UTF-8";
+
+span[id^="param"]
+{
+	padding:0;
+	margin:0
+}
+
+/*
+span[id^="param"] select{
+	border: thin solid #000;
+	top:5px;
+	margin:2px;
+	padding:2px;
+	height:26px;
+	width:auto;
+	float:none;
+	font-size:1em;
+	color:black;
+	text-align:conter;
+	background: ghostwhite no-repeat scroll 5% 60%;
+}*/
+
+span.calendar {
+	display: inline-block;
+	border: solid 1px gray;
+	padding: 0 18px 0 0;
+	/*
+	background-image: url('http://localhost:8080/bicenterHtml/images/icons/calendar.gif');
+	*/
+	background-repeat: no-repeat;
+	background-position: 99% center;
+	cursor: pointer;
+}
+
+span.calendar input {
+	margin: 0;
+	border: none;
+}

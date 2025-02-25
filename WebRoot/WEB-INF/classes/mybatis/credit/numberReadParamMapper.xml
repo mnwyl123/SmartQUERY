@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="numberReadParamMapper">
+    
+    <sql id="tableName">CIFM_NUMBER_READ_PARAM</sql>
+    <sql id="columnField">
+        PARAM,
+    	REQUEST_USER_NAME,
+  		REQUEST_USER_CODE,
+  		COMPANY
+    </sql>
+    <sql id="valueField">
+        #{PARAM},
+    	#{REQUEST_USER_NAME},
+   		#{REQUEST_USER_CODE},
+   		#{COMPANY}
+    </sql>
+    
+    <!-- 查询列表 -->
+    <select id="paramlistPage" parameterType="Page" resultType="pd">
+    	SELECT
+    		<include refid="columnField"/>
+    	FROM
+    		<include refid="tableName"/>
+    	where
+    		COMPANY = #{pd.COMPANY}
+    		<if test="pd.PARAM != null and pd.PARAM != ''">
+    			and PARAM like '%${pd.PARAM}%'
+    		</if>
+    		<if test="pd.REQUEST_USER_NAME != null and pd.REQUEST_USER_NAME != ''">
+    			and REQUEST_USER_NAME like '%${pd.REQUEST_USER_NAME}%'
+    		</if>
+    </select>
+    
+    <!-- 新增 -->
+    <insert id="saveP" parameterType="pd">
+    	insert into <include refid="tableName"/>
+    		(<include refid="columnField"/>)
+    	values
+    		(<include refid="valueField"/>)
+    </insert>
+    <!-- 修改 -->
+	<update id="updateP" parameterType="pd">
+		UPDATE <include refid="tableName"/>
+		SET
+			REQUEST_USER_NAME = #{REQUEST_USER_NAME},
+			REQUEST_USER_CODE = #{REQUEST_USER_CODE}
+		WHERE
+			PARAM = #{PARAM}
+		and
+			COMPANY = #{COMPANY}
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteP" parameterType="pd">
+		DELETE FROM <include refid="tableName"/>
+		WHERE
+			PARAM = #{PARAM}
+		and
+			COMPANY = #{COMPANY}
+	</delete>
+	<select id="queryByPARAM" parameterType="pd" resultType="pd" >
+		SELECT
+           *
+        FROM
+            CIFM_NUMBER_READ_PARAM A
+        WHERE
+			PARAM = #{PARAM}
+	</select>
+</mapper>

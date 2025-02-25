@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PersonRegisterMapper">
+	
+    <!-- 获取查询编码 -->
+	<select id="findcredType" parameterType="pd" resultType="pd">
+		select NAME,DICT_CODE from SYS_DICTIONARIES A
+        inner join SYS_DICT B on B.DIC_IDVALUE = A.PARENT_ID
+        WHERE B.DIC_CODE=#{DIC_CODE}
+	</select>
+	<select id="findclno" parameterType="page" resultType="pd">
+		select ID,CREDENTIALS_NO from cifm_person_info where clno is null or LENGTH(clno)=0
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+	select * from (
+		SELECT  
+		        A.ID,
+		        A.CLIENT_NAME CLIENT_NAME,
+                A.CREDENTIALS_TYPE,
+                A.CREDENTIALS_NO CREDENTIALS_NO,
+                A.QUERY_REASON,
+                IFNULL(A.CUST_MANAGER,'CIP') CUST_MANAGER,
+                A.REMARKS,
+                D.NAME CHECK_SYS_NAME,
+                C.NAME USER_NAME,
+                DATE_FORMAT(B.APPLICATION_TIME,'%Y-%m-%d') APPLICATION_TIME,
+                CASE WHEN B.IS_PRINT='1' THEN '是' ELSE '否' END IS_PRINT,
+                CASE WHEN B.INTERNAL='1' THEN '行内查询' ELSE '人行查询' END STATUS,
+                CASE WHEN B.STATUS='06' OR B.RESULTCODE='AAA000' THEN '是' ELSE '否' END IS_GET,
+                C.USERNAME SEARCHER_ID,
+				F.NAME ORG_NAME,
+				b.USER_SYS_ID,
+				case 
+				when G.sum = '3' then '1'
+				when G.sum = '0' or G.sum is null then '0'
+				else '2' end as FLAG
+          FROM CIFM_PERSON_INFO A
+          INNER JOIN CIFM_FLOW_STATUS B
+        ON A.ID = B.ID 
+        left JOIN SYS_USER C
+        ON B.USER_SYS_ID=C.USER_ID 
+        left JOIN SYS_USER D 
+        ON B.CHECK_SYS_ID =D.USER_ID
+        left JOIN SYS_USER_ORG E 
+		ON B.USER_SYS_ID= E.USER_ID 
+		left JOIN SYS_ORG F 
+		ON E.ORG_ID=F.ORG_ID
+		left JOIN (select ID,count(1) sum from ( select ID,APPLICATION_TYPE from id_url group by ID,APPLICATION_TYPE) a group by ID) G
+		ON B.ID = G.ID
+        WHERE 1=1 and F.COMPANY=#{pd.company}
+        <!-- <if test="pd.sign!= null and pd.sign != ''">
+			<if test="pd.sign=='1'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d')= str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+			<if test="pd.sign=='2'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d') &gt; str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+			<if test="pd.sign=='3'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d') &lt; str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+		</if> -->	
+		<if test="pd.START_TIME!= null and pd.START_TIME != ''">
+			AND str_to_date(b.application_time,'%Y-%m-%d') &gt;= str_to_date(#{pd.START_TIME},'%Y-%m-%d')
+		</if>
+		<if test="pd.END_TIME!= null and pd.END_TIME != ''">
+			AND str_to_date(b.application_time,'%Y-%m-%d') &lt;= str_to_date(#{pd.END_TIME},'%Y-%m-%d')
+		</if>
+		<if test="pd.INTERNAL!= null and pd.INTERNAL != ''">
+			AND B.INTERNAL=#{pd.INTERNAL}
+		</if>	
+		<if test="pd.result!= null and pd.result != ''">
+			<if test="pd.result=='AAA000'.toString()">
+				AND B.RESULTCODE=#{pd.result}
+			</if>
+			<if test="pd.result=='1'.toString()">
+				AND B.RESULTCODE!=#{pd.result}
+			</if>
+		</if>	
+        <if test="pd.USERID== null or pd.USERID == ''">
+			AND C.USER_ID in(select user_id from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.INTERNAL!= null and pd.INTERNAL != ''">
+			AND B.INTERNAL=#{pd.INTERNAL}
+		</if>
+		<if test="pd.USERID!= null and pd.USERID != ''">
+			AND C.USER_ID=#{pd.USERID}
+		</if>
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME != ''">
+			and
+				A.CLIENT_NAME LIKE CONCAT(CONCAT('%', #{pd.CLIENT_NAME}),'%')
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				A.CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.sign!= null and pd.sign != ''">
+			<if test="pd.sign=='1'.toString()">
+				<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+				and
+					A.CREDENTIALS_NO LIKE CONCAT(CONCAT('%', #{pd.CREDENTIALS_NO}),'%')
+				</if>
+			</if>
+			<if test="pd.sign=='2'.toString()">
+				<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+				and
+					A.clno = #{pd.CREDENTIALSNO}
+				</if>
+			</if>
+			<if test="pd.sign=='3'.toString()">
+				<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+				and
+					left(A.clno,4) = #{pd.CREDENTIALSNO}
+				</if>
+			</if>
+			<if test="pd.sign=='4'.toString()">
+				<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+				and
+					left(A.clno,2) = #{pd.CREDENTIALSNO}
+				</if>
+			</if>
+		</if>	
+		<!-- <if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				A.CREDENTIALS_NO LIKE CONCAT(CONCAT('%', #{pd.CREDENTIALS_NO}),'%')
+		</if> -->
+		<if test="pd.SEARCHER_ID!= null and pd.SEARCHER_ID != ''">
+			and
+				C.USERNAME LIKE CONCAT(CONCAT('%',#{pd.SEARCHER_ID}),'%')
+		</if>
+		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
+			and
+				F.NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
+		</if>
+		<!-- <if test="pd.USER_NAME!= null and pd.USER_NAME != ''">
+			and
+				C.NAME=#{pd.USER_NAME}
+		</if> -->) a
+		where 1=1
+		<if test="pd.FLAG!= null and pd.FLAG != ''">
+			AND FLAG=#{pd.FLAG}
+		</if>	
+	</select>
+	<!-- 列表 -->
+	<select id="hisDatalistPage" parameterType="page" resultType="pd">
+		SELECT  
+		        A.ID,
+		        A.CLIENT_NAME CLIENT_NAME,
+                A.CREDENTIALS_TYPE,
+                A.CREDENTIALS_NO CREDENTIALS_NO,
+                A.QUERY_REASON,
+                A.CUST_MANAGER,
+                A.REMARKS,
+                D.NAME CHECK_SYS_NAME,
+                C.NAME USER_NAME,
+                DATE_FORMAT(B.CHECK_TIME,'%Y-%m-%d') APPLICATION_TIME,
+                CASE WHEN B.IS_PRINT='1' THEN '是' ELSE '否' END IS_PRINT,
+                A.BUSINESS_STATUS STATUS,
+                CASE WHEN B.STATUS='06' THEN '是' ELSE '否' END IS_GET,
+                C.USERNAME SEARCHER_ID,
+				F.NAME ORG_NAME
+          FROM CIFM_PERSON_INFO A
+          INNER JOIN CIFM_FLOW_STATUS B
+        ON A.ID = B.ID 
+        INNER JOIN SYS_USER C
+        ON B.USER_SYS_ID=C.USER_ID 
+        INNER JOIN SYS_USER D 
+        ON B.CHECK_SYS_ID =D.USER_ID
+        INNER JOIN SYS_USER_ORG E 
+		ON B.USER_SYS_ID= E.USER_ID 
+		INNER JOIN SYS_ORG F 
+		ON E.ORG_ID=F.ORG_ID
+        WHERE 1=1 and F.COMPANY=#{pd.company}
+        <if test="pd.sign!= null and pd.sign != ''">
+			<if test="pd.sign=='1'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d')= str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+			<if test="pd.sign=='2'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d') &gt; str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+			<if test="pd.sign=='3'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d') &lt; str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+		</if>
+        <if test="pd.USERID== null or pd.USERID == ''">
+			AND C.USER_ID in(select user_id from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERID!= null and pd.USERID != ''">
+			AND C.USER_ID=#{pd.USERID}
+		</if>
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME != ''">
+			and
+				DECRYPT_DEC(A.CLIENT_NAME) LIKE CONCAT(CONCAT('%', #{pd.CLIENT_NAME}),'%')
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				A.CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				DECRYPT_DEC(A.CREDENTIALS_NO) LIKE CONCAT(CONCAT('%', #{pd.CREDENTIALS_NO}),'%')
+		</if>
+		<if test="pd.SEARCHER_ID!= null and pd.SEARCHER_ID != ''">
+			and
+				C.USERNAME LIKE CONCAT(CONCAT('%',#{pd.SEARCHER_ID}),'%')
+		</if>
+		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
+			and
+				F.NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
+		</if>
+		<!-- <if test="pd.USER_NAME!= null and pd.USER_NAME != ''">
+			and
+				C.NAME=#{pd.USER_NAME}
+		</if> -->
+	</select>
+	<!-- 添加备注 -->
+	<update id="update" parameterType="pd" >
+		UPDATE
+			CIFM_PERSON_INFO
+			set 
+				REMARKS=#{REMARKS},
+				BUSINESS_STATUS=#{STATUS}
+			where 
+				ID=#{ID}
+	</update>
+	<update id="updateclno" parameterType="pd" >
+		UPDATE
+			CIFM_PERSON_INFO
+			set 
+				clno=#{CREDENTIALS_NO}
+			where 
+				ID=#{ID}
+	</update>
+	<!-- 导出 -->
+	<select id="listAll" parameterType="page" resultType="pd">
+		SELECT  
+		        A.ID,
+		        A.CLIENT_NAME CLIENT_NAME,
+                A.CREDENTIALS_TYPE,
+                A.CREDENTIALS_NO CREDENTIALS_NO,
+                A.QUERY_REASON,
+                IFNULL(A.CUST_MANAGER,'CIP') CUST_MANAGER,
+                A.REMARKS,
+                D.NAME CHECK_SYS_NAME,
+                C.NAME USER_NAME,
+                DATE_FORMAT(B.APPLICATION_TIME,'%Y-%m-%d') APPLICATION_TIME,
+                CASE WHEN B.IS_PRINT='1' THEN '是' ELSE '否' END IS_PRINT,
+                CASE WHEN B.INTERNAL='1' THEN '行内查询' ELSE '人行查询' END STATUS,
+                CASE WHEN B.STATUS='06' OR B.RESULTCODE='AAA000' THEN '是' ELSE '否' END IS_GET,
+                C.USERNAME SEARCHER_ID,
+				F.NAME ORG_NAME,
+				b.USER_SYS_ID
+          FROM CIFM_PERSON_INFO A
+          INNER JOIN CIFM_FLOW_STATUS B
+        ON A.ID = B.ID 
+        INNER JOIN SYS_USER C
+        ON B.USER_SYS_ID=C.USER_ID 
+        INNER JOIN SYS_USER D 
+        ON B.CHECK_SYS_ID =D.USER_ID
+        INNER JOIN SYS_USER_ORG E 
+		ON B.USER_SYS_ID= E.USER_ID 
+		INNER JOIN SYS_ORG F 
+		ON E.ORG_ID=F.ORG_ID
+        WHERE 1=1 and F.COMPANY=#{pd.company}	
+		<if test="pd.START_TIME!= null and pd.START_TIME != ''">
+			AND str_to_date(b.application_time,'%Y-%m-%d') &gt;= str_to_date(#{pd.START_TIME},'%Y-%m-%d')
+		</if>
+		<if test="pd.END_TIME!= null and pd.END_TIME != ''">
+			AND str_to_date(b.application_time,'%Y-%m-%d') &lt;= str_to_date(#{pd.END_TIME},'%Y-%m-%d')
+		</if>
+		<if test="pd.INTERNAL!= null and pd.INTERNAL != ''">
+			AND B.INTERNAL=#{pd.INTERNAL}
+		</if>	
+        <if test="pd.USERID== null or pd.USERID == ''">
+			AND C.USER_ID in(select user_id from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.INTERNAL!= null and pd.INTERNAL != ''">
+			AND B.INTERNAL=#{pd.INTERNAL}
+		</if>
+		<if test="pd.USERID!= null and pd.USERID != ''">
+			AND C.USER_ID=#{pd.USERID}
+		</if>
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME != ''">
+			and
+				A.CLIENT_NAME LIKE CONCAT(CONCAT('%', #{pd.CLIENT_NAME}),'%')
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				A.CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.sign!= null and pd.sign != ''">
+			<if test="pd.sign=='1'.toString()">
+				<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+				and
+					A.CREDENTIALS_NO LIKE CONCAT(CONCAT('%', #{pd.CREDENTIALS_NO}),'%')
+				</if>
+			</if>
+		</if>	
+		<if test="pd.SEARCHER_ID!= null and pd.SEARCHER_ID != ''">
+			and
+				C.USERNAME LIKE CONCAT(CONCAT('%',#{pd.SEARCHER_ID}),'%')
+		</if>
+		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
+			and
+				F.NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
+		</if>
+
+	</select>
+	<select id="findViewById" parameterType="pd" resultType="pd">
+		select case when APPLICATION_TYPE = '01' then '授权书'
+					when APPLICATION_TYPE = '02' then '贷款证明材料'
+					else '证件影像材料' end APPLICATION_TYPE
+				,APPLICATION_URL from id_url A
+        WHERE ID=#{ID}
+	</select>
+	<select id="findStatusViewById" parameterType="pd" resultType="pd">
+		select  case when APPLICATION_TYPE = '01' then '授权书'
+					when APPLICATION_TYPE = '02' then '贷款证明材料'
+					else '证件影像材料' end APPLICATION_TYPE
+				,APPLICATION_URL
+				from (
+				SELECT ID,WARRANT as APPLICATION_URL,'01' APPLICATION_TYPE from CIFM_FLOW_STATUS  WHERE ID=#{ID}
+				union all
+				SELECT ID,LOAN_APPLICATION as APPLICATION_URL,'02' APPLICATION_TYPE from CIFM_FLOW_STATUS  where ID=#{ID}
+				union all
+				SELECT ID,IDENTITY_DOCUMENT as APPLICATION_URL,'03' APPLICATION_TYPE from  CIFM_FLOW_STATUS  where ID=#{ID}) a
+	</select>
+</mapper>

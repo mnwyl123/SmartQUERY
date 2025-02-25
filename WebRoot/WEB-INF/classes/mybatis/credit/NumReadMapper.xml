@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NumReadMapper">
+	
+	<!--报文表名 -->
+	<sql id="tableName">
+		CIFM_NUMREADRE_QUEST
+	</sql>	
+	<!-- 字段 -->
+	<sql id="columnField">
+		REQUEST_NO,
+		CLIENT_NAME,
+		CREDENTIALS_TYPE,
+		CREDENTIALS_NO,
+		PRODUCE_DATE,
+		COMPANY,
+		STATUS
+	</sql>
+	<!-- 字段值 -->
+	<sql id="valueField">
+		cast(#{REQUEST_NO} as SIGNED),
+		#{CLIENT_NAME},
+		#{CREDENTIALS_TYPE},
+		#{CREDENTIALS_NO},
+		str_to_date(#{PRODUCE_DATE},'%Y-%m-%d'),
+		#{COMPANY},
+		'0'
+	</sql>
+	<!-- 报文列表 -->
+	<select id="reportlistPage" parameterType="page" resultType="pd">
+		select 
+			REQUEST_NO,
+			CLIENT_NAME,
+			CREDENTIALS_TYPE,
+			CREDENTIALS_NO,
+			date_format(PRODUCE_DATE,'%Y-%m-%d') PRODUCE_DATE
+		FROM
+		<include refid="tableName"></include>
+		WHERE STATUS != '1'
+		<if test="pd.CLIENT_NAME!=null and pd.CLIENT_NAME!=''">
+			AND CLIENT_NAME LIKE CONCAT(CONCAT('%',#{pd.CLIENT_NAME}),'%')
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!=null and pd.CREDENTIALS_TYPE!=''">
+			AND CREDENTIALS_TYPE LIKE CONCAT(CONCAT('%',#{pd.CREDENTIALS_TYPE}),'%')
+		</if>
+		<if test="pd.CREDENTIALS_NO!=null and pd.CREDENTIALS_NO!=''">
+			AND CREDENTIALS_NO LIKE CONCAT(CONCAT('%',#{pd.CREDENTIALS_NO}),'%')
+		</if>
+		<if test="pd.PRODUCE_DATE!=null and pd.PRODUCE_DATE!=''">
+			AND date_format(PRODUCE_DATE,'%Y-%m-%d') LIKE CONCAT(CONCAT('%',#{pd.PRODUCE_DATE}),'%')
+		</if>
+		ORDER BY PRODUCE_DATE DESC
+	</select>
+	<!-- 生成报文记录 -->
+	<insert id="saveCreateReportRecord" parameterType="ArrayList" useGeneratedKeys="false">
+		insert into CIFM_NUMREADR_BATCH(BATCH_NAME,REQUEST_NO,COMPANY)
+		<foreach collection="list" item="item" separator=" union all ">
+			select 
+				#{item.BATCH_NAME} filename,
+				#{item.REQUEST_NO} REQUEST_NO,
+				#{item.COMPANY} COMPANY
+			from dual
+		</foreach>
+	</insert>
+	<!-- 获取报文记录列表 -->
+	<select id="getReportRecordlistPage" parameterType="Page" resultType="pd">
+		SELECT 
+			BATCH_NAME,
+			COUNT(REQUEST_NO) RECODECNT 
+		FROM 
+			CIFM_NUMREADR_BATCH
+		WHERE 
+			COMPANY = #{pd.COMPANY}
+			<if test="pd.REPORTDATE != null and pd.REPORTDATE != ''">
+				AND SUBSTR(BATCH_NAME,15,8) = #{pd.REPORTDATE}
+			</if>
+			<if test="pd.BATCH_NAME != null and pd.BATCH_NAME != ''">
+				AND BATCH_NAME LIKE CONCAT(CONCAT('%',#{pd.BATCH_NAME}),'%')
+			</if>
+		GROUP BY BATCH_NAME
+		ORDER BY SUBSTR(BATCH_NAME,15,14) DESC
+	</select>
+	<!-- 根据文件名删除报文记录 -->
+	<select id="delReport" parameterType="String">
+		DELETE FROM 
+			CIFM_NUMREADR_BATCH
+		WHERE
+			BATCH_NAME=#{BATCH_NAME}
+	</select>
+	<!-- 根据唯一标识查询对象 -->
+	<select id="findReportById" parameterType="String" resultType="pd">
+		select 
+			REQUEST_NO,
+			CLIENT_NAME,
+			CREDENTIALS_TYPE,
+			CREDENTIALS_NO,
+			date_format(PRODUCE_DATE,'%Y-%m-%d') PRODUCE_DATE
+		FROM
+		<include refid="tableName"></include>
+		WHERE 1=1
+		<if test="REQUEST_NO!=null and REQUEST_NO!=''">
+			AND REQUEST_NO = #{REQUEST_NO}
+		</if>
+	</select>
+	
+	<!-- 获取报文最大查询编号 -->
+	<select id="findReportMaxId" parameterType="String" resultType="int">
+		select 
+			IFNULL(MAX(REQUEST_NO),1000) MAXREQUEST_NO
+		FROM
+		<include refid="tableName"></include>
+	</select>
+	<!-- 新增报文 -->
+	<insert id="saveReport" parameterType="pd">
+		INSERT INTO
+		<include refid="tableName"></include>
+		(
+			<include refid="columnField"></include>)
+		VALUES
+		(
+			<include refid="valueField"></include>)
+	</insert>
+	<!-- 修改报文 -->
+	<update id="updateReport" parameterType="pd">
+	<!-- 	UPDATE
+			<include refid="tableName"></include>
+		SET
+			(
+				<include refid="columnField"></include>
+			)
+			=
+			(SELECT
+				<include refid="valueField"></include>
+			FROM DUAL)
+		WHERE
+			REQUEST_NO = #{REQUEST_NO} -->
+			UPDATE
+			<include refid="tableName"></include>
+		SET 
+		REQUEST_NO =cast(#{REQUEST_NO} as SIGNED),
+		CLIENT_NAME=#{CLIENT_NAME},
+		CREDENTIALS_TYPE=#{CREDENTIALS_TYPE},
+		CREDENTIALS_NO=#{CREDENTIALS_NO},
+		PRODUCE_DATE=str_to_date(#{PRODUCE_DATE},'%Y-%m-%d'),
+		COMPANY=#{COMPANY}WHERE
+		REQUEST_NO = #{REQUEST_NO}
+		
+	</update>
+	<!-- 删除报文 -->
+	<delete id="deleteReport" parameterType="pd">
+		DELETE FROM
+			<include refid="tableName"></include>
+		WHERE
+			REQUEST_NO = #{REQUEST_NO}
+	</delete>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		DELETE FROM
+			<include refid="tableName"></include>
+		WHERE 
+			REQUEST_NO in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 数字解读-查询成功反馈报文 -->
+	<select id="numReadlistPage" parameterType="page" resultType="pd">
+		 select
+			CLIENT_NAME,
+			B.CREDENTIALS_TYPE,
+			CREDENTIALS_NO,
+			B.PRODUCE_DATE,
+			A.RESULT_TYPE,
+			A.SCORE,
+			A.FACTORS,
+			A.POSITION,
+			A.SCORE_DATE,
+			A.RE_FILE_NAME
+		FROM
+			CIFM_NUMREADR_SUCC_LOG A,
+			CIFM_NUMREADRE_QUEST B
+		WHERE A.REQUEST_NO = B.REQUEST_NO
+			AND A.COMPANY = #{pd.COMPANY}
+			AND B.COMPANY = #{pd.COMPANY}
+		<if test="pd.CLIENT_NAME!=null and pd.CLIENT_NAME!=''">
+			AND B.CLIENT_NAME LIKE CONCAT(CONCAT('%',#{pd.CLIENT_NAME}),'%')
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!=null and pd.CREDENTIALS_TYPE!=''">
+			AND B.CREDENTIALS_TYPE LIKE CONCAT(CONCAT('%',#{pd.CREDENTIALS_TYPE}),'%')
+		</if>
+		<if test="pd.CREDENTIALS_NO!=null and pd.CREDENTIALS_NO!=''">
+			AND B.CREDENTIALS_NO LIKE CONCAT(CONCAT('%',#{pd.CREDENTIALS_NO}),'%')
+		</if>
+		<if test="pd.RE_FILE_NAME!=null and pd.RE_FILE_NAME!=''">
+			AND A.RE_FILE_NAME LIKE CONCAT(CONCAT('%',#{pd.RE_FILE_NAME}),'%')
+		</if>
+		ORDER BY B.PRODUCE_DATE DESC  
+		<!--   SELECT
+		       B.REQUEST_ID,
+		       DECRYPT_DEC(B.CLIENT_NAME) CLIENT_NAME,
+		       B.CREDENTIALS_TYPE,
+		       DECRYPT_DEC(B.CREDENTIALS_NO) CREDENTIALS_NO,
+		       B.PRODUCE_DATE,
+		       B.RESULTTYPE RESULT_TYPE,
+		       B.SCORE,
+		       B.FACTORRECS FACTORS,
+		       B.POSITION,
+		       B.SCOREDATE SCORE_DATE,
+		       B.FILENAME_REQUEST FILENAME
+         FROM 
+               CIFM_FLOW_STATUS A 
+      		   INNER JOIN 
+      		   CIFM_NUMREADRE_QUEST B 
+      			ON A.ID = B.ID  WHERE A.STATUS= '02'
+      	<if test="pd.CLIENT_NAME!=null and pd.CLIENT_NAME!=''">
+			AND DECRYPT_DEC(B.CLIENT_NAME) LIKE CONCAT(CONCAT('%',#{pd.CLIENT_NAME}),'%')
+		</if>
+		<if test="pd.CERTTYPE!=null and pd.CERTTYPE!=''">
+			AND B.CREDENTIALS_TYPE LIKE CONCAT(CONCAT('%',#{pd.CERTTYPE}),'%')
+		</if>
+		<if test="pd.CREDENTIALS_NO!=null and pd.CREDENTIALS_NO!=''">
+			AND DECRYPT_DEC(B.CREDENTIALS_NO) LIKE CONCAT(CONCAT('%',#{pd.CREDENTIALS_NO}),'%')
+		</if>
+		<if test="pd.FILENAME!=null and pd.FILENAME!=''">
+			AND B.FILENAME_REQUEST LIKE CONCAT(CONCAT('%',#{pd.FILENAME}),'%')
+		</if>-->
+	</select>
+	<!-- 查询成功反馈报文新增 -->
+	<insert id="saveNumRead" parameterType="pd">
+		INSERT INTO 
+		CIFM_NUMREADR_SUCC_LOG
+			(REQUEST_NO,
+			RESULT_TYPE,
+			SCORE,
+			FACTORS,
+			POSITION,
+			SCORE_DATE,
+			RE_FILE_NAME,
+			USER_CODE,
+			ORG_CODE,
+			COMPANY)
+		VALUES
+			(TO_NUMBER(#{REQUEST_NO}),
+			#{RESULT_TYPE},
+			#{SCORE},
+			#{FACTORS},
+			#{POSITION},
+			#{SCORE_DATE},
+			#{RE_FILE_NAME},
+			#{USER_CODE},
+			#{ORG_CODE},
+			#{COMPANY})
+	</insert>
+	<!-- 数字解读-查询失败反馈报文 -->
+	<select id="resultlistPage" parameterType="page" resultType="pd">
+		select 
+			RE_FILE_NAME,		
+			RESPONSE_TIME,
+			TOTAL_NUM,
+			ERROR_CODE,
+			ERROR_MSG,
+			(SELECT USERNAME FROM SYS_USER WHERE USERNAME_PERBANK = USER_CODE AND COMPANY = #{pd.COMPANY}) USERCODE
+		FROM
+			CIFM_NUMREADR_FAIL_LOG
+		WHERE COMPANY = #{pd.COMPANY}
+		<if test="pd.USER_CODE!=null and pd.USER_CODE!=''">
+			AND EXISTS(SELECT 1 FROM SYS_USER WHERE USERNAME LIKE CONCAT(CONCAT('%',#{pd.USER_CODE}),'%')
+				AND USERNAME_PERBANK = USER_CODE AND COMPANY = #{pd.COMPANY})
+		</if>
+		<if test="pd.RESPONSE_TIME!=null and pd.RESPONSE_TIME!=''">
+			AND RESPONSE_TIME LIKE CONCAT(CONCAT('%',#{pd.RESPONSE_TIME}),'%')
+		</if>
+		ORDER BY RESPONSE_TIME DESC
+	</select>
+	<!-- 查询失败反馈报文新增 -->
+	<insert id="saveResultRead" parameterType="pd">
+		INSERT INTO 
+		CIFM_NUMREADR_FAIL_LOG
+			(ERROR_CODE,
+			ERROR_MSG,
+			RESPONSE_TIME,
+			TOTAL_NUM,
+			RE_FILE_NAME,
+			USER_CODE,
+			ORG_CODE,
+			COMPANY)
+		VALUES
+			(#{ERROR_CODE},
+			#{ERROR_MSG},
+			#{RESPONSE_TIME},
+			TO_NUMBER(#{TOTAL_NUM}),
+			#{RE_FILE_NAME},
+			#{USER_CODE},
+			#{ORG_CODE},
+			#{COMPANY})
+	</insert>
+	<!-- 根据证件类型获取映射值 -->
+	<select id="getRealCerttype" parameterType="String" resultType="String">
+		SELECT NAME
+		  FROM SYS_DICTIONARIES A,
+		  	   SYS_DICT B
+		 WHERE A.PARENT_ID = B.DIC_IDVALUE
+		   AND B.DIC_CODE = 'CRED_TYPE'
+		   <if test="_parameter!=null and _parameter!=''">
+		   AND A.DICT_CODE = #{CREDENTIALS_TYPE} 
+		   </if>
+		   LIMIT 0,1
+	</select>
+	<!-- 根据机构id查询顶级在人行信用机构代码 -->
+	<!-- <select id="findTopOrgIdInPerBank" parameterType="String" resultType="String">
+		SELECT 
+			ORG_ID_PERBANK
+		FROM
+			SYS_ORG
+		WHERE
+			ORG_LEVEL = 1
+			AND ROWNUM = 1
+		START WITH ORG_ID = #{orgId}
+		CONNECT BY ORG_ID=PRIOR PARENT_ID 
+		
+	</select> -->
+	<select id="findTopOrgIdInPerBank" parameterType="String" resultType="String">
+		SELECT 
+			ORG_ID_PERBANK
+		FROM
+			SYS_ORG
+		WHERE
+			ORG_LEVEL = 1
+			and COMPANY=#{orgId}  
+			limit 0,1	
+	</select>
+	<!-- 根据当前日期查询最大流水号 -->
+	<select id="findMaxSerialNum" parameterType="String" resultType="String">
+		SELECT 
+			IFNULL(MAX(SUBSTR(BATCH_NAME,24,6))+1,'001') MAXSERIAL 
+		FROM 
+			CIFM_NUMREADR_BATCH
+		WHERE 
+			SUBSTR(BATCH_NAME,15,8)=#{nowdate}
+	</select>
+	
+	<!-- 根据唯一标识的集合查询对象集合 -->
+	<update id="updateStatus" parameterType="String">
+		update 
+			<include refid="tableName"></include>
+		set
+			STATUS = '1'
+		WHERE 
+			REQUEST_NO in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 根据唯一标识的集合查询对象集合 -->
+	<select id="findReportByIds" parameterType="String" resultType="pd">
+		select 
+			REQUEST_NO,
+			CLIENT_NAME,
+			CREDENTIALS_TYPE,
+			CREDENTIALS_NO,
+			date_format(PRODUCE_DATE,'%Y-%m-%d') PRODUCE_DATE,
+			COMPANY
+		FROM
+		<include refid="tableName"></include>
+		WHERE 
+			REQUEST_NO in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		order by REQUEST_NO
+	</select>
+	
+	<!-- 根据唯一标识的集合查询对象集合 -->
+	<select id="findReport" parameterType="pd" resultType="pd">
+		select * from(
+			select 
+				REQUEST_NO,
+				CLIENT_NAME,
+				CREDENTIALS_TYPE,
+				CREDENTIALS_NO,
+				date_format(PRODUCE_DATE,'%Y-%m-%d') PRODUCE_DATE,
+				COMPANY
+			FROM
+			<include refid="tableName"></include>
+			WHERE
+				STATUS is null
+			order by REQUEST_NO
+		)
+		WHERE
+			<if test="currentNo!=null and currentNo!=''">
+				REQUEST_NO &gt; #{currentNo}  
+			</if>
+			LIMIT 0,1000
+	</select>
+	
+	<!-- 根据产品时间查询 -->
+	<select id="findReportByDate" parameterType="pd" resultType="pd">
+		select * from(
+			select 
+				REQUEST_NO,
+				 CLIENT_NAME, 
+				CREDENTIALS_TYPE,
+				 CREDENTIALS_NO,
+				date_format(PRODUCE_DATE,'%Y-%m-%d') PRODUCE_DATE,
+				COMPANY
+			FROM
+			<include refid="tableName"></include>
+			WHERE
+				date_format(PRODUCE_DATE,'%Y-%m-%d') LIKE CONCAT(CONCAT('%',#{PRODUCE_DATE}),'%')
+			order by REQUEST_NO
+		)
+		WHERE
+			<if test="currentNo!=null and currentNo!=''">
+				 REQUEST_NO &gt; #{currentNo}  
+			</if>
+			LIMIT 0,1000
+	</select>
+	
+	
+	<!-- 根据产品时间查询 -->
+	<select id="findReportSumByDate" parameterType="pd" resultType="pd">
+		select 
+			count(REQUEST_NO) SUM
+		FROM
+		<include refid="tableName"></include>
+		WHERE
+			date_format(PRODUCE_DATE,'%Y-%m-%d') LIKE CONCAT(CONCAT('%',#{PRODUCE_DATE}),'%')
+		order by REQUEST_NO
+	</select>
+	<!-- 根据唯一标识的集合查询对象集合 -->
+	<select id="findReportSum" parameterType="String" resultType="pd">
+		select 
+			count(REQUEST_NO) SUM
+		FROM
+		<include refid="tableName"></include>
+		WHERE
+			STATUS is null
+		order by REQUEST_NO
+	</select>
+	<!-- 根据唯一标识的集合查询对象集合 -->
+	<select id="findReportSumByIds" parameterType="String" resultType="pd">
+		select 
+			count(REQUEST_NO) SUM
+		FROM
+		<include refid="tableName"></include>
+		WHERE 
+			REQUEST_NO in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</select>
+	<!-- 新增信息-->
+	<insert id="saveInfo" parameterType="map" useGeneratedKeys="false">
+		${creatSql}
+	</insert>
+	<!-- 删除所有 -->
+	<delete id="deleteAllData" parameterType="pd">
+		DELETE FROM
+			<include refid="tableName"></include>
+		WHERE 
+			1=1
+			<if test="PRODUCE_DATE!=null and PRODUCE_DATE!=''">
+			AND
+				date_format(PRODUCE_DATE,'%Y-%m-%d') LIKE CONCAT(CONCAT('%',#{PRODUCE_DATE}),'%')
+			</if>
+	</delete>
+	<!-- 数字解读-查询成功反馈报文 -->
+	<select id="queryNumReadSucessDataSum" parameterType="pd" resultType="pd">
+		select
+			count(A.REQUEST_NO) SUM
+		FROM
+			CIFM_NUMREADR_SUCC_LOG A,
+			CIFM_NUMREADRE_QUEST B
+		WHERE A.REQUEST_NO = B.REQUEST_NO
+			AND A.COMPANY = #{COMPANY}
+			AND B.COMPANY = #{COMPANY}
+		<if test="CLIENT_NAME!=null and CLIENT_NAME!=''">
+			AND B.CLIENT_NAME LIKE CONCAT(CONCAT('%',#{CLIENT_NAME}),'%')
+		</if>
+		<if test="CREDENTIALS_TYPE!=null and CREDENTIALS_TYPE!=''">
+			AND B.CREDENTIALS_TYPE LIKE CONCAT(CONCAT('%',#{CREDENTIALS_TYPE}),'%')
+		</if>
+		<if test="CREDENTIALS_NO!=null and CREDENTIALS_NO!=''">
+			AND B.CREDENTIALS_NO LIKE CONCAT(CONCAT('%',#{CREDENTIALS_NO}),'%')
+		</if>
+		<if test="RE_FILE_NAME!=null and RE_FILE_NAME!=''">
+			AND A.RE_FILE_NAME LIKE CONCAT(CONCAT('%',#{RE_FILE_NAME}),'%')
+		</if>
+		ORDER BY A.REQUEST_NO
+	</select>
+	<!-- 数字解读-查询成功反馈报文 -->
+	<select id="queryNumReadSucessData" parameterType="pd" resultType="pd">
+		select * from(
+			select
+				 CLIENT_NAME,
+				B.CREDENTIALS_TYPE,
+				CREDENTIALS_NO,
+				B.PRODUCE_DATE,
+				A.RESULT_TYPE,
+				A.SCORE,
+				A.FACTORS,
+				A.POSITION,
+				A.SCORE_DATE,
+				A.RE_FILE_NAME,
+				A.REQUEST_NO
+			FROM
+				CIFM_NUMREADR_SUCC_LOG A,
+				CIFM_NUMREADRE_QUEST B
+			WHERE A.REQUEST_NO = B.REQUEST_NO
+				AND A.COMPANY = #{COMPANY}
+				AND B.COMPANY = #{COMPANY}
+			<if test="CLIENT_NAME!=null and CLIENT_NAME!=''">
+				AND B.CLIENT_NAME LIKE CONCAT(CONCAT('%',#{CLIENT_NAME}),'%')
+			</if>
+			<if test="CREDENTIALS_TYPE!=null and CREDENTIALS_TYPE!=''">
+				AND B.CREDENTIALS_TYPE LIKE CONCAT(CONCAT('%',#{CREDENTIALS_TYPE}),'%')
+			</if>
+			<if test="CREDENTIALS_NO!=null and CREDENTIALS_NO!=''">
+				AND B.CREDENTIALS_NO LIKE CONCAT(CONCAT('%',#{CREDENTIALS_NO}),'%')
+			</if>
+			<if test="RE_FILE_NAME!=null and RE_FILE_NAME!=''">
+				AND A.RE_FILE_NAME LIKE CONCAT(CONCAT('%',#{RE_FILE_NAME}),'%')
+			</if>
+			ORDER BY A.REQUEST_NO
+		) a
+		WHERE
+			<if test="currentNo!=null and currentNo!=''">
+				REQUEST_NO &gt; #{currentNo} AND  
+			</if>
+		1=1	LIMIT 0,1000
+	</select>
+</mapper>

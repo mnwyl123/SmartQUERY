@@ -1,0 +1,59 @@
+body {
+	font-size: 9pt;
+}
+
+ul {
+	color: #ec763c;
+	list-style: inside;
+	padding: 0;
+}
+
+li {
+	line-height: 2em;
+	margin: 0;
+	padding: 0;
+}
+
+.card {
+	width: 270px;
+	height: 167px;
+	font-weight: bold;
+	background-image: url(images/homepage/Photo_Bottom.jpg);
+	background-position: bottom center;
+	background-repeat: no-repeat;
+}
+
+.card .cardTitle {
+	width: 270px;
+	height: 65px;
+	background-image:
+		url(images/homepage/Photo_Title_MyBI.jpg);
+	backgroud-repeat: no-repeat;
+}
+
+.card .cardContent {
+	width: 270px;
+	height: 84px;
+	margin: 0;
+	background-image: url(images/homepage/Photo_Middle.jpg);
+}
+
+.card .cardContent ul {
+	margin: 0;
+}
+
+.card .cardContent ul.oneCol {
+	float: left;
+	margin-left: 20px;
+}
+
+#banner,#firstLine,#secondLine {
+	width: 1003px;
+	maring: auto;
+}
+
+#bottom p {
+	line-height: 1em;
+	margin: 0.5em;
+	padding: 0;
+}

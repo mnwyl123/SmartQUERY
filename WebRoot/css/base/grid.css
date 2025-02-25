@@ -1,0 +1,49 @@
+@CHARSET "UTF-8";
+
+DIV.data-grid {
+	margin:0px;
+}
+DIV.data-grid table, table.data-grid {
+	background-color:#ffffff;
+	width:100%;
+	border-collapse: collapse;
+}
+
+DIV.data-grid th, DIV.data-grid thead td,
+table.data-grid th, table.data-grid thead td	 {
+	border:1px solid #727272; 
+	background-image:url(images/grid/Bg_Grid_Title_2.jpg);
+	background-repeat:repeat-x;
+	font-weight:bold;
+	text-align: center;
+	height:23px;
+}
+DIV.data-grid td, table.data-grid td  {
+	border:1px solid #727272; 
+	height:20px;
+	color:#000000;
+	padding-left:2px;
+	padding-right:2px;
+	padding-top:1px;
+	padding-bottom:1px;
+}
+DIV.data-grid td.string, table.data-grid td.string {
+	text-align: left;
+}
+DIV.data-grid td.number, table.data-grid td.number {
+	text-align: right;
+}
+
+DIV.data-grid tr, table.data-grid tr{
+	background-color:#FFFFFF;
+	cursor: arrow;
+}
+
+DIV.data-grid tr.oddLine, table.data-grid tr.oddLine {
+	background-color:#EEEEEE;
+}
+
+DIV.data-grid tr:hover, table.data-grid tr:hover {
+	background-color:#9EBED5;
+	cursor: arrow;
+}

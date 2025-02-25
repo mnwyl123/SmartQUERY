@@ -1,0 +1,75 @@
+@charset "utf-8";
+/* CSS Document */
+/*初始化代码*/
+body {color: #333; font-size:12px; font-family: "微软雅黑", helvetica, arial, verdana, tahoma, sans-serif;}  
+
+/* page begin */
+
+.pager{ margin:20px auto 40px auto; width:100%; text-align:center; color:#333; font-size:14px;}
+	.pager a{padding:0;display:inline-block;width: 34px;height: 34px; line-height: 34px;color:#333;margin-left:3px;margin-right:3px;-webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;}
+	.pager a:hover{ color:#fff;background:#F5AA0D;}
+	.pager-hover {}
+	.pager-hover a.sel{color:#fff;background:#F5AA0D;}
+	.pager-hover a.disadled{background:0;background:#fff;cursor:default}
+	.pager-hover a.disadled:hover{color:#333;text-decoration:none;}
+	
+	.pager-inp{ width:40px; margin:0px 2px; height:20px; text-align:center;}
+	.pager-style{ margin:0px 20px 0px 10px;}
+	.pager-but{  padding:3px 8px; background:#F5AA0D; color:#FFF; border:1px solid #F5AA0D; display:inline-block; borde-radius:10px; margin-left:5px;}
+
+
+
+
+
+/* .pager{ margin:20px auto 40px auto; width:100%; text-align:center; color:#333; font-size:14px;}
+.pager a{ padding:3px 8px; color:#333; border:1px solid #ccc; background:#efefef;margin-left:3px;margin-right:3px }
+.pager a:hover{ color:#F5AA0D;}
+.pager-hover {}
+.pager-hover a.sel{color:#F5AA0D;border:1px solid #F5AA0D;}
+.pager-hover a.disadled{background:0;background:#fff;cursor:default}
+.pager-hover a.disadled:hover{color:#333;text-decoration:none;}
+
+.pager-inp{ width:40px; margin:0px 2px; height:20px; text-align:center;}
+.pager-style{ margin:0px 20px 0px 10px;}
+.pager-but{  padding:3px 8px; background:#F5AA0D; color:#FFF; border:1px solid #F5AA0D; display:inline-block; borde-radius:10px; margin-left:5px;} */
+/* page stop */
+
+a:hover {text-decoration:underline; }
+a:link{text-decoration:none;}
+a:active{text-decoration:none;}
+a:visited{text-decoration:none;}
+
+
+
+
+
+
+
+#pager.page_blue .pager a {
+   	-webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border: 1px #d6dfdf solid;
+    margin: 0 2px;
+    width: 50px;
+}
+#pager.page_blue .pager a.disadled{
+display: none
+}
+#pager.page_blue .pager a:hover,#pager.page_blue .pager  a.sel,#pager.page_blue .pager-but {
+   	background:#1b82c8;
+}
+#pager.page_blue .pager a:hover,#pager.page_blue .pager  a.sel{
+	color: #fff;
+}
+#pager.page_blue .pager a:last-child,#pager.page_blue .pager-inp{
+	border: 1px #d6dfdf solid;
+}
+
+#pager.page_blue .pager-but{
+	 border-color: #d6dfdf;
+}
+
+
+
+

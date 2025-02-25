@@ -1,0 +1,70 @@
+ 
+.ui-layout-resizer {
+	border: none; 
+	padding: 0px; 
+	margin: 0px;
+	background-image: url(); 
+}
+.ui-layout-toggler {
+	border: none; 
+	padding: 0px; 
+	margin: 0px;
+	background-image: url(); 
+}
+.ui-layout-resizer-north {
+	background-image: url(images/mainframe/Bg_Divider_Horizontal.jpg); 
+	background-repeat:repeat-x;
+} 
+
+.ui-layout-toggler-north-open {
+	background-image: url(images/mainframe/Btn_Horizontal_Up.jpg); 
+	background-repeat:no-repeat;
+}
+.ui-layout-toggler-north-closed {
+	background-image: url(images/mainframe/Btn_Horizontal_down.jpg); 
+	background-repeat:no-repeat;
+}
+.ui-layout-resizer-south {
+	opacity: 1 !important; filter:Alpha(Opacity=100) !important;
+	background-image: url(images/mainframe/Bg_Divider_Horizontal.jpg) !important; 
+	background-repeat:repeat-x;
+} 
+
+.ui-layout-toggler-south-open {
+	background-image: url(images/mainframe/Btn_Horizontal_down.jpg); 
+	background-repeat:no-repeat;
+}
+.ui-layout-toggler-south-closed {
+	background-image: url(images/mainframe/Btn_Horizontal_Up.jpg); 
+	background-repeat:no-repeat;
+}
+
+.ui-layout-resizer-west {
+	opacity: 1 !important; filter:Alpha(Opacity=100) !important;
+	background-image: url(images/mainframe/Bg_Divider_Vertical.jpg) !important; 
+	background-repeat:repeat-y;
+}
+
+.ui-layout-toggler-west-open {
+	background-image: url(images/mainframe/Btn_Vertical_left.jpg); 
+	background-repeat:no-repeat;
+}
+
+.ui-layout-toggler-west-closed {
+	background-image: url(images/mainframe/Btn_Vertical_Right.jpg); 
+	background-repeat:no-repeat;
+}
+.ui-layout-resizer-east {
+	background-image: url(images/mainframe/Bg_Divider_Vertical.jpg); 
+	background-repeat:repeat-y;
+} 
+
+.ui-layout-toggler-east-open {
+	background-image: url(images/mainframe/Btn_Vertical_Right.jpg); 
+	background-repeat:no-repeat;
+}
+
+.ui-layout-toggler-east-closed {
+	background-image: url(images/mainframe/Btn_Vertical_left.jpg); 
+	background-repeat:no-repeat;
+}

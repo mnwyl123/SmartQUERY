@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CreditAcctManageMapper">
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		      CREDIT_CODE,
+              CREDIT_NAME,
+              CREDENTIALS_TYPE,
+              CREDENTIALS_NO,
+              START_DATE,
+              END_DATE,
+              CREDIT_ACCT_TYPE,
+              CURRENT_PASSWORD PREVIOUS_PASSWORD,
+              IS_WEB
+		from 
+			CIFM_CREDIT_ACCT_MANAGE
+		where 
+			CREDIT_CODE = #{CREDIT_CODE}
+		AND
+			COMPANY = #{COMPANY}
+	</select>
+	
+	<!--新增 -->
+	<insert id="insert" parameterType="pd">
+		insert into CIFM_CREDIT_ACCT_MANAGE (
+              CREDIT_CODE,
+              CREDIT_NAME,
+              CREDENTIALS_TYPE,
+              CREDENTIALS_NO,
+              START_DATE,
+              CURRENTTIME,
+  			  PREVIOUS_PASSWORD,
+  			  CURRENT_PASSWORD,
+  			  PWD_EXPIRES_DATE,
+  			  CREDIT_ACCT_TYPE,
+  			  PERBANK_STATUS,
+  			  COMPANY,
+  			  IS_WEB
+             )
+        values(
+              #{CREDIT_CODE},
+              #{CREDIT_NAME},
+              #{CREDENTIALS_TYPE},
+              #{CREDENTIALS_NO},
+              #{START_DATE},
+              #{START_DATE},
+              #{PREVIOUS_PASSWORD},
+              #{CURRENT_PASSWORD},
+              #{PWD_EXPIRES_DATE},
+              #{CREDIT_ACCT_TYPE},
+              #{PERBANK_STATUS},
+              #{COMPANY},
+              #{IS_WEB}
+            ) 
+	</insert>
+	<!--新增到perbank -->
+	<insert id="addPerBank" parameterType="pd">
+		insert into perbank_username_interface (
+              USERNAME,
+              CURRENT_PASSWORD
+             )
+        values(
+              #{CREDIT_CODE},
+              #{CURRENT_PASSWORD}            
+            ) 
+	</insert>
+	<!-- 更新 -->
+	<update id="update" parameterType="pd" >
+		UPDATE
+			CIFM_CREDIT_ACCT_MANAGE
+			set 
+			  CREDIT_CODE=#{CREDIT_CODE},
+              CREDIT_NAME=#{CREDIT_NAME},
+              CREDENTIALS_TYPE=#{CREDENTIALS_TYPE},
+              CREDENTIALS_NO=#{CREDENTIALS_NO},
+              START_DATE=#{START_DATE},
+              END_DATE=#{END_DATE},
+              CURRENTTIME=#{START_DATE},
+              CREDIT_ACCT_TYPE=#{CREDIT_ACCT_TYPE}
+			where 
+				CREDIT_CODE=#{CREDIT_CODE}
+			AND
+				COMPANY = #{COMPANY}
+			AND 
+				CREDIT_ACCT_TYPE=#{CREDIT_ACCT_TYPE1}
+	</update>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		      CREDIT_CODE,
+              CREDIT_NAME,
+              CREDENTIALS_TYPE,
+              CREDENTIALS_NO,
+              START_DATE,
+              END_DATE,
+              CREDIT_ACCT_TYPE,
+              IS_WEB,
+              ISWHITE,
+              PERBANK_STATUS
+		from  CIFM_CREDIT_ACCT_MANAGE
+		where COMPANY = #{pd.COMPANY}
+		<if test="pd.CREDIT_CODE !=null and pd.CREDIT_CODE != ''"><!-- 检索 -->
+		and CREDIT_CODE = #{pd.CREDIT_CODE}
+		</if>
+		<if test="pd.CREDIT_NAME != null and pd.CREDIT_NAME != ''">
+		and CREDIT_NAME = #{pd.CREDIT_NAME}
+		</if>
+	</select>
+	<delete id="delete" parameterType="pd">
+		delete from  CIFM_CREDIT_ACCT_MANAGE
+		where 
+			CREDIT_CODE = #{CREDIT_CODE} 
+		AND
+			COMPANY = #{COMPANY}
+		AND
+            CREDIT_ACCT_TYPE=#{CREDIT_ACCT_TYPE}
+	</delete>
+	<!-- 删除perbank表中的数据 -->
+	<delete id="deletePerBank" parameterType="pd">
+		delete from  
+		     perbank_username_interface
+		where 
+			USERNAME = #{CREDIT_CODE} 		
+	</delete>
+	<!-- 删除web_crawler_info2表中的数据 -->
+	<delete id="deleteWeb2" parameterType="pd">
+		delete from  
+		     web_crawler_info2
+		where 
+			USER_CODE = #{CREDIT_CODE} 		
+	</delete>
+	<!-- 修改人行密码 （人行加密） -->
+	<select id="findByUN" parameterType="pd" resultType="pd">
+		select 
+		      *
+		from 
+			WEB_CRAWLER_INFO2
+		where 
+			USER_CODE = #{username}
+	</select>
+	<update id="updateInfo" parameterType="pd" >
+		UPDATE
+			WEB_CRAWLER_INFO2
+			set 
+			  USER_PWD=#{password},LOCAL_CPU=#{local_cpu},LOCAL_DISK=#{local_disk},LOCAL_NETWORK=#{local_network}
+			where 
+				USER_CODE=#{username}
+	</update>
+	<update id="pwdUpdate" parameterType="pd">
+<!-- 		MERGE INTO WEB_CRAWLER_INFO2 A
+		USING (SELECT #{username} USER_CODE FROM DUAL) B
+		ON(A.USER_CODE = B.USER_CODE)
+		WHEN MATCHED THEN UPDATE SET USER_PWD=#{password},LOCAL_CPU=#{local_cpu},LOCAL_DISK=#{local_disk},LOCAL_NETWORK=#{local_network} WHERE USER_CODE=#{username}
+		WHEN NOT MATCHED THEN -->
+		INSERT into WEB_CRAWLER_INFO2 (USER_CODE,USER_PWD,LOCAL_CPU,LOCAL_DISK,LOCAL_NETWORK,PER_STATEMENT,COM_STATEMENT)
+		VALUES(#{username},#{password},#{local_cpu},#{local_disk},#{local_network},'on','on')
+	</update>
+	<!-- 修改人行密码2 （base64加密）-->
+	<update id="pwdUpdate2" parameterType="pd">
+		MERGE INTO CIFM_CREDIT_ACCT_MANAGE A
+	    USING (SELECT #{username} USER_CODE FROM DUAL) B
+	    ON(A.CREDIT_CODE = B.USER_CODE)
+	    WHEN MATCHED THEN UPDATE SET CURRENT_PASSWORD=#{password_base},PREVIOUS_PASSWORD=#{old_password},CURRENTTIME=#{CURRENT_TIME},PWD_EXPIRES_DATE=#{PWD_EXPIRES_DATE} WHERE USER_CODE=#{username}
+	    WHEN NOT MATCHED THEN
+	    INSERT(A.CREDIT_CODE,A.CURRENT_PASSWORD,A.CURRENT_TIME,A.PWD_EXPIRES_DATE)
+	    VALUES(#{username},#{password_base},#{CURRENT_TIME},#{PWD_EXPIRES_DATE})
+	</update>
+</mapper>

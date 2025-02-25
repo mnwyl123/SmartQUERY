@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+span[id^="param"]
+{
+	padding:0;
+	margin:0
+}
+
+table.inputPanel td.caption {
+	text-align: right;
+}
+
+span[id^="param"] select{
+	border: thin solid #000;
+	top:5px;
+	margin:2px;
+	padding:2px;
+	height:26px;
+	width:auto;
+	float:none;
+	font-size:1em;
+	color:black;
+	text-align:conter;
+	background: ghostwhite no-repeat scroll 5% 60%;
+}
+
+span[id^="param"] select:hover{
+	/*border:1px solid #666666;*/
+	background-color:#c0c0c0;
+}

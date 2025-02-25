@@ -1,0 +1,54 @@
+A2.0.0HBF0000000001120160301F501001120160301123018F502000000100000010000\r\n
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+<Msg>
+<RequestId>1</RequestId>
+<ResultCode>AAA000</ResultCode>
+<ResultDesc>查询成功</ResultDesc>
+<OriginateOrgCode>HBF00000100001</OriginateOrgCode >
+<OriginateUserCode>002</OriginateUserCode>
+<Name>张三</Name>
+<IDType>10</IDType >
+<IDNum>130429198904571533</IDNum>
+<QueryReason>02</QueryReason>
+<ServiceCode>yhbgrxybg_02</ServiceCode>
+<ProductDate>2016-01-30</ProductDate>
+<ResultType>00</ResultType>
+<Score>500.1</Score>
+<FactorNum>5</FactorNum>
+<FactorRecs>
+<Factor>因素 1</Factor>
+</FactorRecs>
+<FactorRecs>
+<Factor>因素 2</Factor>
+</FactorRecs>
+<FactorRecs>
+<Factor>因素 3</Factor>
+</FactorRecs>
+<FactorRecs>
+<Factor>因素 4</Factor>
+</FactorRecs>
+<FactorRecs>
+<Factor>因素 5</Factor>
+</FactorRecs>
+<Position>60%</Position>
+<ScoreDate>2016-01-30</ScoreDate>
+</Msg>
+</Document>
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+<Msg>
+<RequestId>2</RequestId>
+<ResultCode>AAA000</ResultCode>
+<ResultDesc>查询成功</ResultDesc>
+<OriginateOrgCode >HBF00000100001</OriginateOrgCode >
+<OriginateUserCode>002</OriginateUserCode>
+<Name>李四</Name>
+<IDType >10</IDType >
+<IDNum >130429198904571522</IDNum >
+<QueryReason>02</QueryReason>
+<ServiceCode >yhbgrxybg_02</ServiceCode >
+<ProductDate>2016-01-30</ProductDate>
+<ResultType>10</ResultType>
+</Msg>
+</Document>

@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrawlerComInterfaceMapper">
+
+	<!-- 报告信息 -->
+	<select id="reportInfo"  parameterType="String" resultType="Map">
+		select 
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(decrypt_dec(ORG_CODE),'null','') ORG_CODE,
+            replace(decrypt_dec(CHINA_CREDIT_CODE),'null','') CHINA_CREDIT_CODE,
+            replace(decrypt_dec(REPORT_DATE),'null','') REPORT_DATE,
+            replace(decrypt_dec(QUERY_REASON),'null','') QUERY_REASON,
+            replace(decrypt_dec(QUERY_OPERATOR),'null','') QUERY_OPERATOR
+        from
+        	COM_REPORT_INFO
+        WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 基本信息 -->
+	<select id="basic" parameterType="String" resultType="Map">
+		SELECT
+		    replace(REPORT_ID,'null','') REPORT_ID,
+            replace(decrypt_dec(BORR_NAME),'null','') BORR_NAME,
+            replace(decrypt_dec(REGI_ADDR),'null','') REGI_ADDR,
+            replace(decrypt_dec(REGI_TYPE),'null','') REGI_TYPE,
+            replace(decrypt_dec(REGI_NO),'null','') REGI_NO,
+            replace(decrypt_dec(REGI_DATE),'null','') REGI_DATE,
+            replace(decrypt_dec(LICENSE_DATE),'null','') LICENSE_DATE,
+            replace(decrypt_dec(MECH_CODE),'null','') MECH_CODE,
+            replace(decrypt_dec(CHINA_CREDIT_CODE),'null','') CHINA_CREDIT_CODE,
+            replace(decrypt_dec(COUNTRY_TAX_REGI_NO),'null','') COUNTRY_TAX_REGI_NO,
+            replace(decrypt_dec(LAND_TEX_REGI_NO),'null','') LAND_TEX_REGI_NO
+		FROM
+			COM_CREDIT_BASIC_INFO
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 高管人员信息 -->
+	<select id="seniorManager" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(decrypt_dec(SENIOR_DUTIES),'null','') SENIOR_DUTIES,
+            replace(decrypt_dec(SENIOR_NAME),'null','') SENIOR_NAME,
+            replace(decrypt_dec(SNEIOR_CRED_TYPE),'null','') SNEIOR_CRED_TYPE,
+            replace(decrypt_dec(SNEIOR_CRED_NUM),'null','') SNEIOR_CRED_NUM
+		FROM
+			COM_SENIOR_MANAGER_INFO
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 有直接关联关系的其他企业 -->
+	<select id="otherCom" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(decrypt_dec(COM_NAME),'null','') COM_NAME,
+            replace(decrypt_dec(CHINA_CREDIT_CODE),'null','') CHINA_CREDIT_CODE,
+            replace(decrypt_dec(REALTION),'null','') REALTION
+		FROM
+			COM_DIRECT_CONN_OTHERS
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 出资人信息 -->
+	<select id="investorInfo" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+			replace(decrypt_dec(INVE_NAME),'null','')  INVE_NAME,
+			replace(decrypt_dec(INVE_CRED_TYPE),'null','') INVE_CRED_TYPE,
+			replace(decrypt_dec(INVE_CRED_NUM),'null','') INVE_CRED_NUM,
+			replace(decrypt_dec(INVE_PERCENT),'null','') INVE_PERCENT
+		FROM
+			COM_INVESTOR_INFO
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+		
+	<!-- 信息概要 -->
+	<select id="infoSummary" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+			replace(FIRST_TRADE_YEAR,'null','')  FIRST_TRADE_YEAR,
+			replace(RELATION_ORG,'null','') RELATION_ORG,
+			replace(UNCLEAR_ORG,'null','') UNCLEAR_ORG,
+			replace(CURRENT_DEBT,'null','') CURRENT_DEBT,
+			replace(OVER_DEBT,'null','') OVER_DEBT,
+			replace(ORG_NUM,'null','') ORG_NUM,
+			replace(CREDIT_FLAG_NUM,'null','') CREDIT_FLAG_NUM,
+			replace(INFO_STATEMENT_NUM,'null','') INFO_STATEMENT_NUM
+		FROM
+			COM_INFO_SUMMARY
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 未结清不良资产处置信息概要 -->
+	<select id="badAssetDispSumm" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(BAD_ASSETS_TYPE,'null','') BAD_ASSETS_TYPE,
+            replace(BAD_ASSETS_NUM,'null','') BAD_ASSETS_NUM,
+            replace(BAD_ASSETS_BALANCE,'null','') BAD_ASSETS_BALANCE,
+            replace(LAST_DISPOSAL_DATE,'null','') LAST_DISPOSAL_DATE,
+            replace(SETTLE_STATUS,'null','') SETTLE_STATUS
+		FROM
+			COM_BAD_ASSETS_DISP_SUMM
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 未结清信贷业务分类信息概要 -->
+	<select id="unclearCreditTypeSumm" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(BUSS_TYPE,'null','') BUSS_TYPE,
+            replace(ATTENT_STATUS,'null','') ATTENT_STATUS,
+            replace(BUSS_NUM,'null','') BUSS_NUM,
+            replace(BUSS_BALANCE,'null','') BUSS_BALANCE,
+            replace(SETTLE_STATUS,'null','') SETTLE_STATUS
+		FROM
+			COM_UNCLEAR_CREDIT_TYPE_SUMM
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 负债变化历史概要  -->
+	<select id="debtChangeHistSumm" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(CHANGE_DATE,'null','') CHANGE_DATE,
+            replace(ALL_DEBT_BALANCE,'null','') ALL_DEBT_BALANCE,
+            replace(BAD_DEBT_BALANCE,'null','') BAD_DEBT_BALANCE
+		FROM
+			COM_DEBT_CHANGE_HIST_SUMM
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 对外担保概要 -->
+	<select id="formGuarSumm" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(GUAR_TYPE,'null','') GUAR_TYPE,
+            replace(GUAR_NUM,'null','') GUAR_NUM,
+            replace(GUAR_SUM,'null','') GUAR_SUM,
+            replace(NOR_GUAR_BALANCE,'null','') NOR_GUAR_BALANCE,
+            replace(ATTEN_GUAR_BALANCE,'null','') ATTEN_GUAR_BALANCE,
+            replace(BAD_GUAR_BALANCE,'null','') BAD_GUAR_BALANCE
+		FROM
+			COM_FORE_GUAR_SUMM
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 资产公司处置债务明细 -->
+	<select id="assetDispDebtDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(DISP_ORG,'null','') DISP_ORG,
+            replace(CURRENCY,'null','') CURRENCY,
+            replace(ORIG_AMOUNT,'null','') ORIG_AMOUNT,
+            replace(REC_DATE,'null','') REC_DATE,
+            replace(BALANCE,'null','') BALANCE,
+            replace(LAST_DISP_DATE,'null','') LAST_DISP_DATE,
+            replace(SETTLE_STATUS,'null','') SETTLE_STATUS,
+            replace(REMARKS,'null','') REMARKS
+		FROM
+			COM_ASSET_DISP_DEBT_DETAIL
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 担保及第三方代偿业务明细 -->
+	<select id="guarCompDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(COMP_ORG,'null','') COMP_ORG,
+            replace(LAST_COMP_DATE,'null','') LAST_COMP_DATE,
+            replace(TATAL_COMP_SUM,'null','') TATAL_COMP_SUM,
+            replace(COMP_BALANCE,'null','') COMP_BALANCE,
+            replace(LAST_REPAY_DATE,'null','') LAST_REPAY_DATE,
+            replace(ORIG_GUSS,'null','') ORIG_GUSS,
+            replace(SETTLE_STATUS,'null','') SETTLE_STATUS,
+            replace(REMARKS,'null','') REMARKS
+		FROM
+			COM_GUAR_COMP_DETAIL
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 欠息明细 -->
+	<select id="lackInterest" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(CREDIT_ORG,'null','') CREDIT_ORG,
+            replace(CURRENCY,'null','') CURRENCY,
+            replace(LACK_INTE_BALANCE,'null','') LACK_INTE_BALANCE,
+            replace(BALANCE_CHANGE_DATE,'null','') BALANCE_CHANGE_DATE,
+            replace(LACK_INTE_TYPE,'null','') LACK_INTE_TYPE,
+            replace(HIS_MAX_LACK_INTE,'null','') HIS_MAX_LACK_INTE,
+            replace(FIRST_LACK_INTE_DATE,'null','') FIRST_LACK_INTE_DATE,
+            replace(LAST_SETTLE_DATE,'null','') LAST_SETTLE_DATE,
+            replace(SETTLE_STATUS,'null','') SETTLE_STATUS,
+            replace(REMARKS,'null','') REMARKS
+		FROM
+			COM_LACK_INTEREST
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 垫款明细 -->
+	<select id="advaPayDetail" parameterType="String" resultType="Map">
+		SELECT
+		    replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(CREDIT_ORG,'null','') CREDIT_ORG,
+            replace(CURRENCY,'null','') CURRENCY,
+            replace(ADVA_PAY_SUM,'null','') ADVA_PAY_SUM,
+            replace(ADVA_PAY_BALANCE,'null','') ADVA_PAY_BALANCE,
+            replace(ADVA_PAY_DATE,'null','') ADVA_PAY_DATE,
+            replace(ADVA_SETTLE_DATE,'null','') ADVA_SETTLE_DATE,
+            replace(FIVE_TYPE,'null','') FIVE_TYPE,
+            replace(ORIG_BUSS,'null','') ORIG_BUSS,
+            replace(SETTLE_STATUS,'null','') SETTLE_STATUS,
+            replace(REMARKS,'null','') REMARKS
+		FROM
+			COM_ADVA_PAY_DETAIL
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 表内业务明细 -->
+	<select id="innerBussDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(CREDIT_ORG,'null','') CREDIT_ORG,
+            replace(TYPE,'null','') TYPE,
+            replace(CURRENCY,'null','') CURRENCY,
+            replace(BUSS_SUM,'null','') BUSS_SUM,
+            replace(BUSS_BALANCE,'null','') BUSS_BALANCE,
+            replace(START_DATE,'null','') START_DATE,
+            replace(STOP_DATE,'null','') STOP_DATE,
+            replace(FIVE_TYPE,'null','') FIVE_TYPE,
+            replace(LOAN_TYPE,'null','') LOAN_TYPE,
+            replace(IS_GUAR,'null','') IS_GUAR,
+            replace(EXTENSION,'null','') EXTENSION,
+            replace(HIS_RECORD,'null','') HIS_RECORD,
+            replace(SETTLE_DATE,'null','') SETTLE_DATE,
+            replace(SETTLE_STYLE,'null','') SETTLE_STYLE,
+            replace(BUSS_TYPE,'null','') BUSS_TYPE,
+            replace(ATTEN_STATUS,'null','') ATTEN_STATUS,
+            replace(SETTLE_STATUS,'null','') SETTLE_STATUS,
+            replace(REMARKS,'null','') REMARKS
+		FROM
+			COM_INNER_BUSS_DETAIL
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 表外业务明细 -->
+	<select id="outerBussDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(CREDIT_ORG,'null','') CREDIT_ORG,
+            replace(TYPE,'null','') TYPE,
+            replace(CURRENCY,'null','') CURRENCY,
+            replace(BUSS_SUM,'null','') BUSS_SUM,
+            replace(BUSS_BALANCE,'null','') BUSS_BALANCE,
+            replace(START_DATE,'null','') START_DATE,
+            replace(STOP_DATE,'null','') STOP_DATE,
+            replace(FIVE_TYPE,'null','') FIVE_TYPE,
+            replace(IS_GUAR,'null','') IS_GUAR,
+            replace(IS_ADVA,'null','') IS_ADVA,
+            replace(MARGIN_PERCENT,'null','') MARGIN_PERCENT,
+            replace(HIS_RECORD,'null','') HIS_RECORD,
+            replace(BUSS_TYPE,'null','') BUSS_TYPE,
+            replace(ATTEN_STATUS,'null','') ATTEN_STATUS,
+            replace(SETTLE_STATUS,'null','') SETTLE_STATUS,
+            replace(REMARKS,'null','') REMARKS,
+            replace(ACC_NUM,'null','') ACC_NUM,
+            replace(SETTLE_DATE,'null','') SETTLE_DATE
+		FROM
+			COM_OUTER_BUSS_DETAIL
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 银承附加信息-->
+	<select id="bankAccAttacgedInfo" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+		    replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(CREDIT_ORG,'null','') CREDIT_ORG,
+            replace(BANK_ACC_NUM,'null','') BANK_ACC_NUM,
+            replace(TH_BALANCE,'null','') TH_BALANCE,
+            replace(SIX_BALANCE,'null','') SIX_BALANCE,
+            replace(NI_BALANCE,'null','') NI_BALANCE,
+            replace(MOR_NI_BALANCE,'null','') MOR_NI_BALANCE,
+            replace(REMARKS,'null','') REMARKS,
+            replace(TOTAL,'null','') TOTAL,
+            replace(HIS_RECORD,'null','') HIS_RECORD
+		FROM
+			COM_BANK_ACC_ATTACGED_INFO
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 担保明细 -->
+	<select id="guarDetailInfo" parameterType="String" resultType="Map">
+		SELECT
+		    replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(GUAR_TYPE,'null','') GUAR_TYPE,
+            replace(GUARANTOR,'null','') GUARANTOR,
+            replace(GUAR_CRED_TYPE,'null','') GUAR_CRED_TYPE,
+            replace(GUAR_CRED_NUM,'null','') GUAR_CRED_NUM,
+            replace(GUAR_CURRENCY,'null','') GUAR_CURRENCY,
+            replace(GUAR_SUM,'null','') GUAR_SUM,
+            replace(GUAR_STYLE,'null','') GUAR_STYLE,
+            replace(MAIN_BUSS,'null','') MAIN_BUSS,
+            replace(REMARKS,'null','') REMARKS
+		FROM
+			COM_GUAR_DETAIL_INFO
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 欠税记录 -->
+	<select id="taxArrearsRecord" parameterType="String" resultType="Map">
+		SELECT
+			  replace(REPORT_ID,'null','') REPORT_ID,
+			  replace(TAX_AUTHORITIES,'null','') TAX_AUTHORITIES,
+			  replace(TAX_ARREARS_SUM,'null','') TAX_ARREARS_SUM,
+			  replace(TAX_ARREARS_DATE,'null','') TAX_ARREARS_DATE
+		FROM
+			COM_TAX_ARREARS_RECORD
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 判决记录-->
+	<select id="judgeRecord" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(COURT_FILING,'null','') COURT_FILING,
+            replace(FILING_DATE,'null','') FILING_DATE,
+            replace(LITIG_STATUS,'null','') LITIG_STATUS,
+			replace(CASE_NUM,'null','') CASE_NUM,
+			replace(LITIG_PRO,'null','') LITIG_PRO,
+			replace(LITIG_SUB,'null','') LITIG_SUB,
+			replace(LITIG_SUM,'null','') LITIG_SUM,
+			replace(CLOSE_STYLE,'null','') CLOSE_STYLE,
+			replace(JUDGE_START_DATE,'null','') JUDGE_START_DATE,
+			replace(JUDGE_RESULT,'null','') JUDGE_RESULT,
+			replace(LITIG_REASON,'null','') LITIG_REASON
+		FROM
+			COM_JUDGE_RECORD
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 执行记录-->
+	<select id="enforceRecord" parameterType="String" resultType="Map">
+		SELECT
+		    replace(REPORT_ID,'null','') REPORT_ID,
+            replace(COURT_FILING,'null','') COURT_FILING,
+            replace(FILING_DATE,'null','') FILING_DATE,
+            replace(EXE_CASE,'null','') EXE_CASE,
+            replace(CASE_NUM,'null','') CASE_NUM,
+            replace(APP_EXE_SUB,'null','') APP_EXE_SUB,
+            replace(APP_EXE_SUM,'null','') APP_EXE_SUM,
+            replace(CASE_STATUS,'null','') CASE_STATUS,
+            replace(CLOSE_STYLE,'null','') CLOSE_STYLE,
+            replace(EXE_SUB,'null','') EXE_SUB,
+            replace(EXE_SUM,'null','') EXE_SUM,
+            replace(EXE_TYPE,'null','') EXE_TYPE
+		FROM
+			COM_ENFORCE_RECORD
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 社保缴费记录 -->
+	<select id="securPayRecord" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(SECUR_TYPE,'null','') SECUR_TYPE,
+            replace(INSURE_DATE,'null','') INSURE_DATE,
+            replace(STATISTIC_DATE,'null','') STATISTIC_DATE,
+            replace(BASE_PAY,'null','') BASE_PAY,
+            replace(PAY_STATUS,'null','') PAY_STATUS,
+            replace(TOTAL_ARREAR_SUM,'null','') TOTAL_ARREAR_SUM
+		FROM
+			COM_SECUR_PAY_RECORD
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 公积金缴费记录 -->
+	<select id="providFundPayRecord" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(STATISTIC_DATE,'null','') STATISTIC_DATE,
+            replace(FIRST_PAY_DATE,'null','') FIRST_PAY_DATE,
+            replace(EMPLOY_NUM,'null','') EMPLOY_NUM,
+            replace(BASE_PAY,'null','') BASE_PAY,
+            replace(LAST_PAY_DATE,'null','') LAST_PAY_DATE,
+            replace(PAY_TO_DATE,'null','') PAY_TO_DATE,
+            replace(PAY_STATUS,'null','') PAY_STATUS,
+            replace(TOTAL_ARREAR_SUM,'null','') TOTAL_ARREAR_SUM
+		FROM
+			COM_PROVID_FUND_PAY_RECORD
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 企业资质 -->
+	<select id="enterQual" parameterType="String" resultType="Map">
+		SELECT
+		    replace(REPORT_ID,'null','') REPORT_ID,
+            replace(QUAL_TYPE,'null','') QUAL_TYPE,
+            replace(GRANT_ORG,'null','') GRANT_ORG,
+            replace(QUAL_NAME,'null','') QUAL_NAME,
+            replace(GRANT_DATE,'null','') GRANT_DATE,
+            replace(END_DATE,'null','') END_DATE,
+            replace(CONTENT,'null','') CONTENT
+		FROM
+			COM_ENTER_QUAL
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 海关快速通道 -->
+	<select id="custormFastTrack" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(EXEM_TYPE,'null','') EXEM_TYPE,
+            replace(APPROVAL_ORG,'null','') APPROVAL_ORG,
+            replace(EXEM_MERCH_NAME,'null','') EXEM_MERCH_NAME,
+            replace(EXEM_NO,'null','') EXEM_NO,
+            replace(END_DATE,'null','') END_DATE
+		FROM
+			COM_CUSTORM_FAST_TRACK
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 进出口分类监管 -->
+	<select id="imexSupervision" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SUPER_ORG,'null','') SUPER_ORG,
+            replace(SUPER_COUNCIL,'null','') SUPER_COUNCIL,
+            replace(SUPER_LEVEL,'null','') SUPER_LEVEL,
+            replace(START_DATE,'null','') START_DATE,
+            replace(END_DATE,'null','') END_DATE
+		FROM
+			COM_IMEX_SUPERVISION
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 上市公司或有事项 -->
+	<select id="listedCorpor" parameterType="String" resultType="Map">
+		SELECT
+		    replace(REPORT_ID,'null','') REPORT_ID,
+            replace(REPORT_ORG,'null','') REPORT_ORG,
+            replace(MATTER,'null','') MATTER,
+            replace(INFO_DATE,'null','') INFO_DATE
+		FROM
+			COM_LISTED_CORPOR
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 专利情况 -->
+	<select id="patentCase" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(PATENT_NAME,'null','') PATENT_NAME,
+            replace(PATENT_NO,'null','') PATENT_NO,
+            replace(APP_DATE,'null','') APP_DATE,
+            replace(GRANT_DATE,'null','') GRANT_DATE,
+            replace(EFFECTIVE_YEAR,'null','') EFFECTIVE_YEAR
+		FROM
+			COM_PATENT_CASE
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 公共事业费用缴费记录-->
+	<select id="pubCostPayRecord" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(PUB_COM_NAME,'null','') PUB_COM_NAME,
+            replace(INFO_TYPE,'null','') INFO_TYPE,
+            replace(STATIC_DATE,'null','') STATIC_DATE,
+            replace(PAY_STATUS,'null','') PAY_STATUS,
+            replace(LAST_PAY_DATE,'null','') LAST_PAY_DATE,
+            replace(TOTAL_ARREAR_SUM,'null','') TOTAL_ARREAR_SUM,
+            replace(MAX_ARREAR_OCCUR_DATE,'null','') MAX_ARREAR_OCCUR_DATE,
+            replace(MAX_ARREAR_SUM,'null','') MAX_ARREAR_SUM
+		FROM
+			COM_PUB_COST_PAY_RECORD
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 声明信息 -->
+	<select id="declInfo"  parameterType="String" resultType="pd">
+		select 
+		    replace(REPORT_ID,'null','') REPORT_ID,
+            replace(CONTENTS,'null','') CONTENTS,
+            replace(DECL_OBJ,'null','') DECL_OBJ,
+            replace(ADD_DATE,'null','') ADD_DATE
+        from
+        	COM_DECL_INFO
+        WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 财务报表-->
+	<select id="financialReportForm" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(REPORT_TYPE,'null','') REPORT_TYPE,
+            replace(DATE_RANGE,'null','') DATE_RANGE,
+            replace(REPORT_YEAR,'null','') REPORT_YEAR,
+            replace(ENTERPRISE_RANGE,'null','') ENTERPRISE_RANGE,
+            replace(SUB_NO,'null','') SUB_NO,
+            replace(GEGIN_BALANCE,'null','') GEGIN_BALANCE,
+            replace(END_BALANCE,'null','') END_BALANCE
+		FROM
+			COM_FINANCIAL_REPORT_FORM
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 表内业务正常类历史记录-->
+	<select id="innerBussNorHisRecord" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(BUSS_OCCUR_DATE,'null','') BUSS_OCCUR_DATE,
+            replace(BALANCE_CHANGE_DATE,'null','') BALANCE_CHANGE_DATE,
+            replace(BALANCE,'null','') BALANCE,
+            replace(FIVE_TYPE,'null','') FIVE_TYPE
+		FROM
+			COM_INNER_BUSS_NOR_HIS_RECORD
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+		
+	<!-- 展期明细-->
+	<select id="extendDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(EXTEND_START_DATE,'null','') EXTEND_START_DATE,
+            replace(EXTEND_END_DATE,'null','') EXTEND_END_DATE,
+            replace(EXTEND_SUM,'null','') EXTEND_SUM
+		FROM
+			COM_EXTEND_DETAIL
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+			
+	<!-- 对外担保-->
+	<select id="exterGuar" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(MAIN_BUSS_TYPE,'null','') MAIN_BUSS_TYPE,
+            replace(CURRENCY,'null','') CURRENCY,
+            replace(GUAR_SUM,'null','') GUAR_SUM,
+            replace(GUAR_BALANCE,'null','') GUAR_BALANCE,
+            replace(START_DATE,'null','') START_DATE,
+            replace(END_DATE,'null','') END_DATE,
+            replace(MINOR_BUSS_TYPE,'null','') MINOR_BUSS_TYPE,
+            replace(FIVE_TYPE,'null','') FIVE_TYPE,
+            replace(CONTRACT_VALID,'null','') CONTRACT_VALID
+		FROM
+			COM_EXTER_GUAR
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+				
+	<!-- 被担保-->
+	<select id="wasGuar" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(GUARANTOR,'null','') GUARANTOR,
+            replace(GUAR_DATE,'null','') GUAR_DATE,
+            replace(CURRENCY,'null','') CURRENCY,
+            replace(GUAR_SUM,'null','') GUAR_SUM,
+            replace(GUAR_STYLE,'null','') GUAR_STYLE
+		FROM
+			COM_WAS_GUAR
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+					
+	<!-- 抵/质押物-->
+	<select id="pledge" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(PLEDGE_TYPE,'null','') PLEDGE_TYPE,
+            replace(PLEDGE_OWNER,'null','') PLEDGE_OWNER,
+            replace(PLEDGE_SPECIES,'null','') PLEDGE_SPECIES,
+            replace(CURRENCY,'null','') CURRENCY,
+            replace(ASSESS_SUM,'null','') ASSESS_SUM,
+            replace(ASSESS_DATE,'null','') ASSESS_DATE,
+            replace(GUAR_SUM,'null','') GUAR_SUM
+		FROM
+			COM_PLEDGE
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+						
+	<!-- 公共信息明细-->
+	<select id="publicInfoDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(SERIAL_NO,'null','') SERIAL_NO,
+            replace(STATIC_DATE,'null','') STATIC_DATE,
+            replace(CUR_SHOULD_PAY,'null','') CUR_SHOULD_PAY,
+            replace(CUR_ACTUAL_PAY,'null','') CUR_ACTUAL_PAY,
+            replace(PAY_STATUS,'null','') PAY_STATUS,
+            replace(TOTAL_ARREAR_SUM,'null','') TOTAL_ARREAR_SUM
+		FROM
+			COM_PUBLIC_INFO_DETAIL
+		WHERE
+			REPORT_ID = #{rpid}
+	</select>
+	
+	<!-- 查询中证码-->
+	<select id="queryLoanNo" parameterType="pd" resultType="pd">
+		${creatSql}
+	</select>
+	
+		<!-- 保存中证码-->
+	<insert id="saveLoanNo" parameterType="pd">
+		INSERT INTO 
+			CIFM_COMPANY_LOANNO(
+				COM_NAME,
+				LoanCardNo,
+				SocialCredit,
+				SdepOrgCode,
+				CreditCode,
+				BusinessNum,
+				SocialGroupNo,
+				PublicNum,
+				CivilNo,
+				FundNo,
+				Other,
+				ReligionNo,
+				SdeplandTaxCode,
+				SdepNationalTaxCode,
+				CLAWER_TIME)
+			VALUES(
+				encrypt_dec(#{OrgName}),
+				encrypt_dec(#{LoanCardNo}),
+				encrypt_dec(#{SocialCredit}),
+				encrypt_dec(#{SdepOrgCode}),
+				encrypt_dec(#{CreditCode}),
+				encrypt_dec(#{BusinessNum}),
+				encrypt_dec(#{SocialGroupNo}),
+				encrypt_dec(#{PublicNum}),
+				encrypt_dec(#{CivilNo}),
+				encrypt_dec(#{FundNo}),
+				encrypt_dec(#{Other}),
+				encrypt_dec(#{ReligionNo}),
+				encrypt_dec(#{SdeplandTaxCode}),
+				encrypt_dec(#{SdepNationalTaxCode}),
+				#{CLAWER_TIME})
+	</insert>
+</mapper>

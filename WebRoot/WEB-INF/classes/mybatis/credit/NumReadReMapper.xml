@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NumReadReMapper">
+    
+   <!-- 个人查询申请审核列表 -->
+<select id="IndAppRelistPage" parameterType="page" resultType="pd" >
+		SELECT
+            A.ID,
+            A.APPLICATION_TIME,
+            A.USER_SYS_ID,
+            A.INTERNAL,
+            A.CLIENT_TYPE,
+           B.CLIENT_NAME,
+            B.CREDENTIALS_TYPE,
+           B.CREDENTIALS_NO,
+            B.QUERY_REASON,
+            B.PRODUCE_DATE,
+            C.NAME AS ORG_NAME
+        FROM
+            CIFM_FLOW_STATUS A,CIFM_NUMREADRE_QUEST B,SYS_ORG C,SYS_USER_ORG D 
+        WHERE
+            A.ID = B.ID AND A.STATUS='01' AND A.CLIENT_TYPE = '1' AND D.USER_ID = A.USER_SYS_ID AND C.ORG_ID=D.ORG_ID AND A.CHECK_SYS_ID=#{pd.USER_ID}
+			<if test="pd.CLIENT_NAME!=null and pd.CLIENT_NAME!=''">
+			    AND 
+			    	B.CLIENT_NAME = #{pd.CLIENT_NAME}
+			</if>
+			<if test="pd.CREDENTIALS_TYPE!=null and pd.CREDENTIALS_TYPE!=''">
+			    AND 
+			    	B.CREDENTIALS_TYPE = #{pd.CREDENTIALS_TYPE}
+			</if>
+			<if test="pd.CREDENTIALS_NO!=null and pd.CREDENTIALS_NO!=''">
+			    AND 
+			    	B.CREDENTIALS_NO = #{pd.CREDENTIALS_NO}
+			</if>
+		ORDER BY A.ID
+	</select>
+	  <!-- 查询系统用户部门 -->
+	<select id="getUserDepart" parameterType="pd" resultType="String" >
+		SELECT
+			DEPT_CODE
+		FROM
+			SYS_USER
+		WHERE
+			USER_ID = #{USER_SYS_ID}
+	</select>
+	  <!-- 查询系统用户机构 -->
+	<select id="getUserOrg" parameterType="pd" resultType="String" >
+		SELECT 
+			A.NAME 
+		FROM 
+			SYS_ORG A,SYS_USER_ORG B 
+		WHERE 
+			A.ORG_ID = B.ORG_ID AND B.USER_ID = #{USER_SYS_ID}
+	</select>
+	   <!-- 查询个人申请信息 -->
+	<select id="getAppCheck" parameterType="pd" resultType="pd" >
+		SELECT
+			A.APPLICATION_TIME,
+			A.INTERNAL,
+			B.CLIENT_NAME,
+			B.CREDENTIALS_TYPE,
+			B.CREDENTIALS_NO,
+			A.USER_SYS_ID,
+			C.USERNAME AS USER_SYS_NAME,
+			B.QUERY_REASON,
+			B.QUERY_VERSION,
+			B.WARRANT_MATURITY_DATE,
+			B.QUERY_TYPE,
+            A.ORG_ID
+		FROM
+			CIFM_FLOW_STATUS A,CIFM_PERSON_INFO B,SYS_USER C
+		WHERE
+			A.ID = B.ID AND A.ID= #{ID} AND A.USER_SYS_ID = C.USER_ID
+	</select>
+	<!-- 更新审核状态 -->
+	<update id="UpdateCheck" parameterType="pd" >
+		UPDATE
+				CIFM_FLOW_STATUS
+			set 
+				CHECK_TIME 				= STR_TO_DATE(#{CHECK_TIME},'%Y-%m-%d %H:%i:%s'),
+				QUERY_TIME 				= STR_TO_DATE(#{QUERY_TIME},'%Y-%m-%d %H:%i:%s'),
+				STATUS 					= #{STATUS},
+				CHECK_REJECT_RESON		= #{CHECK_REJECT_RESON},
+				REPORT_ID				= #{REPORT_ID}
+			where 
+				ID= #{ID}
+	</update>
+	<!-- 更新状态 -->
+	<update id="updateStatus" parameterType="pd" >
+		UPDATE
+				CIFM_FLOW_STATUS
+			set 
+				STATUS 					= #{STATUS}
+			where 
+				ID= #{ID}
+				and STATUS='02'
+	</update>
+	 <!-- 查询拼接报文信息 -->
+	<select id="QueryDetail" parameterType="String" resultType="pd" >
+	    SELECT
+	      A.ID,
+	      E.ORG_CODE  ORIGINATEORGCODE,
+	      A.QUERY_REASON,
+	      A.CREDENTIALS_NO,
+	      A.CREDENTIALS_TYPE,
+	      A.CLIENT_NAME,
+	      A.PRODUCE_DATE PRODUCTDATE,
+	      C.USERNAME_PERBANK ORIGINATEUSERCODE,
+	      'yhbgrxybg_02'  SERVICECODE
+	    FROM 
+			CIFM_NUMREADRE_QUEST A,
+			CIFM_FLOW_STATUS B,
+			SYS_USER C,
+			SYS_USER_ORG D,
+			SYS_ORG E
+		WHERE 
+			A.ID = B.ID
+			AND B.USER_SYS_ID = C.USER_ID
+			AND C.USER_ID = D.USER_ID
+			AND D.ORG_ID = E.ORG_ID
+			AND A.ID = #{ID}
+	</select>
+	<!-- 查询征信账户信息 -->
+	<select id="queryAccInfo" parameterType="pd" resultType="pd">
+		  SELECT
+		  		 C.ORG_CODE QUERYORGCODE,
+		         D.CREDIT_CODE USERCODE,
+		         D.CURRENT_PASSWORD PASSWORD
+		  FROM 
+		  		 SYS_USER A
+		         INNER JOIN SYS_USER_ORG B ON A.USER_ID = B.USER_ID
+		         INNER JOIN SYS_ORG C ON B.ORG_ID = C.ORG_ID
+		         INNER JOIN CIFM_CREDIT_ACCT_MANAGE D ON D.CREDIT_CODE = A.USERNAME_PERBANK
+		  WHERE 
+		 		 A.USERNAME =  #{USERNAME}
+	</select>
+		<!-- 修改流程表 -->
+	<update id="updateResponseInfo" parameterType="pd" >
+		UPDATE
+			CIFM_NUM_READ
+		SET 
+			FILENAME_RESPONSE=#{FileName},
+			RESULTCODE=#{ResultCode},
+			RESULTDESC=#{ResultDesc},
+			STATECODE=#{StateCode},
+			STATEDESC=#{StateDesc}
+		WHERE 
+			ID=#{ID}
+	</update>
+	<!-- 返回报文信息落库 -->
+	<update id="updateResponseData" parameterType="pd">
+		UPDATE
+			CIFM_NUMREADRE_QUEST T
+		SET 
+					
+					REQUESTID = #{RequestId},
+					RESULTCODE = #{ResultCode},
+					RESULTDESC = #{ResultDesc},
+					ORIGINATEORGCODE = #{OriginateOrgCode},
+					ORIGINATEUSERCODE = #{OriginateUserCode},
+					NAME = #{Name},
+					IDTYPE = #{IDType},
+					IDNUM = #{IDNum},
+					QUERYREASON = #{QueryReason},
+					SERVICECODE = #{ServiceCode},
+					PRODUCTDATE = #{ProductDate},
+					RESULTTYPE = #{ResultType},
+					SCORE = #{Score},
+					FACTORNUM = #{FactorNum},
+					FACTORRECS = #{FACTORRECS},
+					POSITION = #{Position},
+					SCOREDATE = #{ScoreDate}
+		WHERE 
+			        T.REQUEST_ID=#{RequestId}  and #{FILENAME} = T.FILENAME_REQUEST
+		
+	</update>
+	<!-- 请求信息落库 -->
+	<insert id="saveRequestInfo" parameterType="pd">
+		INSERT INTO CIFM_NUM_READ
+				(
+					ID,
+					QUERYORGCODE,
+					USERNAME,
+					FILENAME_REQUEST
+				)
+			VALUES
+				(
+					#{ID},
+					#{QUERYORGCODE},
+					#{USERNAME},
+					#{FILENAME}
+				)
+	</insert>
+	<!-- 查询状态表的信息 -->
+	<select id="QueryFlowStatus" parameterType="String" resultType="pd" >
+		SELECT
+			*
+		FROM CIFM_FLOW_STATUS	
+		WHERE ID = #{ID}
+	</select>
+	<!-- 向明细表中添加数据-->
+	<insert id="saveDetail" parameterType="pd">
+		INSERT INTO CIFM_PERSON_DETAIL
+			(
+				ID,
+				IP,
+				CHECK_TIME,
+				IS_GET,
+				QUERY_VERSION,
+				QUERY_REASON,
+				CREDENTIALS_NO,
+				CREDENTIALS_TYPE,
+				CLIENT_NAME,
+				QUERY_TIME,
+				USER_REAL_NAME,
+				USER_SYS_NAME,
+				BRANCH_NAME,
+				BRANCH_CODE,
+				ORG_CODE
+			)
+		VALUES
+			(
+				#{ID},
+				#{IP},
+				STR_TO_DATE(#{CHECK_TIME},'%Y-%m-%d %H:%i:%s'),
+				#{IS_GET},
+				#{QUERY_VERSION},
+				#{QUERY_REASON},
+				#{CREDENTIALS_NO},
+				#{CREDENTIALS_TYPE},
+				#{CLIENT_NAME},
+				STR_TO_DATE(#{QUERY_TIME},'%Y-%m-%d %H:%i:%s'),
+				#{USER_REAL_NAME},
+				#{USER_SYS_NAME},
+				#{BRANCH_NAME},
+				#{BRANCH_CODE},
+				#{ORG_CODE}
+			)
+	</insert>
+	<!-- 更新明细表中查询结果状态 -->
+	<update id="UpdateDetailCheck" parameterType="pd" >
+		UPDATE
+				cifm_person_detail
+			set 
+				CHECK_TIME 				= STR_TO_DATE(#{CHECK_TIME},'%Y-%m-%d %H:%i:%s'),
+				QUERY_TIME 				= STR_TO_DATE(#{QUERY_TIME},'%Y-%m-%d %H:%i:%s'),
+				IS_GET 	= #{IS_GET}
+			where 
+				ID= #{ID}
+	</update>
+	  <!-- 查询当前用户机构 -->
+	<select id="getUserOrgID" parameterType="pd" resultType="String" >
+		SELECT 
+			ORG_ID 
+		FROM 
+			SYS_USER_ORG 
+		WHERE 
+			USER_ID = #{USER_ID}
+	</select>
+	
+	 <!-- 查询人行登录信息 -->
+	<select id="getLoginInfo" parameterType="pd" resultType="pd" >
+		SELECT 
+			CREDIT_CODE,CURRENT_PASSWORD 
+		FROM 
+			CIFM_CREDIT_ACCT_MANAGE A,SYS_USER B 
+		WHERE A.CREDIT_CODE = B.USERNAME_PERBANK AND B.USERNAME=#{USERNAME}
+	</select>
+	<!-- 查询查询员信息 -->
+	<select id="getQueryUserInfo" parameterType="pd" resultType="pd" >
+		SELECT 
+			B.USERNAME,
+			B.USER_ID
+		FROM 
+			CIFM_FLOW_STATUS A,SYS_USER B 
+		WHERE A.ID = #{ID} AND A.USER_SYS_ID=B.USER_ID
+	</select>
+	<!-- 查询请求信息-->
+	<select id="getQueryInfo" parameterType="pd" resultType="pd" >
+		SELECT 
+			T.ID,
+			E.ORG_CODE QUERYORGCODE,
+			C.USERNAME_PERBANK USERNAMEPERBANK,
+			(SELECT A.CURRENT_PASSWORD FROM  CIFM_CREDIT_ACCT_MANAGE A WHERE A.CREDIT_CODE =  C.USERNAME_PERBANK) PASSWORD,
+			E.ORG_CODE ORIGINATEORGCODE,
+			C.USER_ID ORIGINATEUSERCODE,
+			T.CLIENT_NAME NAME,
+			T.CREDENTIALS_TYPE IDTYPE,
+			T.CREDENTIALS_NO,
+			T.QUERY_REASON QUERYREASON
+		FROM CIFM_PERSON_INFO T,
+			CIFM_FLOW_STATUS M,
+			SYS_USER C,
+			SYS_USER_ORG D,
+			SYS_ORG E
+		WHERE  M.ID = T.ID AND M.USER_SYS_ID = C.USER_ID AND C.USER_ID = D.USER_ID AND D.ORG_ID = E.ORG_ID
+			   AND T.ID = #{ID}
+	</select>
+	<!-- 获取数据 -->
+	<select id="findByInfo" parameterType="pd" resultType="pd">
+		select ID,REPORT_ID from(
+			select 
+				  A.ID,
+				  A.REPORT_ID
+			from 
+				CIFM_FLOW_STATUS A
+			left join
+				CIFM_PERSON_INFO B
+			on
+				A.ID = B.ID
+			where
+				A.STATUS IN ('06','05')
+			and
+				A.INTERNAL = '2'
+			and
+				A.CLIENT_TYPE = '1'
+			and
+				A.ORG_ID = #{ORG_ID}
+			and
+				B.CLIENT_NAME = #{CLIENT_NAME}
+			and
+				B.CREDENTIALS_TYPE = #{CREDENTIALS_TYPE}
+			and
+				B.CREDENTIALS_NO= #{CREDENTIALS_NO}
+			and
+				B.QUERY_REASON = #{QUERY_REASON}
+			and
+				B.QUERY_TYPE = #{QUERY_TYPE}
+			and
+				(A.QUERY_TIME + #{LIMT_DATE}) &gt; (SYSDATE-1)
+			ORDER BY APPLICATION_TIME DESC
+		) where limit 1
+	</select>
+	<!-- 更新审核状态 -->
+	<update id="updateInner" parameterType="pd" >
+		UPDATE
+				CIFM_FLOW_STATUS
+			set 
+				INTERNAL		= #{INTERNAL}
+			where 
+				ID= #{ID}
+	</update>
+	<!-- 公共保存方法 -->
+	<insert id="publicSave" parameterType="String" useGeneratedKeys="false">
+		${_parameter}
+	</insert>
+	<!-- 存放报文数据需要的表及表的列 -->
+	<select id="reportTabAndCol" resultType="pd">
+		SELECT XML_TAG,TABLE_NAME,COLUMN_NAME FROM XML_COL_MAPPING WHERE XML_TAG IS NOT NULL
+	</select>
+	<!-- 查询表名对应的列名 -->
+	<select id="queryColOfTab" parameterType="List" resultType="pd">
+		SELECT TABLE_NAME TAB,TO_CHAR(WM_CONCAT(COLUMN_NAME)) COL FROM USER_TAB_COLS WHERE 
+		TABLE_NAME IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+		GROUP BY TABLE_NAME
+	</select>
+	<!-- 查询xml报告对应的数据字典 -->
+	<select id="queryXmlDic" resultType="String">
+		SELECT D_NUM||'@'||CODE||'@'||NAME DIC FROM XML_DICTIONARIES
+	</select>
+	<!-- 查询标签对应字段为SERIAL -->
+	<select id="querySerial" resultType="String">
+		SELECT XML_TAG FROM XML_COL_MAPPING 
+		WHERE 
+			COLUMN_NAME='SERIAL' AND LENGTH(TRIM(XML_TAG))=8
+	</select>
+	
+	
+	<!-- 查询需要加密的表名和字段名 -->
+	<select id="queryTableColData" resultType="pd">
+	     SELECT TABLE_NAME,to_char(wm_concat(COL_NAME)) COL_NAME FROM TABLE_COL_ENCRYPT group by table_name
+	</select>
+	 	<!-- 更新审核状态 -->
+	<update id="updataFileName" parameterType="pd" >
+		UPDATE
+				CIFM_NUMREADRE_QUEST
+			SET 
+				FILENAME_REQUEST		= #{FILENAME_REQUEST}
+			WHERE 
+				ID= #{ID}
+	</update> 
+		<!-- 更新审核状态 -->
+	<update id="updateID" parameterType="pd" >
+		UPDATE
+				CIFM_NUMREADRE_QUEST
+			set 
+				REQUEST_ID	= #{REQUESTID}
+			where 
+				ID= #{ID}
+	</update>  
+</mapper>

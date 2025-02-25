@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="HolidayMapper">
+    
+    <sql id="tableName">CIFM_HOLIDAY</sql>
+    <sql id="columnField">
+   		IS_HOLIDAY,
+    	DATE_PARAM,
+    	COMPANY
+    </sql>
+    <sql id="valueField">
+    	#{IS_HOLIDAY},
+   		STR_TO_DATE(#{DATE_PARAM},'%Y-%m-%d'),
+   		#{COMPANY}
+    </sql>
+    
+    <!-- 查询列表 -->
+    <select id="paramlistPage" parameterType="Page" resultType="pd">
+    	SELECT
+    		IS_HOLIDAY,
+    		date_format(DATE_PARAM,'%Y-%m-%d %H:%i:%s') DATE_PARAM
+    	FROM
+    		<include refid="tableName"/>
+    	where
+    		1=1
+    		<if test="pd.DATE_PARAM != null and pd.DATE_PARAM != ''">
+    			AND DATE_PARAM = date_format(#{pd.DATE_PARAM},'%Y-%m-%d')
+    		</if>
+    		<if test="pd.IS_HOLIDAY != null and pd.IS_HOLIDAY != ''">
+    			AND IS_HOLIDAY = #{pd.IS_HOLIDAY}
+    		</if>
+    		<if test="pd.YEAR_PARAM != null and pd.YEAR_PARAM != ''">
+    			AND date_format(DATE_PARAM,'%Y') = #{pd.YEAR_PARAM}
+    		</if>
+    		<if test="pd.MONTH_PARAM != null and pd.MONTH_PARAM != ''">
+    			AND date_format(DATE_PARAM,'%m') = #{pd.MONTH_PARAM}
+    		</if>
+    		ORDER BY DATE_PARAM
+    </select>
+    
+    <!-- 新增 -->
+    <insert id="saveP" parameterType="pd">
+    	insert into <include refid="tableName"/>
+    		(<include refid="columnField"/>)
+    	values
+    		(<include refid="valueField"/>)
+    </insert>
+    <!-- 修改 -->
+	<update id="updateP" parameterType="pd">
+		UPDATE <include refid="tableName"/>
+		SET
+			IS_HOLIDAY = #{IS_HOLIDAY}
+		WHERE
+    		date_format(DATE_PARAM,'%Y-%m-%d %H:%i:%s') = #{DATE_PARAM}
+    	
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteP" parameterType="pd">
+		DELETE FROM <include refid="tableName"/>
+		WHERE
+			date_format(DATE_PARAM,'%Y-%m-%d %H:%i:%s') = #{DATE_PARAM}
+
+	</delete>
+	
+	<!-- 查询日期 -->
+	<select id="queryData" parameterType="pd" resultType="pd">
+		select
+			DATE_PARAM
+		FROM <include refid="tableName"/>
+		WHERE
+			date_format(DATE_PARAM,'%Y-%m-%d') = #{DATE_PARAM}
+	</select>
+	
+</mapper>

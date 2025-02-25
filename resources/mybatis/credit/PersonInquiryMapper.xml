@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PersonInquiryMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		CIFM_PERSON_INFO
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		  ID,
+		  CLIENT_NAME,
+		  CREDENTIALS_TYPE,
+		  CREDENTIALS_NO,
+		  QUERY_REASON,
+		  QUERY_VERSION,
+		  WARRANT_MATURITY_DATE,
+		  CUST_MANAGER,
+		  QUERY_TYPE    
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},	
+		#{CLIENT_NAME},		
+		#{CREDENTIALS_TYPE},
+		#{CREDENTIALS_NO},	
+		#{QUERY_REASON},	
+		#{QUERY_VERSION},		
+		#{WARRANT_MATURITY_DATE},
+		#{CUST_MANAGER},	
+		#{QUERY_TYPE}	
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	   CIFM_PERSON_INFO
+		( ID,
+		  CLIENT_NAME,
+		  CREDENTIALS_TYPE,
+		  CREDENTIALS_NO,
+		  QUERY_REASON,
+		  QUERY_VERSION,
+		  WARRANT_MATURITY_DATE,
+		  CUST_MANAGER,
+		  QUERY_TYPE,
+		  RLSB,
+		  SHFS,
+		  SQTIME,
+		  YMQNAME,
+		  MQNAME,
+		  YWFF,
+		  YWSHS,
+		  YWLB,
+		  clno,
+		  SFYD,
+		  USEPERSON
+		  ) values (
+	    #{ID},	
+		#{CLIENT_NAME},		
+		#{CREDENTIALS_TYPE},
+		#{CREDENTIALS_NO},	
+		#{QUERY_REASON},	
+		#{QUERY_VERSION},		
+		#{WARRANT_MATURITY_DATE},
+		#{CUST_MANAGER},	
+		#{QUERY_TYPE},
+		#{RLSB},
+		#{SHFS},
+		#{SQTIME},
+		#{YMQNAME},
+		#{MQNAME},
+		#{YWFF},
+		#{YWSHS},
+		#{YWLB},
+		#{CLNO},
+		#{SFYD},
+		#{USEPERSON}
+		)
+	</insert>
+	<insert id="saveURL" parameterType="pd">
+		insert into ID_URL
+        (ID,APPLICATION_TYPE,APPLICATION_URL,DATA_DATE)
+        values(
+        #{ID},
+        #{TYPE_NO},
+        #{ADDRESS_INFO},
+        now()
+        )
+	</insert>
+	<!--存入流程状态表-->
+	<insert id="saveToFs" parameterType="pd">
+		insert into CIFM_FLOW_STATUS
+		(ID,
+	         USER_SYS_ID,
+	         ORG_ID,
+	  		 APPLICATION_TIME,
+			CHECK_SYS_ID,
+	  		STATUS,
+	  		IP,
+	  		MAC,
+	  		ANNEX,
+	  		INTERNAL,
+	  		CHANNEL_ID,
+	  		CLIENT_TYPE,
+	  		IS_WX_CHECK,
+	  		CHANNEL_QUERY_NO,
+	  		WARRANT,
+	  		LOAN_APPLICATION,
+	  		IDENTITY_DOCUMENT,
+	  		PRO_ID,
+	  		QUERY_NO,
+	  		OSYSNO) 
+  		values (
+	  		#{ID},
+	        #{USER_SYS_ID},
+	        #{ORG_ID},
+	        STR_TO_DATE(#{APPLICATION_TIME},'%Y%m%d %H:%i:%s'),
+			#{CHECK_SYS_ID},
+	  		#{STATUS},
+	  		#{IP},
+	  		#{MAC},
+	  		#{ANNEX},
+	  		#{INTERNAL},
+	  		#{CHANNEL_ID},
+	  		#{CLIENT_TYPE},
+	  		#{IS_WX_CHECK},
+	  		#{CHANNEL_QUERY_NO},
+	  		#{WARRANT},
+	  		#{LOAN_APPLICATION},
+	  		#{IDENTITY_DOCUMENT},
+	  		#{PRO_ID},
+	  		#{LSID},
+	  		#{OSYSNO}
+		)
+	</insert>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			  A.ID,
+			  A.CLIENT_NAME,
+			  A.CREDENTIALS_TYPE,
+			  A.CREDENTIALS_NO,
+			  A.QUERY_REASON,
+			  A.QUERY_VERSION,
+			  A.WARRANT_MATURITY_DATE,
+			  A.CUST_MANAGER,
+			  A.QUERY_TYPE,
+			  B.CHECK_SYS_ID,
+			  B.USER_SYS_ID,
+			  B.IS_WX_CHECK,
+			  B.INTERNAL,
+			  B.REPORT_ID,
+			  B.WARRANT,
+        	  B.LOAN_APPLICATION,
+        	  B.IDENTITY_DOCUMENT,
+        	  B.PRO_ID,
+        	  B.QUERY_NO,
+        	  right(B.WARRANT,3) as WARRANTTYPE,
+        	  right(B.LOAN_APPLICATION,3) as LOAN_APPLICATIONTYPE,
+        	  right(B.IDENTITY_DOCUMENT,3) as IDENTITY_DOCUMENTTYPE
+		FROM CIFM_PERSON_INFO A
+		INNER JOIN CIFM_FLOW_STATUS B
+		ON A.ID = B.ID 
+		where 
+			A.ID = #{ID}
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findByIdHis" parameterType="pd" resultType="pd">
+		select 
+			  A.ID,
+			  DECRYPT_DEC(A.CLIENT_NAME) CLIENT_NAME,
+			  A.CREDENTIALS_TYPE,
+			  DECRYPT_DEC(A.CREDENTIALS_NO) CREDENTIALS_NO,
+			  A.QUERY_REASON,
+			  A.QUERY_VERSION,
+			  A.WARRANT_MATURITY_DATE,
+			  A.CUST_MANAGER,
+			  A.QUERY_TYPE,
+			  B.CHECK_SYS_ID,
+			  B.USER_SYS_ID,
+			  B.IS_WX_CHECK,
+			  B.INTERNAL,
+			  B.REPORT_ID    
+		FROM CIFM_PERSON_INFO_HIS A
+		INNER JOIN CIFM_FLOW_STATUS_HIS B
+		ON A.ID = B.ID 
+		where 
+			A.ID = #{ID}
+	</select>
+	<!-- 查询同一渠道编号渠道流水号是否重复 -->
+	<select id="findByQueryNo" parameterType="pd" resultType="pd">
+		select 
+		   *
+		from 
+				CIFM_FLOW_STATUS
+		where 
+			CHANNEL_ID = #{CHANNEL_ID} and CHANNEL_QUERY_NO=#{CHANNEL_QUERY_NO}
+	</select>
+	<!-- 查询用户所在机构 -->
+	<select id="findOrg" parameterType="pd" resultType="pd">
+		SELECT A.ORG_CODE,A.ORG_ID,C.USER_ID,C.IP,C.MAC,C.LOCK_STATUS,C.USERNAME_PERBANK,C.USERNAME_PERBANK_ORG,C.COMPANY
+		  FROM SYS_ORG A
+		       INNER JOIN SYS_USER_ORG B ON A.ORG_ID = B.ORG_ID
+		       INNER JOIN SYS_USER C ON B.USER_ID = C.USER_ID
+		 WHERE C.USERNAME = #{USERNAME}
+	</select>
+	
+	<!-- 获取查询编码 -->
+	<select id="findId" parameterType="pd" resultType="pd">
+		select to_char(max(FIND_ID)+1) FIND_ID FROM (select to_number(substr(ID,-8)) FIND_ID from CIFM_FLOW_STATUS
+        where 
+            subStr(ID,1,8)=#{DATA_DATE})
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT A.ID,
+		  A.CLIENT_NAME,
+		  A.CREDENTIALS_TYPE,
+		  A.CREDENTIALS_NO,
+		  A.QUERY_VERSION,
+		  A.QUERY_REASON,
+		  A.WARRANT_MATURITY_DATE,
+		  A.CUST_MANAGER,
+		  A.QUERY_TYPE,
+		  B.STATUS,
+		  DATE_FORMAT(B.QUERY_TIME,'%Y%m%d %H:%i:%s') QUERY_TIME,
+		  B.CHECK_REJECT_RESON,
+		  B.PRO_ID,
+		  p.PRODUCT_NAME 
+		  FROM CIFM_PERSON_INFO A
+		  INNER JOIN CIFM_FLOW_STATUS B
+		ON A.ID = B.ID 
+		INNER JOIN SYS_USER_ORG C ON B.USER_SYS_ID= C.USER_ID INNER JOIN SYS_ORG D ON C.ORG_ID=D.ORG_ID
+		left join cifm_product p on B.PRO_ID = p.product_id
+        where 1=1 and C.ORG_ID=#{pd.ORG_ID} and B.USER_SYS_ID=#{pd.USERID} AND D.COMPANY=#{pd.company}
+        and ( B.STATUS='00' or B.STATUS='01' or B.STATUS='03' or B.STATUS='04' or B.STATUS='07' or B.STATUS='08' or B.STATUS='09')
+        <!-- <if test="pd.isHistory!='1'">
+			 and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03')
+		</if> -->
+		<!-- <if test="pd.isHistory ='1'">
+			 and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03')
+		</if> -->
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME != ''">
+			and
+				CLIENT_NAME = #{pd.CLIENT_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				CREDENTIALS_NO=#{pd.CREDENTIALS_NO}
+		</if>
+		order by B.QUERY_TIME DESC
+	</select>
+	<!-- 列表 -->
+	<select id="hisdatalistPage" parameterType="page" resultType="pd">
+		SELECT A.ID,
+		  A.CLIENT_NAME,
+		  A.CREDENTIALS_TYPE,
+		  A.CREDENTIALS_NO,
+		  A.QUERY_VERSION,
+		  A.QUERY_REASON,
+		  A.WARRANT_MATURITY_DATE,
+		  A.CUST_MANAGER,
+		  A.QUERY_TYPE,
+		  B.STATUS,
+		  DATE_FORMAT(B.QUERY_TIME,'%Y%m%d %H:%i:%s') QUERY_TIME,
+		  B.CHECK_REJECT_RESON,
+		  B.PRO_ID,
+		  p.PRODUCT_NAME 
+		  FROM CIFM_PERSON_INFO A
+		  INNER JOIN CIFM_FLOW_STATUS B
+		ON A.ID = B.ID 
+		INNER JOIN SYS_USER_ORG C ON B.USER_SYS_ID= C.USER_ID INNER JOIN SYS_ORG D ON C.ORG_ID=D.ORG_ID
+		left join cifm_product p on B.PRO_ID = p.product_id
+        where 1=1 and C.ORG_ID=#{pd.ORG_ID} and B.USER_SYS_ID=#{pd.USERID} AND D.COMPANY=#{pd.company}
+        and (B.STATUS !='01' or B.STATUS!='00')
+        <!-- <if test="pd.isHistory!='1'">
+			 and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03')
+		</if> -->
+		<!-- <if test="pd.isHistory ='1'">
+			 and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03')
+		</if> -->
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME != ''">
+			and
+				CLIENT_NAME = #{pd.CLIENT_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				CREDENTIALS_NO=#{pd.CREDENTIALS_NO}
+		</if>
+		order by B.QUERY_TIME DESC
+	</select>
+	<!-- 列表 -->
+	<select id="historyDatalistPage" parameterType="page" resultType="pd">
+		SELECT A.ID,
+		  A.CLIENT_NAME,
+		  A.CREDENTIALS_TYPE,
+		  A.CREDENTIALS_NO,
+		  A.QUERY_VERSION,
+		  A.QUERY_REASON,
+		  A.WARRANT_MATURITY_DATE,
+		  A.CUST_MANAGER,
+		  A.QUERY_TYPE,
+		  B.STATUS,
+		  DATE_FORMAT(B.QUERY_TIME,'%Y%m%d %H:%i:%s') QUERY_TIME,
+		  B.CHECK_REJECT_RESON,
+		  B.PRO_ID,
+		  p.PRODUCT_NAME
+		  FROM CIFM_PERSON_INFO A
+		  INNER JOIN CIFM_FLOW_STATUS B
+		ON A.ID = B.ID 
+		INNER JOIN SYS_USER_ORG C ON B.USER_SYS_ID= C.USER_ID INNER JOIN SYS_ORG D ON C.ORG_ID=D.ORG_ID
+		left join cifm_product p on B.PRO_ID = p.product_id
+        where 1=1 and C.ORG_ID=#{pd.ORG_ID} and B.USER_SYS_ID=#{pd.USERID} AND D.COMPANY=#{pd.company}
+        and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03' and B.STATUS!='04' and B.STATUS!='07')
+        <!-- <if test="pd.isHistory!='1'">
+			 and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03')
+		</if> -->
+		<!-- <if test="pd.isHistory ='1'">
+			 and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03')
+		</if> -->
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME != ''">
+			and
+				CLIENT_NAME = #{pd.CLIENT_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				CREDENTIALS_NO=#{pd.CREDENTIALS_NO}
+		</if>
+		order by B.QUERY_TIME DESC
+	</select>
+	<select id="queryhistoryDatalistPage" parameterType="page" resultType="pd">
+		SELECT A.ID,
+		  A.CLIENT_NAME,
+		  A.CREDENTIALS_TYPE,
+		  A.CREDENTIALS_NO,
+		  A.QUERY_VERSION,
+		  A.QUERY_REASON,
+		  A.WARRANT_MATURITY_DATE,
+		  A.CUST_MANAGER,
+		  A.QUERY_TYPE,
+		  B.STATUS,
+		  DATE_FORMAT(B.QUERY_TIME,'%Y%m%d %H:%i:%s') QUERY_TIME,
+		  B.CHECK_REJECT_RESON 
+		  FROM CIFM_PERSON_INFO_HIS A
+		  INNER JOIN CIFM_FLOW_STATUS_HIS B
+		ON A.ID = B.ID 
+		INNER JOIN SYS_USER_ORG C ON B.USER_SYS_ID= C.USER_ID INNER JOIN SYS_ORG D ON C.ORG_ID=D.ORG_ID
+        where 1=1 and C.ORG_ID=#{pd.ORG_ID} and B.USER_SYS_ID=#{pd.USERID} AND D.COMPANY=#{pd.company}
+        and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03' and B.STATUS!='04' and B.STATUS!='07')
+        <!-- <if test="pd.isHistory!='1'">
+			 and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03')
+		</if> -->
+		<!-- <if test="pd.isHistory ='1'">
+			 and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03')
+		</if> -->
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME != ''">
+			and
+				CLIENT_NAME = ENCRYPT_DEC(#{pd.CLIENT_NAME})
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				CREDENTIALS_NO=ENCRYPT_DEC(#{pd.CREDENTIALS_NO})
+		</if>
+		order by B.QUERY_TIME DESC
+	</select>
+	<!-- 查询授权审核人员 -->
+	<select id="findCheckUserList" parameterType="pd" resultType="pd">
+		  SELECT DISTINCT D.USER_ID, D.NAME,C.ORG_CODE
+          FROM SYS_USER D
+               INNER JOIN SYS_USER_ORG A ON A.USER_ID = D.USER_ID
+               INNER JOIN SYS_USER_ROLE B ON A.USER_ID = B.USER_ID
+               INNER JOIN SYS_ORG C ON C.ORG_ID = A.ORG_ID 
+               INNER JOIN SYS_ROLE F ON F.ROLE_ID=B.ROLE_ID
+         WHERE C.ORG_CODE = #{ORG_CODE} AND (F.ROLE_NAME LIKE '%授权%' OR F.ROLE_NAME LIKE '%审核%')
+	</select>
+	<!-- 修改 -->
+	<update id="update" parameterType="pd" >
+		UPDATE
+			CIFM_PERSON_INFO
+			set 
+				ID=#{ID},	
+		        CLIENT_NAME=#{CLIENT_NAME},		
+				CREDENTIALS_TYPE=#{CREDENTIALS_TYPE},
+				CREDENTIALS_NO=#{CREDENTIALS_NO},
+				QUERY_REASON=#{QUERY_REASON},	
+				QUERY_VERSION=#{QUERY_VERSION},		
+				WARRANT_MATURITY_DATE=#{WARRANT_MATURITY_DATE},
+				CUST_MANAGER=#{CUST_MANAGER},	
+				QUERY_TYPE=#{QUERY_TYPE}
+			where 
+				ID=#{ID}
+	</update>
+	<!-- 修改 -->
+	<update id="updateFs" parameterType="pd" >
+		UPDATE
+			CIFM_FLOW_STATUS
+			set 
+				CHANNEL_ID=#{CHANNEL_ID},
+				IS_WX_CHECK=#{IS_WX_CHECK},
+				CHECK_SYS_ID=#{CHECK_SYS_ID}	
+				<if test="WARRANT!= null and WARRANT != ''">
+				,WARRANT=#{WARRANT}
+				</if>
+				<if test="LOAN_APPLICATION!= null and LOAN_APPLICATION != ''">
+				,LOAN_APPLICATION=#{LOAN_APPLICATION}
+				</if>
+				<if test="IDENTITY_DOCUMENT!= null and IDENTITY_DOCUMENT != ''">
+				,IDENTITY_DOCUMENT=#{IDENTITY_DOCUMENT}	
+				</if>
+			where 
+				ID=#{ID}
+	</update>
+	<!-- 提交审核 -->
+	<update id="updateStatus" parameterType="pd" >
+		UPDATE
+			CIFM_FLOW_STATUS
+			set 
+				STATUS=#{STATUS}		
+			where 
+				ID=#{ID} and (STATUS='00' or STATUS='03')
+	</update>	
+	<!-- 查询审核员ID -->
+	<select id="findcheckuser" parameterType="pd" resultType="pd">
+		SELECT user_id CHECK_SYS_ID, username
+		  FROM SYS_USER
+		 WHERE     USERNAME =#{CHECK_SYS_NAME}
+		       AND company = (SELECT company
+		                        FROM SYS_USER
+		                       WHERE user_id = #{USER_SYS_ID})
+	</select>	
+	<!-- 删除流程表 -->
+	<delete id="deleteFs" parameterType="pd">
+	    delete from CIFM_FLOW_STATUS
+	    where ID=#{ID}
+	</delete>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+	    delete from CIFM_PERSON_INFO
+	    where ID=#{ID}
+	</delete>
+	<!--根据用户ID查询用户查询累计次数-->
+	<select id="queryCount" parameterType="pd" resultType="pd">
+		SELECT 
+			USER_ID,
+			USERNAME,
+			QUERY_MIN_COUNT,
+			QUERY_MULTIPLE,
+			QUERY_MONTH,
+			QUERY_COUNT,
+			AVG_QUERY_COUNT,
+			USER_TYPE
+  		FROM
+  			CIFM_QUERY_FREQUENCY
+  		WHERE
+  			USER_ID=#{USER_ID} AND USER_TYPE=#{USER_TYPE}
+  		ORDER BY QUERY_MONTH DESC
+	</select>
+	<!--存入用户查询量设置表-->
+	<insert id="saveQueryCount" parameterType="pd">
+		INSERT INTO CIFM_QUERY_FREQUENCY
+			(
+				USER_ID,
+				USERNAME,
+				QUERY_MIN_COUNT,
+				QUERY_MULTIPLE,
+				QUERY_MONTH,
+				QUERY_COUNT,
+				AVG_QUERY_COUNT,
+				USER_TYPE,
+				COMPANY
+			) 
+  		VALUES 
+  			(
+	  			#{USER_ID},
+				#{USERNAME},
+				#{QUERY_MIN_COUNT},
+				#{QUERY_MULTIPLE},
+				#{QUERY_MONTH},
+				#{QUERY_COUNT},
+				#{AVG_QUERY_COUNT},
+				#{USER_TYPE},
+				#{COMPANY}
+			)
+	</insert>
+	  <!-- 统计最近三个月查询次数 -->
+	<select id="getQueryCount" parameterType="pd" resultType="String" >
+		SELECT 
+			COUNT(ID) ,now() 
+		FROM 
+			CIFM_FLOW_STATUS A 
+		WHERE 
+			STATUS='06' AND INTERNAL='2' AND USER_SYS_ID=#{USER_ID} AND CLIENT_TYPE=#{USER_TYPE} AND QUERY_TIME BETWEEN DATE_SUB(now(),INTERVAL 3 MONTH) AND now()
+	</select>
+	<!-- 更新用户查询量设置表 -->
+	<update id="updateQuery" parameterType="pd" >
+		UPDATE
+			CIFM_QUERY_FREQUENCY
+			SET 
+				QUERY_MONTH=#{QUERY_MONTH},
+				QUERY_COUNT=#{QUERY_COUNT},
+				AVG_QUERY_COUNT=#{AVG_QUERY_COUNT}		
+			where 
+				USER_ID=#{USER_ID} AND USER_TYPE=#{USER_TYPE}
+	</update>	
+	<!-- 用户查询量设置表 中查询次数加1-->
+	<update id="updateAddQuery" parameterType="pd" >
+		UPDATE
+			CIFM_QUERY_FREQUENCY
+			SET 
+				QUERY_COUNT=QUERY_COUNT+1
+			where 
+				USER_ID=#{USER_ID} AND USER_TYPE=#{USER_TYPE} AND QUERY_MONTH=#{QUERY_MONTH}
+	</update>
+	 <!-- 查询系统状态-->
+	<select id="findSysStatus" parameterType="pd" resultType="pd" >
+		SELECT 
+			SYS_STATUS 
+		FROM 
+			SYS_INFO  
+		WHERE 
+			SYS_NO=#{sysNo}
+	</select>
+	<!-- 丢弃数据 -->
+	<update id="updateDStatus" parameterType="pd" >
+		UPDATE
+			CIFM_FLOW_STATUS
+			set 
+				STATUS=#{STATUS}		
+			where 
+				ID=#{ID} and STATUS in ('04','07','08','09')
+	</update>
+	<!-- 查询是否含有渠道号 -->
+	<select id="findByCHANNELNO" parameterType="pd" resultType="pd">
+		select 
+		   CHANNEL_ID,CHANNEL_DES,CHANNEL_STATUS,CHANNEL_CONTACT,COMPANY
+		from 
+				CIFM_CHANNEL
+		where 
+			CHANNEL_ID = #{CHANNEL_ID}		
+	</select>	
+	
+	<!-- 查询渠道号与用户名是否一致 -->
+	<select id="findCHANNELNO_USERNAME" parameterType="pd" resultType="pd">
+	select 
+       1
+    from 
+         SYS_USER
+    where 
+        CHANNEL_ID = #{CHANNEL_ID}
+     and 
+        USERNAME = #{USERNAME}
+    </select>
+    <!-- 根据机构id查询机构名称 -->
+	<select id="findOrgNameByCode" parameterType="String" resultType="pd">
+	select 
+	      NAME 
+	from 
+	      sys_org 
+	where 
+	      org_code=#{_parameter}
+    </select>
+</mapper>

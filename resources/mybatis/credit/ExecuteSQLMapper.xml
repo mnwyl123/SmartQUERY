@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ExecuteSQLMapper">
+
+<!-- 执行sql -->
+<insert id="insertSQL" parameterType="String">#{SQL}</insert>
+<delete id="deleteSQL" parameterType="String">#{SQL}</delete>
+<update id="updateSQL" parameterType="String">#{SQL}</update>
+
+<!-- 查询sql -->
+<select id="querySQL" parameterType="String" resultType="pd">#{SQL}</select>
+
+</mapper>

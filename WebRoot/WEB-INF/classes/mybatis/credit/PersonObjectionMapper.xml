@@ -1,0 +1,1255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PersonObjectionMapper">
+	
+	<!-- 通过系统用户名获取人行用户名-->
+	<select id="findUsernamePerBank" parameterType="String" resultType="String">
+		select 
+			USERNAME_PERBANK   
+		FROM SYS_USER
+		where 
+			USERNAME = #{_parameter}
+	</select>
+	<!-- 通过系统用户名获取人行账户信息-->
+	<select id="findPerBankInfo" parameterType="String" resultType="pd">
+		<!-- select 
+			A.USERNAME_PERBANK,
+			(SELECT CURRENT_PASSWORD 
+				FROM CIFM_CREDIT_ACCT_MANAGE 
+				WHERE CREDIT_ACCT_TYPE = '1' AND CREDIT_CODE = A.USERNAME_PERBANK) PER_PASSWORD,
+			USERNAME_PERBANK_ORG,
+			(SELECT CURRENT_PASSWORD 
+				FROM CIFM_CREDIT_ACCT_MANAGE 
+				WHERE CREDIT_ACCT_TYPE = '2' AND CREDIT_CODE = A.USERNAME_PERBANK_ORG) COM_PASSWORD
+		FROM 
+			SYS_USER A
+		where A.USERNAME = #{_parameter} -->
+		SELECT 
+		      A.USERNAME_PERBANK,
+		      (SELECT CURRENT_PASSWORD 
+		        FROM CIFM_CREDIT_ACCT_MANAGE 
+		        WHERE CREDIT_ACCT_TYPE in ('1','3') AND CREDIT_CODE = A.USERNAME_PERBANK) PER_PASSWORD,
+		      USERNAME_PERBANK_ORG,
+		      (SELECT CURRENT_PASSWORD 
+		        FROM CIFM_CREDIT_ACCT_MANAGE 
+		        WHERE CREDIT_ACCT_TYPE in ('2','3') AND CREDIT_CODE = A.USERNAME_PERBANK_ORG) COM_PASSWORD,
+		      (SELECT VALUE FROM SERVER_MESSAGE_INFO T  WHERE T.CODE = 'PER_DataProviderOrgCode') DATA_PROVIDER_ORG_CODE,
+		      C.BRANCH_CODE_PERBANK ORIGINATE_ORG_CODE,
+		      A.USERNAME ORIGINATEUSERCODE,
+		      A.USERNAME 
+	    FROM 
+		      SYS_USER A,
+		      SYS_USER_ORG B,
+		      SYS_ORG C,
+		      SERVER_MESSAGE_INFO D       
+	    WHERE 
+	    	  A.USER_ID = B.USER_ID AND B.ORG_ID = C.ORG_ID AND A.USERNAME  = D.VALUE AND D.CODE = 'PER_OriginateUserCode'
+	</select>
+	<!-- findComBankInfo -->
+	<select id="findComBankInfo" parameterType="String" resultType="pd">
+    SELECT 
+          A.USERNAME_PERBANK,
+          (SELECT CURRENT_PASSWORD 
+            FROM CIFM_CREDIT_ACCT_MANAGE 
+            WHERE CREDIT_ACCT_TYPE in ('1','3') AND CREDIT_CODE = A.USERNAME_PERBANK) PER_PASSWORD,
+          USERNAME_PERBANK_ORG,
+          (SELECT CURRENT_PASSWORD 
+            FROM CIFM_CREDIT_ACCT_MANAGE 
+            WHERE CREDIT_ACCT_TYPE in ('2','3') AND CREDIT_CODE = A.USERNAME_PERBANK_ORG) COM_PASSWORD,
+          (SELECT VALUE FROM SERVER_MESSAGE_INFO T  WHERE T.CODE = 'COM_DataProviderOrgCode') DATA_PROVIDER_ORG_CODE,
+          C.BRANCH_CODE_COMBANK ORIGINATE_ORG_CODE,
+          A.USERNAME ORIGINATEUSERCODE,
+          A.USERNAME
+      FROM 
+          SYS_USER A,
+          SYS_USER_ORG B,
+          SYS_ORG C,
+          SERVER_MESSAGE_INFO D 
+      WHERE 
+          A.USER_ID = B.USER_ID AND B.ORG_ID = C.ORG_ID AND A.USERNAME  = D.VALUE AND D.CODE = 'COM_OriginateUserCode'
+	</select>
+	<!-- 通过人行用户名获取人行密码-->
+	<select id="findPasswordPerBank" parameterType="String" resultType="String">
+		select 
+			CURRENT_PASSWORD   
+		FROM CIFM_CREDIT_ACCT_MANAGE
+		where 
+			CREDIT_CODE = #{_parameter}
+	</select>
+	<!-- 查询流程表所需值 -->
+	<select id="findFs" parameterType="String" resultType="pd">
+		SELECT A.ORG_CODE,A.ORG_ID,C.USER_ID,C.IP,C.MAC,C.LOCK_STATUS,C.USERNAME_PERBANK,C.USERNAME_PERBANK_ORG
+		  FROM SYS_ORG A
+		       INNER JOIN SYS_USER_ORG B ON A.ORG_ID = B.ORG_ID
+		       INNER JOIN SYS_USER C ON B.USER_ID = C.USER_ID
+		 WHERE C.USERNAME = #{_parameter}
+	</select>
+	<!--存入流程状态表-->
+	<insert id="saveToFs" parameterType="pd">
+		insert into CIFM_FLOW_STATUS
+		(
+			ID,
+       		USER_SYS_ID,
+       		ORG_ID,
+		 	APPLICATION_TIME,
+			CHECK_SYS_ID,
+	  		STATUS,
+	  		IP,
+	  		MAC,
+	  		QUERY_TIME,
+	  		CLIENT_TYPE)
+  		values (
+	  		#{ID},
+	        #{USER_SYS_ID},
+	        #{ORG_ID},
+            STR_TO_DATE(#{APPLICATION_TIME},'%Y-%m-%d %H:%i:%s')
+			#{CHECK_SYS_ID},
+	  		#{STATUS},
+	  		#{IP},
+	  		#{MAC},
+            STR_TO_DATE(#{QUERY_TIME},'%Y-%m-%d %H:%i:%s')
+	  		#{CLIENT_TYPE}
+		)
+	</insert>
+	<!--存入异议信息表请求1-->
+	<insert id="saveToObjectionInfoOne" parameterType="pd">
+		insert into CIFM_OBJ_PER_INFO
+		(
+			ID,
+			DATAPROVIDERORGCODE,
+			USERNAME,
+			ORIGINATEORGCODE,
+			ORIGINATEUSERCODE,
+			REPORT_TYPE,
+			BEGINDATE,
+			ENDDATE)
+  		values (
+  			#{ID},
+	  		#{DATAPROVIDERORGCODE},
+	        #{USERNAME},
+	        #{ORIGINATEORGCODE},
+	        #{ORIGINATEUSERCODE},
+	        #{REPORTTYPE},
+	        #{BEGINDATE},
+	        #{ENDDATE}
+		)
+	</insert>
+	<!--存入异议信息表请求2,5-->
+	<insert id="saveToObjectionInfoTwo" parameterType="pd">
+		insert into CIFM_OBJ_PER_INFO
+		(
+			ID,
+			DATAPROVIDERORGCODE,
+			USERNAME,
+			ORIGINATEORGCODE,
+			ORIGINATEUSERCODE,
+			OBJCHECKID,
+			REPORT_TYPE)
+  		values (
+  			#{ID},
+	  		#{DataProviderOrgCode},
+	        #{UserName},
+	        #{OriginateOrgCode},
+	        #{OriginateUserCode},
+	        #{ObjCheckID},
+	        #{ReportType}
+		)
+	</insert>
+	<!--存入异议信息表请求3-->
+	<insert id="saveToObjectionInfoThree" parameterType="pd">
+		insert into CIFM_OBJ_PER_INFO
+		(
+			ID,
+			DATAPROVIDERORGCODE,
+			USERNAME,
+			ORIGINATEORGCODE,
+			ORIGINATEUSERCODE,
+			PHONENUM,
+			OBJCHECKID,
+			OBJCHECKNUM,
+			CHECKRESULT,
+			CHECKRESULTDESC,
+			REPORT_TYPE)
+  		values (
+  			#{ID},
+	  		#{DataProviderOrgCode},
+	        #{UserName},
+	        #{OriginateOrgCode},
+	        #{OriginateUserCode},
+	        #{PhoneNum},
+	        #{ObjCheckID},
+	        #{ObjCheckNum},
+	        #{CheckResult},
+	        #{CheckResultDesc},
+	        #{ReportType}
+		)
+	</insert>
+	<!--存入异议信息表请求4-->
+	<insert id="saveToObjectionInfoFour" parameterType="pd">
+		insert into CIFM_OBJ_PER_INFO
+		(
+			ID,
+			DATAPROVIDERORGCODE,
+			USERNAME,
+			ORIGINATEORGCODE,
+			ORIGINATEUSERCODE,
+			OBJCORRECTID,
+			CORRECTRESULT,
+			ENCLOSUREINF,
+			CORRECTDESC,
+			REPORT_TYPE)
+  		values (
+  			#{ID},
+	  		#{DataProviderOrgCode},
+	        #{UserName},
+	        #{OriginateOrgCode},
+	        #{OriginateUserCode},
+	        #{ObjCorrectID},
+	        #{CorrectResult},
+	        #{EnclosureInf},
+	        #{CorrectDesc},
+	        #{ReportType}
+		)
+	</insert>
+	<!--存入异议信息表请求6-->
+	<insert id="saveToObjectionInfoSix" parameterType="pd">
+		insert into CIFM_OBJ_PER_INFO
+		(
+			ID,
+			NAME,
+			IDTYPE,
+			IDNUM,
+			BUSINESSCODE,
+			LOCATEINFNM,
+			LOCATEINFTYPE,
+			OBJDESC,
+			REPORT_TYPE)
+  		values (
+  			#{ID},
+	        #{NAME},
+	        #{IDTYPE},
+	        #{IDNUM},
+	        #{BUSINESSCODE},
+	        #{LOCATEINFNM},
+	        #{LOCATEINFTYPE},
+	        #{OBJDESC},
+	        #{REPORTTYPE}
+		)
+	</insert>
+	<!--存入异议信息表请求7-->
+	<insert id="saveToObjectionInfoSeven" parameterType="pd">
+		insert into CIFM_OBJ_PER_INFO
+		(
+			ID,
+			DATAPROVIDERORGCODE,
+			USERNAME,
+			ORIGINATEORGCODE,
+			ORIGINATEUSERCODE,
+			SERVICERETURNCODE,
+			REPORT_TYPE)
+  		values (
+  			#{ID},
+	  		#{DataProviderOrgCode},
+	        #{UserName},
+	        #{OriginateOrgCode},
+	        #{OriginateUserCode},
+	        #{ServiceReturnCode},
+	        #{ReportType}
+		)
+	</insert>
+	<!-- 新增主表-->
+	<insert id="saveResultToCheckObjection" parameterType="pd">
+		insert into OBJ_CHECK_ITEM
+		(
+			ID,
+			RESULTCODE,
+			RESULTDESC,
+			BEGINDATE,
+			ENDDATE,
+			TOCHECKNM)
+  		values (
+  			#{ID},
+	  		#{ResultCode},
+	        #{ResultDesc},
+	        #{BeginDate},
+	        #{EndDate},
+	        #{ToCheckNm}
+		)
+	</insert>
+	
+	<!-- 新增第一层子表-->
+	<insert id="saveResultSubToCheckObjection" parameterType="pd">
+		insert into OBJ_TOCHECKINF
+		(
+			CI_ID,
+			OBJCHECKID,
+			OBJCHECKNUM,
+			CHECKBEGINDATE,
+			NAME,
+			IDTYPE,
+			IDNUM,
+			PHONENUM,
+			OBJITEMINF,
+			OBJITEMDESC,
+			DATAPROVIDERORGCODE,
+			DATAOCCURORGCODE,
+			BUSINESSCODE,
+			BUSINESSTYPE,
+			CHECKFINALDATE,
+			DATAOCCURDATE,
+			DATAOCCURAMOUNT,
+			ENCLOSUREFLAG,
+			RELATIVE_ENDDATE)
+  		values (
+	  		#{ID},
+	        #{ObjCheckID},
+	        #{ObjCheckNum},
+	        #{CheckBeginDate},
+	        #{Name},
+	        #{IDType},
+	        #{IDNum},
+	        #{PhoneNum},
+	        #{ObjItemInf},
+	        #{ObjItemDesc},
+	        #{DataProviderOrgCode},
+	        #{DataOccurOrgCode},
+	        #{BusinessCode},
+	        #{BusinessType},
+	        #{CheckFinalDate},
+	        #{DataOccurDate},
+	        #{DataOccurAmount},
+	        #{EnclosureFlag},
+            date_format((str_to_date(#{CheckBeginDate},'%Y-%m-%d%')+5),'%Y-%m-%d')
+		)
+	</insert>
+	<!-- 最内层子表-->
+	<insert id="saveResultSubLastToCheckObjection" parameterType="pd">
+		insert into OBJ_HISTORICALCHECKINF
+		(
+			T_OBJCHECKID,
+			CHECKTIME,
+			CHECKRESULT,
+			CHECKRESULTDESC,
+			CHECKORGCODE,
+			CHECKUSERCODE,
+			PHONENUM,
+			CHECKACCEPTFLAG,
+			CHECKOPINION)
+  		values (
+  			#{ObjCheckID},
+	  		#{CheckTime},
+			#{CheckResult},
+			#{CheckResultDesc},
+			#{CheckOrgCode},
+			#{CheckUserCode},
+			#{PhoneNum},
+			#{CheckAcceptFlag},
+			#{CheckOpinion}
+		)
+	</insert>
+	<!-- 新增异议附件表-->
+	<insert id="saveResultToCheckObjectionEnclosure" parameterType="pd">
+		insert into OBJ_CHECK_ITEM_ATT
+		(
+			ID,
+			RESULTCODE,
+			RESULTDESC,
+			OBJCHECKID,
+			ENCLOSUREFLAG
+			)
+  		values (
+  			#{ID},
+	  		#{ResultCode},
+	        #{ResultDesc},
+	        #{ObjCheckID},
+	        #{EnclosureFlag}
+		)
+	</insert>
+	<!-- 通用结果表-->
+	<insert id="toCheckObjectionResult" parameterType="pd">
+		insert into OBJ_UNIVERSAL_RESULT
+		(
+			ID,
+			OBJCHECKID,
+			RESULTCODE,
+			RESULTDESC,
+			REPORT_TYPE,
+			USER_ID
+			)
+  		values (
+  			#{ID},
+  			#{OBJCHECKID},
+	  		#{ResultCode},
+	        #{ResultDesc},
+	        #{REPORT_TYPE},
+	        #{USER_ID}
+		)
+	</insert>
+	
+	<!-- 通用结果表-->
+	<select id="findObjectionResultBy" parameterType="pd" resultType="pd">
+	select 
+	        ID,
+			OBJCHECKID,
+			RESULTCODE,
+			RESULTDESC,
+			REPORT_TYPE,
+			USER_ID	
+	 from OBJ_UNIVERSAL_RESULT
+	 where 
+	       REPORT_TYPE = #{REPORT_TYPE}
+	 and   OBJCHECKID = #{OBJCHECKID}
+	 and   ID = #{ID}
+	</select>
+	<!-- 通用结果表-->
+	<update id="updateObjectionResultBy" parameterType="pd">
+	update  OBJ_UNIVERSAL_RESULT
+	set 			
+			RESULTCODE = #{ResultCode},
+			RESULTDESC = #{ResultDesc},
+			USER_ID = #{USER_ID}
+	 where 
+	       REPORT_TYPE = #{REPORT_TYPE}
+	 and   OBJCHECKID = #{OBJCHECKID}
+	 and   ID = #{ID}
+	</update>
+	
+	<!-- 异议事项更正结果接受表-->
+	<insert id="saveResultToObjectionCorrectAccept" parameterType="pd">
+		insert into OBJ_UPDATE_RESULT_ACCEPT
+		(
+			ID,
+			OBJCHECKID,
+			RESULTCODE,
+			RESULTDESC,
+			CORRECTACCEPTFLAG,
+			CORRECTOPINION,
+			USER_ID
+			)
+  		values (
+  			#{ID},
+  			#{OBJCHECKID},
+	  		#{ResultCode},
+	        #{ResultDesc},
+	        #{CorrectAcceptFlag},
+	        #{CorrectOpinion},
+	        #{USER_ID}
+		)
+	</insert>
+	<!-- 更新更正结果上报信息 -->
+	<update id="updateResultToObjectionCorrectAccept" parameterType="pd">
+		UPDATE OBJ_UPDATE_RESULT_ACCEPT
+		SET
+			RESULTCODE = #{ResultCode},
+			RESULTDESC = #{ResultDesc},
+			CORRECTACCEPTFLAG = #{CorrectAcceptFlag},
+			CORRECTOPINION = #{CorrectOpinion},
+			USER_ID = #{USER_ID}
+		WHERE 
+			ID = #{ID}
+			AND OBJCHECKID = #{OBJCHECKID}
+	</update>
+		<!-- 查询更正结果上报信息 -->
+	<select id="findResultToObjectionCorrectAcceptBy" parameterType="pd" resultType="pd">
+		select  
+			ID,
+			OBJCHECKID,		
+			RESULTCODE,
+			RESULTDESC,
+			CORRECTACCEPTFLAG,
+			CORRECTOPINION,
+			USER_ID
+		from OBJ_UPDATE_RESULT_ACCEPT
+		WHERE 
+			ID = #{ID}
+			AND OBJCHECKID = #{OBJCHECKID}
+	</select>
+	<!-- 添加个人标注表-->
+	<insert id="saveResultToAddLabel" parameterType="pd">
+		insert into OBJ_ADD_REMARK
+		(
+			ID,
+			USER_ID,
+			RESULTCODE,
+			RESULTDESC,
+			SERVICERETURNCODE
+			)
+  		values (
+  			#{ID},
+  			#{USER_ID},
+	  		#{ResultCode},
+	        #{ResultDesc},
+	        #{ServiceReturnCode}
+		)
+	</insert>
+
+	<!-- 修改流程表 -->
+	<update id="updateFs" parameterType="pd" >
+		UPDATE
+			CIFM_FLOW_STATUS
+			set
+                QUERY_TIME=STR_TO_DATE(#{QUERY_TIME},'%Y-%m-%d %H:%i:%s'),
+				STATUS=#{STATUS}
+			where 
+				ID=#{ID}
+	</update>
+	
+	<!-- 待核查主表列表 -->
+	<select id="listToCheckMainlistPage" parameterType="page" resultType="pd">
+		SELECT 
+			A.CI_ID||'_'||A.OBJCHECKID ID,
+			A.CI_ID,
+			A.OBJCHECKID,
+			A.OBJCHECKNUM,
+			A.CHECKBEGINDATE,
+			A.RELATIVE_ENDDATE,
+			CASE WHEN str_to_date(A.RELATIVE_ENDDATE,'%Y-%m-%d')>SYSDATE() THEN '未逾期' ELSE '已逾期' END OBJITEMDESC,
+			A.NAME,
+			A.IDTYPE,
+			A.IDNUM,
+			A.PHONENUM,
+			A.OBJITEMINF,
+			A.DATAPROVIDERORGCODE,
+			A.DATAOCCURORGCODE,
+			A.BUSINESSCODE,
+			A.BUSINESSTYPE,
+			A.CHECKFINALDATE,
+			A.DATAOCCURDATE,
+			A.DATAOCCURAMOUNT,
+			A.ENCLOSUREFLAG,
+			A.ORG_ID,
+			B.BEGINDATE,
+			B.ENDDATE
+		FROM 
+			OBJ_TOCHECKINF A,
+			OBJ_CHECK_ITEM B
+		WHERE 
+			A.CI_ID = B.ID
+			AND EXISTS(SELECT 1 FROM CIFM_FLOW_STATUS WHERE ID = A.CI_ID AND CLIENT_TYPE='1')
+	    <if test="pd.ORG_ID != null and pd.ORG_ID != ''">
+			and  a.org_id = #{pd.ORG_ID}
+		</if>
+        <if test="pd.USER_ID != null and pd.USER_ID != ''">
+			and exists(select 1 from sys_user_org where org_id = a.org_id and user_id = #{pd.USER_ID})
+		</if>		
+		<if test="pd.BEGINDATE != null and pd.BEGINDATE != ''">
+			and
+				B.BEGINDATE &gt;= #{pd.BEGINDATE}
+		</if>
+		<if test="pd.ENDDATE != null and pd.ENDDATE != ''">
+			and
+				B.ENDDATE &lt;= #{pd.ENDDATE}
+		</if>
+		<if test="pd.OBJCHECKID != null and pd.OBJCHECKID != ''">
+			and
+				A.OBJCHECKID like '%'||#{pd.OBJCHECKID}||'%'
+		</if>
+		<if test="pd.OBJCHECKNUM != null and pd.OBJCHECKNUM != ''">
+			and
+				A.OBJCHECKNUM like '%'||#{pd.OBJCHECKNUM}||'%'
+		</if>
+		<if test="pd.ENCLOSUREFLAG != null and pd.ENCLOSUREFLAG != ''">
+			and
+				A.ENCLOSUREFLAG = #{pd.ENCLOSUREFLAG}
+		</if>
+	</select>
+	<!-- 待核查一层子表列表 -->
+	<select id="listToCheckSublistPage" parameterType="page" resultType="pd">
+		SELECT  
+	            CI_ID,
+				OBJCHECKID,
+				OBJCHECKNUM,
+				CHECKBEGINDATE,
+				NAME,
+				IDTYPE,
+				IDNUM,
+				PHONENUM,
+				OBJITEMINF,
+				OBJITEMDESC,
+				DATAPROVIDERORGCODE,
+				DATAOCCURORGCODE,
+				BUSINESSCODE,
+				BUSINESSTYPE,
+				CHECKFINALDATE,
+				DATAOCCURDATE,
+				DATAOCCURAMOUNT,
+				ENCLOSUREFLAG
+        FROM OBJ_TOCHECKINF
+        WHERE CI_ID=#{pd.ID}
+	</select>
+	<!-- 待核查二层子表列表 -->
+	<select id="listToCheckSubLast" parameterType="page" resultType="pd">
+		SELECT  
+                CHECKTIME,
+                CHECKRESULT,
+                CHECKRESULTDESC,
+                CHECKORGCODE,
+                CHECKUSERCODE,
+                PHONENUM,
+                CHECKACCEPTFLAG,
+                CHECKOPINION
+        FROM OBJ_HISTORICALCHECKINF
+        WHERE T_OBJCHECKID=#{pd.OBJCHECKID}
+	</select>
+	<!-- 待核查附件列表 -->
+	<select id="listToCheckEnclosurelistPage" parameterType="page" resultType="pd">
+		SELECT  
+		        C.NAME,
+		        A.ID,
+		        A.USERNAME,
+		        A.DATAPROVIDERORGCODE,
+                A.ORIGINATEORGCODE,
+                A.ORIGINATEUSERCODE,
+                B.RESULTCODE,
+                B.RESULTDESC,
+                B.OBJCHECKID,
+                B.ENCLOSUREFLAG,
+                B.ENCLOSUREINF
+        FROM CIFM_OBJ_PER_INFO A
+        INNER JOIN OBJ_CHECK_ITEM_ATT B
+        ON A.ID = B.ID
+        INNER JOIN SYS_USER C
+        ON A.USERNAME= C.USERNAME
+        WHERE A.REPORT_TYPE='2'
+        <if test="pd.USERNAMEINF== null or pd.USERNAMEINF == ''">
+			and A.USERNAME in(select username from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERNAMEINF != null and pd.USERNAMEINF != ''">
+			and A.USERNAME=#{pd.USERNAMEINF}
+		</if>
+        <if test="pd.NAME != null and pd.NAME != ''">
+			and
+				C.NAME = #{pd.NAME}
+		</if>
+		<if test="pd.OBJCHECKID != null and pd.OBJCHECKID != ''">
+			and
+				B.OBJCHECKID LIKE CONCAT(CONCAT('%', #{pd.OBJCHECKID}),'%')
+		</if>
+		<if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+			and
+				B.RESULTDESC LIKE CONCAT(CONCAT('%', #{pd.RESULTDESC}),'%')
+		</if>
+		<if test="pd.ENCLOSUREFLAG != null and pd.ENCLOSUREFLAG != ''">
+			and
+				B.ENCLOSUREFLAG LIKE CONCAT(CONCAT('%', #{pd.ENCLOSUREFLAG}),'%')
+		</if>
+		
+	</select>
+	<!-- 根据异议事项号和id查询异议事项附件信息 -->
+	<select id="findAttrBy" parameterType="pd" resultType="pd">
+		SELECT  
+			  ID,
+			  RESULTCODE,
+			  RESULTDESC,
+			  OBJCHECKID,
+			  ENCLOSUREFLAG ,
+			  ENCLOSUREINF
+        FROM OBJ_CHECK_ITEM_ATT A
+        WHERE
+        	ID = #{ID}
+        	AND OBJCHECKID = #{OBJCHECKID}
+        	limit 1
+	</select>
+	<!-- 待核查结果列表-->
+	<select id="listToCheckResultlistPage" parameterType="page" resultType="pd">
+		<!-- SELECT  
+		        C.NAME,
+		        A.ID,
+		        A.USERNAME,
+		        A.DATAPROVIDERORGCODE,
+                A.ORIGINATEORGCODE,
+                A.ORIGINATEUSERCODE,
+                A.PHONENUM,
+				A.OBJCHECKID,
+				A.OBJCHECKNUM,
+				A.CHECKRESULT,
+				A.CHECKRESULTDESC,
+                B.RESULTCODE,
+                B.RESULTDESC
+        FROM CIFM_OBJ_PER_INFO A
+        INNER JOIN OBJ_UNIVERSAL_RESULT B
+        ON A.ID = B.ID
+        INNER JOIN SYS_USER C
+        ON A.USERNAME= C.USERNAME
+        WHERE A.REPORT_TYPE='3'
+        <if test="pd.USERNAMEINF== null or pd.USERNAMEINF == ''">
+			and A.USERNAME in(select username from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERNAMEINF != null and pd.USERNAMEINF != ''">
+			and A.USERNAME=#{pd.USERNAMEINF}
+		</if>
+        <if test="pd.NAME != null and pd.NAME != ''">
+			and
+				C.NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+		</if>
+		<if test="pd.OBJCHECKID != null and pd.OBJCHECKID != ''">
+			and
+				A.OBJCHECKID LIKE CONCAT(CONCAT('%', #{pd.OBJCHECKID}),'%')
+		</if>
+		<if test="pd.OBJCHECKNUM != null and pd.OBJCHECKNUM != ''">
+			and
+				A.OBJCHECKNUM LIKE CONCAT(CONCAT('%', #{pd.OBJCHECKNUM}),'%')
+		</if>
+		<if test="pd.CHECKRESULTDESC != null and pd.CHECKRESULTDESC != ''">
+			and
+				A.CHECKRESULTDESC LIKE CONCAT(CONCAT('%', #{pd.CHECKRESULTDESC}),'%')
+		</if>-->
+		SELECT  
+            (SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID) NAME,
+            D.CI_ID ID,
+            A.DATAPROVIDERORGCODE,
+            A.ORIGINATEORGCODE,
+            A.ORIGINATEUSERCODE,
+	        D.OBJCHECKID,
+         	D.OBJCHECKNUM,
+	        D.RESULT_PHONENUM PHONENUM,
+	        D.RESULT_CHECKRESULT CHECKRESULT,
+	        D.RESULT_CHECKRESULTDESC CHECKRESULTDESC,
+	        D.CHECKBEGINDATE,
+      		D.RELATIVE_ENDDATE,
+            B.RESULTCODE,
+            B.RESULTDESC
+        FROM 
+        	OBJ_TOCHECKINF D
+        LEFT JOIN 
+        	CIFM_OBJ_PER_INFO A
+        ON D.CI_ID = A.ID
+          	LEFT JOIN OBJ_UNIVERSAL_RESULT B
+        ON D.CI_ID = B.ID
+        	AND B.OBJCHECKID = D.OBJCHECKID
+        	AND B.REPORT_TYPE='3'
+        where EXISTS(SELECT 1 FROM CIFM_FLOW_STATUS WHERE ID = D.CI_ID AND CLIENT_TYPE='1')
+        <if test="pd.ORG_ID != null and pd.ORG_ID != ''">
+			AND  D.ORG_ID = #{pd.ORG_ID}
+		</if>
+        <if test="pd.USER_ID != null and pd.USER_ID != ''">
+			AND EXISTS(SELECT 1 FROM SYS_USER_ORG WHERE ORG_ID = D.ORG_ID AND USER_ID = #{USER_ID})
+		</if>
+		<if test="pd.OBJCHECKNUM != null and pd.OBJCHECKNUM != ''">
+			AND D.OBJCHECKNUM LIKE CONCAT(CONCAT('%', #{pd.OBJCHECKNUM}),'%')
+		</if>
+		<if test="pd.CHECKRESULTDESC != null and pd.CHECKRESULTDESC != ''">
+			AND D.RESULT_CHECKRESULTDESC LIKE CONCAT(CONCAT('%', #{pd.CHECKRESULTDESC}),'%')
+		</if>
+		<if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+			AND D.RESULT_CHECKRESULT LIKE CONCAT(CONCAT('%', #{pd.RESULTDESC}),'%')
+		</if>
+		<if test="pd.NAME != null and pd.NAME != ''">
+			AND (SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID) like '%'||#{pd.NAME}||'%'
+		</if>
+		<if test="pd.OBJCHECKID != null and pd.OBJCHECKID != ''">
+			AND D.OBJCHECKID LIKE CONCAT(CONCAT('%', #{pd.OBJCHECKID}),'%')
+		</if>
+	</select>
+	<!-- 更正结果列表 -->
+	<select id="listCorrectlistPage" parameterType="page" resultType="pd">
+		<!-- SELECT  
+		        C.NAME,
+		        A.ID,
+		        A.USERNAME,
+		        A.DATAPROVIDERORGCODE,
+                A.ORIGINATEORGCODE,
+                A.ORIGINATEUSERCODE,
+                A.OBJCORRECTID,
+				A.CORRECTRESULT,
+				A.ENCLOSUREINF,
+				A.CORRECTDESC,
+                B.RESULTCODE,
+                B.RESULTDESC
+        FROM CIFM_OBJ_PER_INFO A
+        INNER JOIN OBJ_UNIVERSAL_RESULT B
+        ON A.ID = B.ID
+        INNER JOIN SYS_USER C
+        ON A.USERNAME= C.USERNAME
+        WHERE A.REPORT_TYPE='4'
+        <if test="pd.USERNAMEINF== null or pd.USERNAMEINF == ''">
+			and A.USERNAME in(select username from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERNAMEINF != null and pd.USERNAMEINF != ''">
+			and A.USERNAME=#{pd.USERNAMEINF}
+		</if>
+        <if test="pd.NAME != null and pd.NAME != ''">
+			and
+				C.NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+		</if>
+		<if test="pd.OBJCORRECTID != null and pd.OBJCORRECTID != ''">
+			and
+				A.OBJCORRECTID LIKE CONCAT(CONCAT('%', #{pd.OBJCORRECTID}),'%')
+		</if>
+		<if test="pd.CORRECTRESULT != null and pd.CORRECTRESULT != ''">
+			and
+				A.CORRECTRESULT LIKE CONCAT(CONCAT('%', #{pd.CORRECTRESULT}),'%')
+		</if>
+		<if test="pd.CORRECTDESC != null and pd.CORRECTDESC != ''">
+			and
+				A.CORRECTDESC LIKE CONCAT(CONCAT('%', #{pd.CORRECTDESC}),'%')
+		</if> -->
+		SELECT  
+			(SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID) NAME,
+			D.CI_ID ID,
+			A.DATAPROVIDERORGCODE,
+			A.ORIGINATEORGCODE,
+			A.ORIGINATEUSERCODE,
+			D.CORRECTRESULT,
+			D.OBJCHECKID,
+			D.OBJCHECKNUM,
+			D.CORRECTDESC,
+			D.CORRECT_ENCLOSUREINF,
+			D.CHECKBEGINDATE,
+      		D.RELATIVE_ENDDATE,
+			B.RESULTDESC
+		FROM 
+			OBJ_TOCHECKINF D
+		LEFT JOIN 
+			CIFM_OBJ_PER_INFO A
+		ON D.CI_ID = A.ID
+			LEFT JOIN OBJ_UNIVERSAL_RESULT B
+		ON D.CI_ID = B.ID
+			AND B.OBJCHECKID = D.OBJCHECKID
+			AND B.REPORT_TYPE='4'
+		where EXISTS(SELECT 1 FROM CIFM_FLOW_STATUS WHERE ID = D.CI_ID AND CLIENT_TYPE='1')
+		<if test="pd.ORG_ID != null and pd.ORG_ID != ''">
+			AND D.ORG_ID = #{pd.ORG_ID}
+		</if>			
+		<if test="pd.NAME != null and pd.NAME != ''">
+		AND (SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID)  like '%'||#{pd.NAME}||'%'
+		</if>				
+		<if test="pd.USER_ID != null and pd.USER_ID != ''">
+			AND EXISTS(SELECT 1 FROM SYS_USER_ORG WHERE ORG_ID = D.ORG_ID AND USER_ID = #{USER_ID})
+		</if>
+		<if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+			AND B.RESULTDESC LIKE CONCAT(CONCAT('%', #{pd.RESULTDESC}),'%')
+		</if>
+		<if test="pd.CORRECTRESULT != null and pd.CORRECTRESULT != ''">
+			AND D.CORRECTRESULT LIKE CONCAT(CONCAT('%', #{pd.CORRECTRESULT}),'%')
+		</if>
+		<if test="pd.CORRECTDESC != null and pd.CORRECTDESC != ''">
+			AND D.CORRECTDESC LIKE CONCAT(CONCAT('%', #{pd.CORRECTDESC}),'%')
+		</if>
+		<if test="pd.OBJCHECKID != null and pd.OBJCHECKID != ''">
+			and D.OBJCHECKID LIKE CONCAT(CONCAT('%', #{pd.OBJCHECKID}),'%')
+		</if>
+	</select>
+	<!-- 更正结果接受列表 -->
+	<select id="listCorrectAcceptlistPage" parameterType="page" resultType="pd">
+		<!-- SELECT  
+		        A.USERNAME,
+		        A.ID,
+		        C.NAME,
+		        A.DATAPROVIDERORGCODE,
+                A.ORIGINATEORGCODE,
+                A.ORIGINATEUSERCODE,
+                A.OBJCHECKID,
+                B.RESULTCODE,
+                B.RESULTDESC,
+                B.CORRECTACCEPTFLAG,
+				B.CORRECTOPINION
+        FROM CIFM_OBJ_PER_INFO A
+        INNER JOIN OBJ_UPDATE_RESULT_ACCEPT B
+        ON A.ID = B.ID
+        INNER JOIN SYS_USER C
+        ON A.USERNAME= C.USERNAME
+        WHERE A.REPORT_TYPE='5'
+        <if test="pd.USERNAMEINF== null or pd.USERNAMEINF == ''">
+			and A.USERNAME in(select username from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERNAMEINF != null and pd.USERNAMEINF != ''">
+			and A.USERNAME=#{pd.USERNAMEINF}
+		</if>
+        <if test="pd.NAME != null and pd.NAME != ''">
+			and
+				C.NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+		</if>
+		<if test="pd.OBJCHECKID != null and pd.OBJCHECKID != ''">
+			and
+				A.OBJCHECKID LIKE CONCAT(CONCAT('%', #{pd.OBJCHECKID}),'%')
+		</if>
+		<if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+			and
+				B.RESULTDESC LIKE CONCAT(CONCAT('%', #{pd.RESULTDESC}),'%')
+		</if>
+		<if test="pd.CORRECTACCEPTFLAG != null and pd.CORRECTACCEPTFLAG != ''">
+			and
+				B.CORRECTACCEPTFLAG LIKE CONCAT(CONCAT('%', #{pd.CORRECTACCEPTFLAG}),'%')
+		</if>
+		<if test="pd.CORRECTOPINION != null and pd.CORRECTOPINION != ''">
+			and
+				B.CORRECTOPINION LIKE CONCAT(CONCAT('%', #{pd.CORRECTOPINION}),'%')
+		</if>-->
+		
+		SELECT  
+			(SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID) NAME,
+			D.CI_ID ID,
+			A.DATAPROVIDERORGCODE,
+			A.ORIGINATEORGCODE,
+			A.ORIGINATEUSERCODE,
+			D.OBJCHECKID,
+			D.OBJCHECKNUM,
+			D.CHECKBEGINDATE,
+      		D.RELATIVE_ENDDATE,
+			B.RESULTDESC,
+			B.CORRECTACCEPTFLAG,
+			B.CORRECTOPINION
+		FROM 
+			OBJ_TOCHECKINF D
+		LEFT JOIN 
+			CIFM_OBJ_PER_INFO A
+		ON 
+			D.CI_ID = A.ID
+		LEFT JOIN OBJ_UPDATE_RESULT_ACCEPT B
+		ON 
+			B.OBJCHECKID = D.OBJCHECKID
+			AND D.CI_ID = B.ID
+		where 
+			EXISTS(SELECT 1 FROM CIFM_FLOW_STATUS WHERE ID = D.CI_ID AND CLIENT_TYPE='1')
+			<if test="pd.USER_ID != null and pd.USER_ID != ''">
+				AND EXISTS(SELECT 1 FROM SYS_USER_ORG WHERE ORG_ID = D.ORG_ID AND USER_ID = #{USER_ID})
+			</if>
+			<if test="pd.NAME != null and pd.NAME != ''">
+		        AND (SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID)  like '%'||#{pd.NAME}||'%'
+		    </if>
+		    <if test="pd.ORG_ID != null and pd.ORG_ID != ''">
+		        AND D.ORG_ID = #{pd.ORG_ID}
+		    </if>
+		    <if test="pd.OBJCHECKID != null and pd.OBJCHECKID != ''">
+			    and D.OBJCHECKID LIKE CONCAT(CONCAT('%', #{pd.OBJCHECKID}),'%')
+		    </if> 		    
+		    <if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+			    AND B.RESULTDESC LIKE CONCAT(CONCAT('%', #{pd.RESULTDESC}),'%')
+		    </if>
+		<if test="pd.CORRECTACCEPTFLAG != null and pd.CORRECTACCEPTFLAG != ''">
+			AND B.CORRECTACCEPTFLAG = #{pd.CORRECTACCEPTFLAG}
+		</if>
+		<if test="pd.CORRECTOPINION != null and pd.CORRECTOPINION != ''">
+			AND B.CORRECTOPINION LIKE CONCAT(CONCAT('%', #{pd.CORRECTOPINION}),'%')
+		</if>
+		 
+		    
+	</select>
+	<!-- 添加个人标注列表 -->
+	<select id="listAddPersonLabellistPage" parameterType="page" resultType="pd">
+		<!-- SELECT  
+		        A.USERNAME,
+		        A.ID,
+		        C.NAME,
+                A.NAME PERNAME,
+				A.IDTYPE,
+				A.IDNUM,
+				A.BUSINESSCODE,
+				A.LOCATEINFNM,
+				A.LOCATEINFTYPE,
+				A.DATAOCCURORGCODE,
+				A.OBJDESC,
+                B.RESULTCODE,
+                B.RESULTDESC
+        FROM CIFM_OBJ_PER_INFO A
+        INNER JOIN OBJ_ADD_REMARK B
+        ON A.ID = B.ID
+        INNER JOIN SYS_USER C
+        ON A.USERNAME= C.USERNAME
+        WHERE A.REPORT_TYPE='6'
+        <if test="pd.USERNAMEINF== null or pd.USERNAMEINF == ''">
+			and A.USERNAME in(select username from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERNAMEINF != null and pd.USERNAMEINF != ''">
+			and A.USERNAME=#{pd.USERNAMEINF}
+		</if>
+        <if test="pd.NAME != null and pd.NAME != ''">
+			and
+				C.NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+		</if>
+		<if test="pd.PERNAME != null and pd.PERNAME != ''">
+			and
+				A.NAME LIKE CONCAT(CONCAT('%', #{pd.PERNAME}),'%')
+		</if>
+		<if test="pd.IDNUM != null and pd.IDNUM != ''">
+			and
+				A.IDNUM LIKE CONCAT(CONCAT('%', #{pd.IDNUM}),'%')
+		</if>
+		<if test="pd.OBJDESC != null and pd.OBJDESC != ''">
+			and
+				A.OBJDESC LIKE CONCAT(CONCAT('%', #{pd.OBJDESC}),'%')
+		</if>
+		<if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+			and
+				B.RESULTDESC LIKE CONCAT(CONCAT('%', #{pd.RESULTDESC}),'%')
+		</if> -->
+		
+		SELECT  
+			(SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID) NAME,
+			A.ID,
+			A.NAME PERNAME,
+			A.IDTYPE,
+			A.IDNUM,
+			A.BUSINESSCODE,
+			A.LOCATEINFNM,
+			A.LOCATEINFTYPE,
+			A.DATAOCCURORGCODE,
+			A.OBJDESC,
+			A.DEL_RESULTCODE,
+			A.DEL_RESULTDESC,
+			B.RESULTCODE,
+			B.RESULTDESC,
+			B.SERVICERETURNCODE
+		FROM CIFM_OBJ_PER_INFO A
+		LEFT JOIN OBJ_ADD_REMARK B
+		ON A.ID = B.ID
+		WHERE 
+			A.NAME IS NOT NULL AND A.IDTYPE IS NOT NULL AND A.IDNUM IS NOT NULL
+			AND (DEL_RESULTCODE IS NULL OR DEL_RESULTCODE &lt;&gt; 'AAA000')
+		<if test="pd.NAME != null and pd.NAME != ''">
+		     AND (SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID)  like '%'||#{pd.NAME}||'%'
+		</if>
+		<if test="pd.PERNAME != null and pd.PERNAME != ''">
+		     AND A.NAME  =#{pd.PERNAME}
+		</if>	
+		<if test="pd.CREDENTIALS_TYPE != null and pd.CREDENTIALS_TYPE != ''">
+		     AND A.IDTYPE  = #{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.IDNUM != null and pd.IDNUM != ''">
+		     AND A.IDNUM  =#{pd.IDNUM}
+		</if>
+		<if test="pd.OBJDESC != null and pd.OBJDESC != ''">
+		     AND A.OBJDESC  like '%'||#{pd.OBJDESC}||'%'
+		</if>
+		<if test="pd.SERVICERETURNCODE != null and pd.SERVICERETURNCODE != ''">
+		     AND B.SERVICERETURNCODE  like '%'||#{pd.SERVICERETURNCODE}||'%'
+		</if>			
+		<if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+		     AND B.RESULTDESC  like '%'||#{pd.RESULTDESC}||'%'
+		</if>		
+	</select>
+	<!-- 删除个人标注列表 -->
+	<select id="listDeletePersonLabellistPage" parameterType="page" resultType="pd">
+		<!-- SELECT  
+		        A.USERNAME,
+		        A.ID,
+		        C.NAME,
+		        A.DATAPROVIDERORGCODE,
+                A.ORIGINATEORGCODE,
+                A.ORIGINATEUSERCODE,
+                A.SERVICERETURNCODE,
+                B.RESULTCODE,
+                B.RESULTDESC
+        FROM CIFM_OBJ_PER_INFO A
+        INNER JOIN OBJ_UNIVERSAL_RESULT B
+        ON A.ID = B.ID
+        INNER JOIN SYS_USER C
+        ON A.USERNAME= C.USERNAME
+        WHERE A.REPORT_TYPE='7'
+        <if test="pd.USERNAMEINF== null or pd.USERNAMEINF == ''">
+			and A.USERNAME in(select username from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERNAMEINF != null and pd.USERNAMEINF != ''">
+			and A.USERNAME=#{pd.USERNAMEINF}
+		</if>
+        <if test="pd.NAME != null and pd.NAME != ''">
+			and
+				C.NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+		</if>
+		<if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+			and
+				B.RESULTDESC LIKE CONCAT(CONCAT('%', #{pd.RESULTDESC}),'%')
+		</if>
+		 -->
+		SELECT  
+			(SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID) NAME,
+			A.ID,
+			A.NAME PERNAME,
+			A.IDTYPE,
+			A.IDNUM,
+			A.BUSINESSCODE,
+			A.LOCATEINFNM,
+			A.LOCATEINFTYPE,
+			A.DATAOCCURORGCODE,
+			A.OBJDESC,
+			A.DEL_RESULTCODE,
+			A.DEL_RESULTDESC,
+			B.RESULTCODE,
+			B.RESULTDESC,
+			B.SERVICERETURNCODE
+		FROM CIFM_OBJ_PER_INFO A
+		LEFT JOIN OBJ_ADD_REMARK B
+		ON A.ID = B.ID
+		WHERE 
+			A.NAME IS NOT NULL AND A.IDTYPE IS NOT NULL AND A.IDNUM IS NOT NULL
+			AND DEL_RESULTCODE IS NOT NULL 
+		<if test="pd.NAME != null and pd.NAME != ''">
+		     AND (SELECT NAME FROM SYS_USER WHERE USER_ID = B.USER_ID)  like '%'||#{pd.NAME}||'%'
+		</if>
+		<if test="pd.PERNAME != null and pd.PERNAME != ''">
+		     AND A.NAME  =#{pd.PERNAME}
+		</if>	
+		<if test="pd.CREDENTIALS_TYPE != null and pd.CREDENTIALS_TYPE != ''">
+		     AND A.IDTYPE  = #{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.IDNUM != null and pd.IDNUM != ''">
+		     AND A.IDNUM  =#{pd.IDNUM}
+		</if>
+		<if test="pd.OBJDESC != null and pd.OBJDESC != ''">
+		     AND A.OBJDESC  like '%'||#{pd.OBJDESC}||'%'
+		</if>
+		<if test="pd.SERVICERETURNCODE != null and pd.SERVICERETURNCODE != ''">
+		     AND B.SERVICERETURNCODE  like '%'||#{pd.SERVICERETURNCODE}||'%'
+		</if>			
+		<if test="pd.RESULTDESC != null and pd.RESULTDESC != ''">
+		     AND B.RESULTDESC  like '%'||#{pd.RESULTDESC}||'%'
+		</if>
+	</select>
+	<!-- 根据法人查询此法人下的所有机构 -->
+	<select id="findOrgByCompany" parameterType="String" resultType="pd">
+		SELECT ORG_ID,NAME,PARENT_ID FROM SYS_ORG WHERE COMPANY=#{_parameter}
+	</select>
+	
+	<update id="batchUpdateOrg" parameterType="com.dcits.credit.entity.ObjectItem">
+		<!-- begin
+		<foreach close=";" collection="list" index="index" item="record" open="" separator=";">  
+           <if test="record.ORG_ID != null and record.ORG_ID != '' and record.ID != null and record.ID != ''">
+				UPDATE obj_check_item
+				SET
+					ORG_ID = #{record.ORG_ID}
+				WHERE
+					ID = #{record.ID}
+		   </if>
+        </foreach>
+        end -->
+        
+        UPDATE OBJ_TOCHECKINF
+		SET
+			ORG_ID = #{ORG_ID}
+		WHERE
+			<if test="ID != null and ID != ''">
+				CI_ID||'_'||OBJCHECKID = #{ID}
+			</if>
+			<if test="ID == null or ID == ''">
+				1=2
+			</if>
+	</update> 
+	<!-- 保存核查结果上报信息 -->
+	<update id="saveCheckResult" parameterType="pd">
+		UPDATE OBJ_TOCHECKINF
+		SET
+			RESULT_PHONENUM = #{PHONENUM},
+			RESULT_CHECKRESULT = #{CHECKRESULT},
+			RESULT_CHECKRESULTDESC = #{CHECKRESULTDESC}
+		WHERE 
+			CI_ID = #{ID}
+			AND OBJCHECKID = #{OBJCHECKID}
+	</update>
+	<!-- 查询异议事项所有上报信息根据条件 -->
+	<select id="findObjeReportBy" parameterType="pd" resultType="pd">
+		SELECT 
+			ORG_ID,RESULT_PHONENUM PHONENUM,RESULT_CHECKRESULT CHECKRESULT,
+			RESULT_CHECKRESULTDESC CHECKRESULTDESC,CI_ID ID,OBJCHECKID,
+			OBJCHECKNUM,CHECKBEGINDATE,NAME,IDTYPE,IDNUM,PHONENUM,OBJITEMINF,OBJITEMDESC,
+			DATAPROVIDERORGCODE,DATAOCCURORGCODE,BUSINESSCODE,BUSINESSTYPE,CHECKFINALDATE,
+			DATAOCCURDATE,DATAOCCURAMOUNT,ENCLOSUREFLAG,HISTORICALCHECKINF,
+			CORRECTRESULT,CORRECTDESC,CORRECT_ENCLOSUREINF
+		FROM 
+			OBJ_TOCHECKINF
+		WHERE 
+			CI_ID=#{ID} 
+			AND OBJCHECKID=#{OBJCHECKID}
+	</select>	
+	<!-- 保存更正结果上报信息 -->
+	<update id="saveCorrectResult" parameterType="pd">
+		UPDATE OBJ_TOCHECKINF
+		SET
+			CORRECTRESULT = #{CORRECTRESULT},
+			CORRECTDESC = #{CORRECTDESC},
+			CORRECT_ENCLOSUREINF = #{CORRECT_ENCLOSUREINF}
+		WHERE 
+			CI_ID = #{ID}
+			AND OBJCHECKID = #{OBJCHECKID}
+	</update>
+	<!-- 查询异议添加个人标注信息 -->
+	<select id="findAddRemarkBy" parameterType="pd" resultType="pd">
+		SELECT 
+		       OBJCORRECTID,ID,DATAPROVIDERORGCODE,USERCODE,PASSWORD,
+		       ORIGINATEORGCODE,ORIGINATEUSERCODE,BEGINDATE,ENDDATE,OBJCHECKID,
+		       PHONENUM,OBJCHECKNUM,CHECKRESULT,CHECKRESULTDESC,CORRECTRESULT,
+		       ENCLOSUREINF,CORRECTDESC,NAME,IDTYPE,IDNUM,BUSINESSCODE,
+		       LOCATEINFNM,LOCATEINFTYPE,DATAOCCURORGCODE,OBJDESC,SERVICERETURNCODE,
+		       USERNAME,REPORT_TYPE
+		FROM 
+			CIFM_OBJ_PER_INFO
+		WHERE ID= #{ID}
+	</select>
+	<!-- 修改个人标注信息 -->
+	<update id="updatePersonLabel" parameterType="pd">
+		UPDATE CIFM_OBJ_PER_INFO
+		SET
+			NAME = #{NAME},
+			IDTYPE = #{IDTYPE},
+			IDNUM = #{IDNUM},
+			LOCATEINFNM = #{LOCATEINFNM},
+			LOCATEINFTYPE = #{LOCATEINFTYPE},
+			OBJDESC = #{OBJDESC}
+		WHERE 
+			ID = #{ID}
+	</update>
+	<!-- 删除个人标注信息 -->
+	<update id="deletePersonLabel" parameterType="pd">
+		UPDATE 
+			CIFM_OBJ_PER_INFO
+		SET
+			DEL_RESULTCODE = #{ResultCode},
+			DEL_RESULTDESC = #{ResultDesc} 
+		WHERE
+			ID = #{ID} 
+	</update>
+	
+	<!-- 修改标注信息 -->
+	<update id="update_UserId" parameterType="pd" >
+		UPDATE
+			   OBJ_ADD_REMARK
+		set 
+			   USER_ID=#{USER_ID}
+		where 
+				ID=#{ID}
+	</update>
+	<!-- 修改标注信息(全部) -->
+	<update id="update_addRemark" parameterType="pd" >
+		UPDATE
+			   OBJ_ADD_REMARK
+		set 
+			USER_ID = #{USER_ID},
+			RESULTCODE = #{ResultCode},
+			RESULTDESC = #{ResultDesc} ,
+			SERVICERETURNCODE = #{ServiceReturnCode} 			
+		where 
+				ID=#{ID}
+	</update>
+	<!-- 查询标注信息(全部) -->
+	<select id="find_AddRemarkBy" parameterType="pd" resultType="pd">
+		select 
+			ID,
+			USER_ID,
+			RESULTCODE,
+			RESULTDESC,
+			SERVICERETURNCODE 
+		FROM
+		     OBJ_ADD_REMARK
+		where 
+			ID = #{ID}
+	</select>
+	<!--  删除异议处理附件信息 -->
+	<update id="delAtt" parameterType="pd" >
+		update  OBJ_TOCHECKINF
+		    set CORRECT_ENCLOSUREINF = null
+		where 
+			CI_ID = #{ID}
+		and OBJCHECKID = #{OBJCHECKID}
+	</update>
+	<!-- 查询标注信息(全部) -->
+	<select id="selectObject" parameterType="pd" resultType="pd">
+		SELECT 
+			COUNT(1)  COUNT
+		FROM
+		    OBJ_TOCHECKINF
+		where 
+			OBJCHECKID = #{ObjCheckID}
+		AND OBJCHECKNUM = #{ObjCheckNum}
+		AND DATAOCCURAMOUNT = #{DataOccurAmount}
+	</select>
+</mapper>

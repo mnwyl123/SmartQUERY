@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="SmartSense" default="build-SmartSense" basedir=".">
+	<description>SmartSense</description>
+	<property name="opt.compile.encoding" value="UTF-8"/>
+	<!-- set global properties for this build -->
+	<property name="java.path" location="D:\Program Files\Java\jdk1.7.0_45\bin\javac"/>
+	<property name="src.java" location="${basedir}/src"/>
+	<property name="src.conf" location="${basedir}/resources"/>
+	<property name="classes-target-dir" location="${basedir}/WebRoot/WEB-INF/classes"/>
+	<property name="lib" location="${basedir}/WebRoot/WEB-INF/lib"/>
+
+	<property name="build-dir" location="${basedir}/build"/>
+	<property name="product" value="SmartSense"/>
+	<property name="version" value="1.1"/>
+	<property name="jar.file" value="${product}${version}.jar"/> 
+	
+	<!--定义编译使用的classpath-->
+	<path id="compile-classpath">
+		<fileset dir="${basedir}/lib-onlycompile">
+			<include name="*.jar"/>		
+		</fileset>
+		<fileset dir="${lib}">
+			<include name="*.jar"/>		
+		</fileset>
+	</path> 
+
+	<!--清除编译结果-->
+	<target name="clean" description="clean up" >
+		<echo message="清除编译目标环境"/>
+	  <delete dir="${classes-target-dir}"/>
+		<delete dir="${build-dir}"/>  
+	</target>
+	
+	<!--初始化-->
+	<target name="init" depends="clean">
+		<echo message="准备编译目标环境"/>
+		<mkdir dir="${classes-target-dir}"/>
+		<mkdir dir="${build-dir}"/>
+		<mkdir dir="${build-dir}/dbscript"/>
+	</target>
+
+	<!--编译target-->
+	<target name="compile" depends="init" description="compile the source">
+		<!--编译Java源代码和测试代码-->
+		<echo message="开始编译Java源代码和测试代码"/>
+		<javac fork="true" executable="${java.path}" includeantruntime="on" destdir="${classes-target-dir}" encoding="${opt.compile.encoding}" debug="true">
+			<src path="${src.java}"/>
+			<classpath refid="compile-classpath" />
+		</javac>
+	</target>
+	<target name="jar" depends="compile"> 
+  	<jar destfile="${build-dir}/${jar.file}">   
+    	<fileset dir="${classes-target-dir}">   
+      	<include name="**/*.*"/>  
+       </fileset>  
+  	</jar>
+  </target>  
+  <target name="build" depends="clean, init, compile,jar">
+		<!--拷贝xml配置文件到目标目录-->
+		<echo message="拷贝xml配置文件到目标目录"/>
+		<copy todir="${classes-target-dir}">
+			<fileset dir="${src.conf}">
+				<include name="**/*.*"/>
+				<exclude name="**/*.svn*/**"/>
+  		</fileset>
+  	</copy>
+		<copy todir="${build-dir}/SmartSense">
+			<fileset dir="${basedir}/WebRoot">
+				<include name="**/*"/>
+				<exclude name="**/*.svn*/**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="copy-db" depends="build">	
+		<echo message="dbscript拷贝到build下"/>	    
+		<!--<copy todir="${build-dir}/dbscript/">
+			<fileset dir="${basedir}/dbscript/">
+				<include name="**/*"/>
+				<exclude name="**/*.svn*/**"/>
+			</fileset>
+		</copy>	  -->
+	</target>
+	<target name="build-SmartSense" depends="copy-db" >
+		<echo message="开始生成${product}${version}发布包"/>			
+    <war destfile="${build-dir}/SmartSense.war" webxml="${build-dir}/SmartSense/WEB-INF/web.xml">
+			<zipfileset dir="${build-dir}/SmartSense"/>	
+		</war>
+		<echo message="成功生成${product}${version}发布包"/>
+	</target>
+</project>

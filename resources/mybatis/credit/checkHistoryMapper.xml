@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="HistoryMapper">
+    
+   <!-- 企业审核历史列表 -->
+<select id="EntAppReHistorylistPage" parameterType="page" resultType="pd" >
+		SELECT
+			A.ID,
+			A.CLIENT_TYPE,
+			A.USER_SYS_ID,
+			A.CHECK_TIME,
+			A.STATUS,
+			B.CREDENTIALS_NO_TYPE AS TYPE,
+			B.COMPANY_NAME AS CLIENT_NAME,
+			B.CHINA_CREDIT_CODE AS CCODE,
+			B.QUERY_REASON,
+			B.QUERY_VERSION,
+			C.NAME AS ORG_NAME,
+			E.DEPT_CODE,
+			A.PRO_ID,
+		  	p.PRODUCT_NAME
+		FROM
+			CIFM_FLOW_STATUS A,CIFM_COMPANY_INFO B,SYS_ORG C,SYS_USER_ORG D,SYS_USER E,cifm_product p,sys_user_pro f 
+		WHERE
+			A.ID = B.ID AND A.STATUS!='01' AND A.STATUS!='00' AND A.PRO_ID = p.product_id  AND P.product_id = F.pro_id AND F.user_id = #{pd.USER_ID} AND A.CLIENT_TYPE = '2' AND D.USER_ID = A.USER_SYS_ID AND C.ORG_ID = D.ORG_ID AND A.USER_SYS_ID=E.USER_ID AND A.CHECK_SYS_ID=#{pd.USER_ID}
+			<if test="pd.CLIENT_NAME!=null and pd.CLIENT_NAME!=''">
+			    AND 
+			    	B.COMPANY_NAME = #{pd.CLIENT_NAME}
+			</if>
+			<if test="pd.TYPE !=null and pd.TYPE != ''">
+				AND
+					CREDENTIALS_NO_TYPE=#{pd.TYPE}
+			</if>
+			<if test="pd.CCODE!=null and pd.CCODE!=''">
+			    AND 
+			    	B.CHINA_CREDIT_CODE = #{pd.CCODE}
+			</if>
+		ORDER BY A.CHECK_TIME DESC
+</select>
+   <!-- 历史表企业审核历史列表 -->
+<select id="EntHisAppReHistorylistPage" parameterType="page" resultType="pd" >
+		SELECT
+			A.ID,
+			A.CLIENT_TYPE,
+			A.USER_SYS_ID,
+			A.CHECK_TIME,
+			A.STATUS,
+			B.CREDENTIALS_NO_TYPE AS TYPE,
+			B.COMPANY_NAME AS CLIENT_NAME,
+			B.CHINA_CREDIT_CODE AS CCODE,
+			B.QUERY_REASON,
+			B.QUERY_VERSION,
+			C.NAME AS ORG_NAME,
+			E.DEPT_CODE,
+			A.PRO_ID,
+		  	p.PRODUCT_NAME
+		FROM
+			CIFM_FLOW_STATUS_HIS A,CIFM_COMPANY_INFO_HIS B,SYS_ORG C,SYS_USER_ORG D,SYS_USER E,cifm_product p,sys_user_pro f 
+		WHERE
+			A.ID = B.ID AND A.STATUS!='01' AND A.STATUS!='00' AND A.PRO_ID = p.product_id  AND P.product_id = F.pro_id AND F.user_id = #{pd.USER_ID} AND A.CLIENT_TYPE = '2' AND D.USER_ID = A.USER_SYS_ID AND C.ORG_ID = D.ORG_ID AND A.USER_SYS_ID=E.USER_ID AND A.CHECK_SYS_ID=#{pd.USER_ID}
+			<if test="pd.CLIENT_NAME!=null and pd.CLIENT_NAME!=''">
+			    AND 
+			    	B.COMPANY_NAME = #{pd.CLIENT_NAME}
+			</if>
+			<if test="pd.TYPE !=null and pd.TYPE != ''">
+				AND
+					CREDENTIALS_NO_TYPE=#{pd.TYPE}
+			</if>
+			<if test="pd.CCODE!=null and pd.CCODE!=''">
+			    AND 
+			    	B.CHINA_CREDIT_CODE = #{pd.CCODE}
+			</if>
+		ORDER BY A.CHECK_TIME DESC
+</select>
+   <!-- 个人审核历史列表 -->
+<select id="IndAppReHistorylistPage" parameterType="page" resultType="pd" >
+		SELECT
+			A.ID,
+			A.CLIENT_TYPE,
+			A.USER_SYS_ID,
+			date_format( A.CHECK_TIME, '%Y-%m-%d %H:%i:%s' ) CHECK_TIME,
+			A.STATUS,
+	B.CLIENT_NAME CLIENT_NAME,
+	B.CREDENTIALS_TYPE AS TYPE,
+	B.CREDENTIALS_NO AS CCODE,
+	B.QUERY_REASON,
+	B.QUERY_VERSION,
+	C.NAME AS ORG_NAME,
+	E.DEPT_CODE,
+	A.PRO_ID
+		FROM
+			CIFM_FLOW_STATUS A,CIFM_PERSON_INFO B,SYS_ORG C,SYS_USER_ORG D,SYS_USER E 
+		WHERE
+			 A.ID = B.ID 
+			 AND A.STATUS!='01' 
+			 AND A.STATUS!='00'
+			 AND A.STATUS!='15'
+			 AND A.STATUS!='16'
+			 AND A.CLIENT_TYPE = '1'
+			 AND D.USER_ID = A.USER_SYS_ID 
+			 AND C.ORG_ID = D.ORG_ID 
+			 AND A.USER_SYS_ID=E.USER_ID 
+			 AND A.CHECK_SYS_ID='2525bf1e5d864a9e86c15ef87ccd9bf0'
+			 <if test="pd.CLIENT_NAME!=null and pd.CLIENT_NAME!=''">
+			    AND 
+			    	B.CLIENT_NAME = #{pd.CLIENT_NAME}
+			</if>
+			<if test="pd.TYPE !=null and pd.TYPE != ''">
+				AND
+					CREDENTIALS_TYPE=#{pd.TYPE}
+			</if>
+			<if test="pd.CCODE!=null and pd.CCODE!=''">
+			    AND 
+			    	B.CREDENTIALS_NO = #{pd.CCODE}
+			</if>
+		ORDER BY A.CHECK_TIME DESC
+</select>
+   <!-- 历史表个人审核历史列表 -->
+<select id="IndHisAppReHistorylistPage" parameterType="page" resultType="pd" >
+		SELECT
+			A.ID,
+			A.CLIENT_TYPE,
+			A.USER_SYS_ID,
+			date_format(A.CHECK_TIME,'%Y-%m-%d %H:%i:%s') CHECK_TIME,
+			A.STATUS,
+			B.CLIENT_NAME CLIENT_NAME,
+			B.CREDENTIALS_TYPE AS TYPE,
+			B.CREDENTIALS_NO AS CCODE,
+			B.QUERY_REASON,
+			B.QUERY_VERSION,
+			C.NAME AS ORG_NAME,
+			E.DEPT_CODE,
+			A.PRO_ID,
+		  	p.PRODUCT_NAME
+		FROM
+			CIFM_FLOW_STATUS_HIS A,CIFM_PERSON_INFO_HIS B,SYS_ORG C,SYS_USER_ORG D,SYS_USER E,cifm_product p,sys_user_pro f  
+		WHERE
+			A.ID = B.ID AND A.STATUS!='01' AND A.STATUS!='00' AND A.CLIENT_TYPE = '1' AND A.PRO_ID = p.product_id  AND P.product_id = F.pro_id AND F.user_id = #{pd.USER_ID} AND D.USER_ID = A.USER_SYS_ID AND C.ORG_ID = D.ORG_ID AND A.USER_SYS_ID=E.USER_ID AND A.CHECK_SYS_ID=#{pd.USER_ID}
+			<if test="pd.CLIENT_NAME!=null and pd.CLIENT_NAME!=''">
+			    AND 
+			    	B.CLIENT_NAME = #{pd.CLIENT_NAME}
+			</if>
+			<if test="pd.TYPE !=null and pd.TYPE != ''">
+				AND
+					CREDENTIALS_TYPE=#{pd.TYPE}
+			</if>
+			<if test="pd.CCODE!=null and pd.CCODE!=''">
+			    AND 
+			    	B.CREDENTIALS_NO = #{pd.CCODE}
+			</if>
+		ORDER BY A.CHECK_TIME DESC
+</select>
+<!-- 查询企业申请信息 -->
+<select id="getEntHistoryCheck" parameterType="pd" resultType="pd" >
+	SELECT
+		A.APPLICATION_TIME,
+		A.INTERNAL,
+		A.CHECK_TIME,
+		A.CHECK_SYS_ID,
+		A.STATUS,
+		A.CHECK_REJECT_RESON,
+		B.COMPANY_NAME COMPANY_NAME,
+		B.CREDENTIALS_NO_TYPE,
+		B.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+		C.USERNAME AS USER_SYS_NAME,
+		B.QUERY_REASON,
+		B.QUERY_VERSION,
+		B.WARRANT_MATURITY_DATE,
+		B.QUERY_TYPE
+	FROM
+		CIFM_FLOW_STATUS A,CIFM_COMPANY_INFO B,SYS_USER C
+	WHERE
+		A.ID = B.ID AND A.ID= #{ID} AND A.USER_SYS_ID = C.USER_ID
+</select>
+<!-- 查询企业申请信息 -->
+<select id="hisgetEntHistoryCheck" parameterType="pd" resultType="pd" >
+	SELECT
+		A.APPLICATION_TIME,
+		A.INTERNAL,
+		A.CHECK_TIME,
+		A.CHECK_SYS_ID,
+		A.STATUS,
+		A.CHECK_REJECT_RESON,
+		B.COMPANY_NAME COMPANY_NAME,
+		B.CREDENTIALS_NO_TYPE,
+		B.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+		C.USERNAME AS USER_SYS_NAME,
+		B.QUERY_REASON,
+		B.QUERY_VERSION,
+		B.WARRANT_MATURITY_DATE,
+		B.QUERY_TYPE
+	FROM
+		CIFM_FLOW_STATUS_HIS A,CIFM_COMPANY_INFO_HIS B,SYS_USER C
+	WHERE
+		A.ID = B.ID AND A.ID= #{ID} AND A.USER_SYS_ID = C.USER_ID
+</select>
+ <!-- 查询个人申请信息 -->
+<select id="getAppHistoryCheck" parameterType="pd" resultType="pd" >
+	SELECT
+		A.APPLICATION_TIME,
+		A.INTERNAL,
+		date_format(A.CHECK_TIME,'%Y-%m-%d %H:%i:%s') CHECK_TIME,
+		A.CHECK_SYS_ID,
+		A.STATUS,
+		A.CHECK_REJECT_RESON,
+		B.CLIENT_NAME,
+		B.CREDENTIALS_TYPE,
+		B.CREDENTIALS_NO,
+		C.USERNAME AS USER_SYS_NAME,
+		B.QUERY_REASON,
+		B.QUERY_VERSION,
+		B.WARRANT_MATURITY_DATE,
+		B.QUERY_TYPE
+	FROM
+		CIFM_FLOW_STATUS A,CIFM_PERSON_INFO B,SYS_USER C
+	WHERE
+		A.ID = B.ID AND A.ID= #{ID} AND A.USER_SYS_ID = C.USER_ID
+</select>
+<!-- 查询审核人名称 -->
+<select id="getCheckUserInfo" parameterType="String" resultType="pd" >
+	SELECT
+		USER_ID,
+		USERNAME,
+		NAME
+	FROM
+		SYS_USER
+	WHERE
+		USER_ID=#{USER_ID}
+</select>
+</mapper>

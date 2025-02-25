@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CreditCompanyServerMapperOld">
+
+<!-- 查询报告编号和报告日期 -->
+<select id="getCreditReportDate" parameterType="String" resultType="pd" >
+    SELECT 
+    		to_char(QUERY_TIME,'yyyy-mm-dd hh24:mi:ss') QUERY_TIME 
+    FROM 
+    		CIFM_FLOW_STATUS 
+    WHERE 
+    		REPORT_ID = #{REPORT_ID}
+  <!--  SELECT 
+	    REPORT_DATE QUERY_TIME,
+	    REPORT_ID 
+	FROM 
+	    COM_REPORT_INFO
+	WHERE
+	    REPORT_ID = #{REPORT_ID}-->
+</select>
+<!-- 查询报告编号和报告日期 -->
+<select id="getCreditReport" parameterType="String" resultType="Map" >
+    SELECT 
+	    REPORT_DATE QUERY_TIME,
+	    REPORT_ID 
+	FROM 
+	    COM_REPORT_INFO
+	WHERE
+	    REPORT_ID = #{REPORT_ID}
+</select>
+<!-- 查询社保缴费状态是否正常-->
+<select id="getCreditSecurPayStatus" parameterType="String" resultType="Map" >
+    SELECT 
+    	PAY_STATUS SOCIAL_SECURITY_STATE
+    FROM 
+    	COM_SECUR_PAY_RECORD 
+    WHERE REPORT_ID = #{REPORT_ID}
+</select>
+<!-- 查询是否有水电费拖欠情况-->
+<select id="getCreditCostPayStatus" parameterType="String" resultType="Map" >
+    SELECT 
+    	PAY_STATUS WATER_ELECTRICITY_STATE
+    FROM 
+    	COM_PUB_COST_PAY_RECORD 
+    WHERE REPORT_ID = #{REPORT_ID}
+</select>
+
+<!-- 查询已结信贷发生额历史情况,已结清数量-->
+<select id="getCreditCount" parameterType="String" resultType="String" >
+	
+    SELECT 
+    	COUNT(BUSS_NUM) 
+    FROM
+    	COM_UNCLEAR_CREDIT_TYPE_SUMM 
+    WHERE 
+    	SETTLE_STATUS='1' 
+    AND 
+    	REPORT_ID = #{REPORT_ID}
+  	
+<!--   	 SELECT SUM(BUSS_NUM) 
+  	 FROM (
+			SELECT
+		 		T.YASSETS_DISP_NUM BUSS_NUM FROM  COM_LEND_TRANS T
+				WHERE 
+		    	T.REPORT_ID = #{REPORT_ID}
+			UNION ALL
+			SELECT 
+				A.NUM_SECURED_NOTRANS BUSS_NUM FROM  COM_GUAR_TRANS_IN A
+				WHERE 
+		    	A.REPORT_ID = #{REPORT_ID}
+		) -->
+</select>
+<!-- 查询已结信贷发生额历史情况,非正常笔数-->
+<select id="getCreditAttenNum" parameterType="String" resultType="String" >
+   SELECT 
+    	NVL(SUM(BUSS_NUM),0) 
+    FROM
+   		COM_UNCLEAR_CREDIT_TYPE_SUMM 
+   	WHERE 
+   		ATTENT_STATUS IN('02','03')
+   	AND
+    	REPORT_ID = #{REPORT_ID}
+   	
+    	<!--  SELECT 
+		 		NVL(SUM(T.NUM_ACCOUNT),0)
+		 FROM 
+		 		COM_LEND_TRANS_OTHER T 
+		 WHERE 	
+		 		T.ASSET_QUALITY_CLAS IN('2','3') 
+		 		AND
+		    	REPORT_ID =#{REPORT_ID} -->
+</select>
+<!-- 查询已结信贷发生额历史情况,已结清非正常笔数-->
+<select id="getCreditYAttenNum" parameterType="String" resultType="String" >
+   	SELECT 
+   		NVL(SUM(BUSS_NUM),0) 
+   	FROM 
+   		COM_UNCLEAR_CREDIT_TYPE_SUMM 
+   	WHERE 
+   		SETTLE_STATUS='1' 
+   	AND 
+   		ATTENT_STATUS IN('02','03')
+   	AND
+    	REPORT_ID = #{REPORT_ID}
+    	
+     <!-- SELECT 
+         NVL(SUM(T.NUM_ACCOUNT),0)
+     FROM 
+        COM_LEND_TRANS_SE_TYPE T 
+     WHERE  
+        T.ASSET_QUALITY_CLASSIFICATION IN('2','3') 
+        AND
+          	REPORT_ID =#{REPORT_ID} -->
+</select>
+<!-- 未结清对外担保金额汇总-->
+<select id="getCreditNGuar" parameterType="String" resultType="Map" >
+   	SELECT 
+   		NVL(SUM(REPLACE(NOR_GUAR_BALANCE,',')),0)+NVL(SUM(REPLACE(ATTEN_GUAR_BALANCE,',')),0)+NVL(SUM(REPLACE(BAD_GUAR_BALANCE,',')),0) NS_GUARANTEE_AMOUNT  
+   	FROM 
+   		COM_FORE_GUAR_SUMM 
+   	WHERE 
+   		REPORT_ID = #{REPORT_ID}
+   		
+      <!--  SELECT
+        	NVL(SUM(REPLACE(T.BALANCE_NUM,',')),0) NS_GUARANTEE_AMOUNT 
+       FROM 
+      	    COM_GUAR_TRANS_INFO_OUTS T 
+       WHERE 
+       		T.ASSET_QUALITY_CLAS IN('1','2','3')
+      	    AND
+         	REPORT_ID =#{REPORT_ID} -->
+</select>
+<!-- 未结清不良信贷金额汇总-->
+<select id="getCreditNAtten" parameterType="String" resultType="Map" >
+   	SELECT 
+   		NVL(SUM(REPLACE(BUSS_BALANCE,',')),0) NS_BAD_CREDIT_AMOUNT 
+   	FROM 
+   		COM_UNCLEAR_CREDIT_TYPE_SUMM 
+   	WHERE 
+   		SETTLE_STATUS = '0' 
+   	AND 
+   		ATTENT_STATUS = '03' 
+   	AND 
+   		REPORT_ID = #{REPORT_ID}
+   		
+	<!--  SELECT
+       		NVL(SUM(REPLACE(T.BALANCE_NUM,',')),0) NS_BAD_CREDIT_AMOUNT  
+      FROM 
+      		COM_GUAR_TRANS_INFO_OUTS T 
+      WHERE 
+      		T.ASSET_QUALITY_CLAS IN ('3')
+   			AND
+         	REPORT_ID =#{REPORT_ID} -->
+</select>
+
+<!-- 已结清不良贷款金额汇总(分币种)-->
+<select id="getCreditYAtten" parameterType="String" resultType="Map" >
+  	SELECT 
+   		NVL(SUM(REPLACE(BUSS_SUM,',')),0) BAD_CREDIT_AMOUNT 
+   	FROM 
+   		COM_INNER_BUSS_DETAIL
+   	WHERE 
+   		SETTLE_STATUS = '1' 
+   	AND 
+   		BUSS_TYPE = '01' 
+   	AND 
+   		FIVE_TYPE IN ('次级','可疑','损失') 
+   	AND 
+   		REPORT_ID= #{REPORT_ID}
+   	      
+   <!--  SELECT 
+    		NVL(SUM(REPLACE(L.BALANCE_NUM,',')),0) BAD_CREDIT_AMOUNT 
+    FROM 
+    		COM_LEND_ACCOUNT T INNER JOIN COM_REPAY_INFO L ON T.SERIAL = L.SERIAL 
+    WHERE 
+    		L.FIVE_CLA IN('3','4','5') AND T.STATE_LEND_ACCOUNT_ACT = '2' AND REPORT_ID= #{REPORT_ID}	
+   		 -->
+</select>
+
+<!-- 未结清信贷金额汇总-->
+<select id="getCreditNSum" parameterType="String" resultType="Map" >
+   	SELECT 
+   		NVL(SUM(REPLACE(BUSS_BALANCE,',')),0) NS_CREDIT_AMOUNT 
+   	FROM 
+   		COM_UNCLEAR_CREDIT_TYPE_SUMM 
+   	WHERE 
+   		SETTLE_STATUS = '0' 
+   	AND 
+   		REPORT_ID = #{REPORT_ID}
+</select>
+
+<!-- 已结清信贷金额汇总-->
+<select id="getCreditYSum" parameterType="String" resultType="Map" >
+   	SELECT ((SELECT NVL(SUM(REPLACE(ADVA_PAY_SUM,',')),0) FROM COM_ADVA_PAY_DETAIL WHERE SETTLE_STATUS = '1' AND REPORT_ID = #{REPORT_ID}) +
+			(SELECT NVL(SUM(REPLACE(BUSS_SUM,',')),0) FROM COM_INNER_BUSS_DETAIL WHERE SETTLE_STATUS = '1' AND REPORT_ID = #{REPORT_ID})+
+			(SELECT NVL(SUM(REPLACE(BUSS_SUM,',')),0) FROM COM_OUTER_BUSS_DETAIL WHERE SETTLE_STATUS = '1' AND REPORT_ID = #{REPORT_ID})) CREDIT_AMOUNT FROM DUAL
+</select>
+<!-- 欠息余额汇总-->
+<select id="getCreditLackSum" parameterType="String" resultType="Map" >
+   	SELECT 
+   		NVL(SUM(REPLACE(BAD_ASSETS_BALANCE,',')),0) OWE_INTEREST_BALANCE 
+   	FROM 
+   		COM_BAD_ASSETS_DISP_SUMM 
+   	WHERE 
+   		SETTLE_STATUS = '0' 
+   	AND 
+   		BAD_ASSETS_TYPE = '02'
+   	AND REPORT_ID = #{REPORT_ID}
+   <!--  SELECT NVL(SUM(REPLACE(LACK_INTE_BALANCE,',')),0) OWE_INTEREST_BALANCE FROM COM_LACK_INTEREST WHERE REPORT_ID =  #{REPORT_ID} -->
+</select>
+<!--贷款业务余额(元)-->
+<select id="getCreditBussBalance" parameterType="String" resultType="Map" >
+   	SELECT 
+   		NVL(SUM(REPLACE(BUSS_BALANCE,',')),0) LOAN_BALANCE 
+   	FROM 
+   		COM_UNCLEAR_CREDIT_TYPE_SUMM 
+   	WHERE 
+   		SETTLE_STATUS = '0' 
+   	AND 
+   		BUSS_TYPE = '01' 
+   	AND 
+   		REPORT_ID = #{REPORT_ID}
+ <!--    SELECT NVL(SUM(REPLACE(ALL_DEBT_BALANCE,',')),0) LOAN_BALANCE FROM COM_DEBT_CHANGE_HIST_SUMM WHERE REPORT_ID = #{REPORT_ID}	 -->
+</select>
+
+<!--中间和表外业务余额(元)-->
+<select id="getCreditMiddBalance" parameterType="String" resultType="Map" >
+   	SELECT 
+   		(SELECT NVL(SUM(REPLACE(BUSS_BALANCE,',')),0) FROM COM_OUTER_BUSS_DETAIL WHERE BUSS_TYPE IN ('06','07','08') AND REPORT_ID = #{REPORT_ID})+
+		(SELECT NVL(SUM(REPLACE(TOTAL,',')),0) FROM COM_BANK_ACC_ATTACGED_INFO WHERE  REPORT_ID = #{REPORT_ID}) MIDDLE_TABLEOUT_BALANCE FROM DUAL
+	
+	  <!-- SELECT NVL(SUM(REPLACE(BALANCE_NUM,',')),0) MIDDLE_TABLEOUT_BALANCE FROM COM_GUARANTEE_DET WHERE GUAR_TRANS_SPECIES_NICHE IN ('51','61','71','72') AND REPORT_ID = #{REPORT_ID} -->
+</select>
+
+<!--贷款业务授信额(元)-->
+<select id="getCreditBussSum" parameterType="String" resultType="Map" >
+   	SELECT NVL(SUM(REPLACE(BUSS_SUM,',')),0) LOAN_CREDIT_QUOTA FROM COM_INNER_BUSS_DETAIL WHERE BUSS_TYPE = '01' AND REPORT_ID = #{REPORT_ID}
+</select>
+
+<!--中间和表外业务授信额(元)-->
+<select id="getCreditMiddBussSum" parameterType="String" resultType="Map" >
+   	SELECT (SELECT NVL(SUM(REPLACE(BUSS_SUM,',')),0) FROM COM_OUTER_BUSS_DETAIL 
+   	WHERE BUSS_TYPE IN ('06','07','08') AND REPORT_ID = #{REPORT_ID}) MIDDLE_TABLEOUT_CREDIT_QUOTA FROM DUAL
+</select>
+<!--处置信息(多条）-->
+<select id="getCreditAssetDebt" parameterType="String" resultType="Map" >
+   	SELECT 
+	    DISP_ORG ORG_NAME,
+	    CURRENCY CURRENCY,
+	    ORIG_AMOUNT AMOUNT,
+	    REC_DATE RECEIVE_DATE,
+	    BALANCE BALANCE,
+	    LAST_DISP_DATE LAST_DISPOSAL_DATE,
+	    SETTLE_STATUS STATUS
+	FROM
+	    COM_ASSET_DISP_DEBT_DETAIL
+	WHERE
+	    REPORT_ID = #{REPORT_ID}
+</select>
+
+<!--担保及第三方代偿的债务(多条）-->
+<select id="getCreditGuarComp" parameterType="String" resultType="Map" >
+   	SELECT 
+	    COMP_ORG ORG_NAME,
+	    LAST_COMP_DATE LAST_COMPENSATION_DATE,
+	    TATAL_COMP_SUM AMOUNT,
+	    COMP_BALANCE BALANCE,
+	    LAST_REPAY_DATE LAST_REPAY_DATE,
+	    SETTLE_STATUS STATUS
+	FROM
+	    COM_GUAR_COMP_DETAIL
+	WHERE
+	    REPORT_ID = #{REPORT_ID}
+</select>
+
+<!--欠息信息(多条）-->
+<select id="getCreditLackInfo" parameterType="String" resultType="Map" >
+  	SELECT 
+	    CREDIT_ORG ORG_NAME,
+	    CURRENCY CURRENCY,
+	    LACK_INTE_BALANCE AMOUNT,
+	    BALANCE_CHANGE_DATE BALANCE_CHANGE_DATE,
+	    LACK_INTE_TYPE OI_TYPE,
+	    SETTLE_STATUS STATUS
+	FROM
+	    COM_LACK_INTEREST
+	    REPORT_ID = #{REPORT_ID}
+	UNION ALL
+	SELECT 
+	    CREDIT_ORG ORG_NAME,
+	    CURRENCY CURRENCY,
+	    HIS_MAX_LACK_INTE AMOUNT,
+	    LAST_SETTLE_DATE BALANCE_CHANGE_DATE,
+	    LACK_INTE_TYPE OI_TYPE,
+	    SETTLE_STATUS STATUS
+	FROM
+	    COM_LACK_INTEREST
+	WHERE
+	   SETTLE_STATUS = '1'
+	AND
+	    REPORT_ID = #{REPORT_ID}
+</select>
+</mapper>

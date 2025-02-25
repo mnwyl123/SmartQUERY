@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PwdExpireRemindMapper">
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		      CREDIT_CODE,
+              CREDIT_NAME,
+              CREDENTIALS_TYPE,
+              CREDENTIALS_NO,
+              START_DATE,
+              END_DATE,
+              PWD_EXPIRES_DATE
+		from 
+			CIFM_CREDIT_ACCT_MANAGE
+		where 
+			CREDIT_CODE = #{CREDIT_CODE}
+		AND
+			COMPANY = #{COMPANY}
+		AND 
+			CREDIT_ACCT_TYPE=#{CREDIT_ACCT_TYPE}
+	</select>
+	<!-- 更新 -->
+	<update id="update" parameterType="pd" >
+		UPDATE
+				CIFM_CREDIT_ACCT_MANAGE
+			set 
+			  PWD_EXPIRES_DATE=#{PWD_EXPIRES_DATE},
+			  PREVIOUS_PASSWORD=#{PREVIOUS_PASSWORD},
+              CURRENT_PASSWORD=#{CURRENT_PASSWORD},
+              CURRENTTIME=#{CURRENT_TIME},
+			  PERBANK_STATUS=#{PERBANK_STATUS}
+			where 
+				CREDIT_CODE=#{CREDIT_CODE}
+			AND
+				COMPANY = #{COMPANY}
+			AND 
+				CREDIT_ACCT_TYPE=#{CREDIT_ACCT_TYPE}
+	</update>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		      CREDIT_CODE,
+              CREDIT_NAME,
+              PWD_EXPIRES_DATE,
+              CREDIT_ACCT_TYPE,
+              DATEDIFF(STR_TO_DATE(PWD_EXPIRES_DATE,'%Y%m%d'),STR_TO_DATE(#{pd.DATA_DATE},'%Y%m%d')) EXPIRES_NUM,
+		      IS_WEB
+		from  CIFM_CREDIT_ACCT_MANAGE
+		where  COMPANY = #{pd.COMPANY}
+		<if test="pd.CREDIT_CODE !=null and pd.CREDIT_CODE != ''"><!-- 检索 -->
+		and CREDIT_CODE LIKE CONCAT(CONCAT('%', #{pd.CREDIT_CODE}),'%')
+		</if>
+		<if test="pd.CREDIT_NAME != null and pd.CREDIT_NAME != ''">
+		and  CREDIT_NAME LIKE CONCAT(CONCAT('%', #{pd.CREDIT_NAME}),'%')
+		</if>
+		ORDER BY EXPIRES_NUM ASC
+	</select>
+	<!-- 查询小于过期天数下账户信息列表 -->
+	<select id="queryExpireAccount" parameterType="java.util.Map" resultType="pd">
+		select
+		CREDIT_CODE,
+		CREDIT_NAME,
+		PWD_EXPIRES_DATE,
+		CREDIT_ACCT_TYPE,
+		DATEDIFF(STR_TO_DATE(PWD_EXPIRES_DATE,'%Y%m%d'),sysdate()) EXPIRES_NUM,
+		IS_WEB
+		from  CIFM_CREDIT_ACCT_MANAGE
+		where DATEDIFF(STR_TO_DATE(PWD_EXPIRES_DATE,'%Y%m%d'),sysdate())&lt; 7
+		and 0 &lt; DATEDIFF(STR_TO_DATE(PWD_EXPIRES_DATE,'%Y%m%d'),sysdate())
+		and IS_WEB = '0'
+		ORDER BY EXPIRES_NUM ASC
+	</select>
+	<select id="queryhistAccount" parameterType="java.util.Map" resultType="pd">
+		<![CDATA[ select ID,left(REPLACE(APPLICATION_TIME,'-',''),6) APPLICATION_TIME,REPORT_ID from cifm_flow_status 
+		where left(APPLICATION_TIME,10) = DATE_SUB(curdate(),INTERVAL 40 DAY)
+		and REPORT_ID is not null and LENGTH(REPORT_ID)>0
+		order by APPLICATION_TIME desc 
+		]]>
+	</select>
+	<update id="saveY5" parameterType="java.util.Map" >
+		insert into PER_CUR_Y5_SHOW_INFO_#{APPLICATION_TIME} (REPORT_ID,SERIAL,REPAY_STATUS,P_MONTH,OVERDRAFT_SUM)
+		select REPORT_ID,SERIAL,REPAY_STATUS,P_MONTH,OVERDRAFT_SUM from PER_CUR_Y5_SHOW_INFO where report_id = #{REPORT_ID}
+	</update>
+	<update id="saveM24" parameterType="java.util.Map" >
+		insert into PER_CUR_M24_SHOW_INFO_#{APPLICATION_TIME} (REPORT_ID,SERIAL,REPAY_STATUS,P_MONTH)
+		select REPORT_ID,SERIAL,REPAY_STATUS,P_MONTH from PER_CUR_M24_SHOW_INFO where report_id = #{REPORT_ID}
+	</update>
+	<update id="savepld" parameterType="java.util.Map" >
+		insert into PER_LOAN_DETAIL_#{APPLICATION_TIME} (  REPORT_ID 
+										  ,SERIAL_NUMBER 
+										  ,SERIAL 
+										  ,LOANS_DATE 
+										  ,BUSSID 
+										  ,VOUCHTYPE 
+										  ,CURRENCYTYPE 
+										  ,LOANS_ORG 
+										  ,LOANS_AMOUNT 
+										  ,LOANS_USE 
+										  ,REPAY_NUM 	
+										  ,REPAY_TYPE 
+										  ,EXPIRY_DATE 
+										  ,STOP_DATE 
+										  ,ACC_STATUS 
+										  ,FIVE_TYPE 
+										  ,PRINCIPAL_BALANCE 
+										  ,REST_REPAY_NUM 
+										  ,CUR_REPAY_AMOUT 
+										  ,PLAN_REPAY_DATE 
+										  ,ACTUAL_REPAY_AMOUT 
+										  ,LAST_REPAY_DATE 
+										  ,CUR_OVER_NUM 
+										  ,CUR_OVER_AMOUNT 
+										  ,T_N_REPAY_PRINCIPAL 
+										  ,S_N_REPAY_PRINCIPAL 
+										  ,N_N_REPAY_PRINCIPAL 
+										  ,L_N_REPAY_PRINCIPAL 
+										  ,STATEBTIME 
+										  ,STATEETIME 
+										  ,REPAY_RECORD 
+										  ,OVERDUE_BDATE 
+										  ,OVERDUE_EDATE 
+										  ,SPECIAL_TRADE_TYPE 
+										  ,OCCUR_DATE 
+										  ,CHANGE_MONTH 
+										  ,occur_sum 
+										  ,OVERDUE_DETAIL 
+										  ,balance 
+										  ,BANK_TYPE 
+										  ,n_cr_card_avg_used_sum 
+										  ,n_cr_card_max_cred_sum 
+										  ,nq_cr_card_cred_sum 
+										  ,nq_cr_card_max_cred_sum 
+										  ,nq_cr_card_avg_used_sum 
+										  ,n_cr_card_used_sum 
+										  ,NQ_CR_CARD_COMPANY_ORG_NUM 
+										  ,nq_cr_card_overdraft_balance 
+										  ,N_CR_CARD_ORG_NUM 
+										  ,n_cr_card_cred_sum 
+										  ,NQ_CR_CARD_ACC_NUM 
+										  ,nq_cr_card_min_cred_sum 
+										  ,N_CR_CARD_ACC_NUM 
+										  ,REPAYER_CNT 
+										  ,BAD_DEBT_NUM 
+										  ,bad_debt_balance 
+										  ,n_cr_card_min_cred_sum 
+										  ,CIRC_ACC_ACC_SUM 
+										  ,circ_acc_balance 
+										  ,circ_acc_cred_sum 
+										  ,CIRC_ACC_MANA_ORG_CNT 
+										  ,circ_acc_repay_avg6 
+										  ,CIRC_QUO_ACC_SUM 
+										  ,circ_quo_balance 
+										  ,circ_quo_cred_sum 
+										  ,CIRC_QUO_MANA_ORG_CNT 
+										  ,circ_quo_repay_avg6 
+										  ,NON_REV_ACC_SUM 
+										  ,non_rev_balance 
+										  ,non_rev_cred_sum 
+										  ,NON_REV_MANAGER_ORG_CNT 
+										  ,non_rev_repay_avg6 
+										  ,OVERDUE_ACC_TYPE_CNT 
+										  ,PRO_ACC_TOTAL 
+										  ,PRO_BUSI_TYPE_CNT 
+										  ,REC_ACC_TOTAL 
+										  ,rec_balance_total 
+										  ,REC_BUSS_TYPE_CNT 
+										  ,ACCOUNT_SIGN 
+										  ,ACCOUNT_TYPE 
+										  ,acc_cred_quota 
+										  ,BUSS_CATEGORY 
+										  ,buss_org_code 
+										  ,BUSS_ORG_TYPE 
+										  ,CESSION_REPAY_STATUS 
+										  ,COMMON_LOAN_SIGN 
+										  ,CREATE_DATE 
+										  ,CRED_SERIAL 
+										  ,CURRENCY 
+										  ,CUR_ACC_STATUS 
+										  ,cur_actual_repay_amout 
+										  ,cur_avg_overdraft_balance 
+										  ,cur_avg_use_quota 
+										  ,cur_balance 
+										  ,cur_cur_over_amount 
+										  ,CUR_CUR_OVER_NUM 
+										  ,cur_cur_repay_amout 
+										  ,CUR_FIVE_TYPE 
+										  ,CUR_INFO_REPORT_DATE 
+										  ,CUR_LARGE_DIVIDE_CNT 
+										  ,CUR_LAST_REPAY_DATE 
+										  ,cur_l_n_repay_principal 
+										  ,cur_l_overdraft_principal 
+										  ,CUR_M24_EDATE 
+										  ,CUR_M24_SDATE 
+										  ,cur_max_overdraft_balance 
+										  ,cur_max_use_quota 
+										  ,cur_no_issued_balanc 
+										  ,cur_n_n_repay_principal 
+										  ,CUR_PLAN_REPAY_DATE 
+										  ,CUR_P_MONTH 
+										  ,CUR_REST_REPAY_NUM 
+										  ,CUR_SPECIAL_CASE_CNT 
+										  ,CUR_SPECIAL_TRADE_CNT 
+										  ,cur_s_n_repay_principal 
+										  ,cur_t_n_repay_principal 
+										  ,cur_used_sum 
+										  ,CUR_Y5_EDATE 
+										  ,CUR_Y5_MONTH_CNT 
+										  ,CUR_Y5_SDATE 
+										  ,LABEL_CNT 
+										  ,LOAN_DISTRI_FORM 
+										  ,loan_sum 
+										  ,NEW_ACC_STATUS 
+										  ,new_balance 
+										  ,NEW_CLOSE_DATE 
+										  ,NEW_FIVE_TYPE 
+										  ,NEW_INFO_REPORT_DATE 
+										  ,NEW_LAST_REPAY_DATE 
+										  ,new_last_repay_sum 
+										  ,NEW_OUT_MONTH 
+										  ,NEW_REPAY_STATUE 
+										  ,REPAY_FREQ 
+										  ,REPAY_WAY 
+										  ,share_cred_quota 
+										  ,FIVE_TYPE2 
+										  ,VOUCHTYPE2 
+										  ,CURRENCYTYPE2 
+										  ,SPECIAL_TRADE_TYPE2 )
+								select    REPORT_ID 
+										  ,SERIAL_NUMBER 
+										  ,SERIAL 
+										  ,LOANS_DATE 
+										  ,BUSSID 
+										  ,VOUCHTYPE 
+										  ,CURRENCYTYPE 
+										  ,LOANS_ORG 
+										  ,LOANS_AMOUNT 
+										  ,LOANS_USE 
+										  ,REPAY_NUM 
+										  ,REPAY_TYPE 
+										  ,EXPIRY_DATE 
+										  ,STOP_DATE 
+										  ,ACC_STATUS 
+										  ,FIVE_TYPE 
+										  ,PRINCIPAL_BALANCE 
+										  ,REST_REPAY_NUM 
+										  ,CUR_REPAY_AMOUT 
+										  ,PLAN_REPAY_DATE 
+										  ,ACTUAL_REPAY_AMOUT 
+										  ,LAST_REPAY_DATE 
+										  ,CUR_OVER_NUM 
+										  ,CUR_OVER_AMOUNT 
+										  ,T_N_REPAY_PRINCIPAL 
+										  ,S_N_REPAY_PRINCIPAL 
+										  ,N_N_REPAY_PRINCIPAL 
+										  ,L_N_REPAY_PRINCIPAL 
+										  ,STATEBTIME 
+										  ,STATEETIME 
+										  ,REPAY_RECORD 
+										  ,OVERDUE_BDATE 
+										  ,OVERDUE_EDATE 
+										  ,SPECIAL_TRADE_TYPE 
+										  ,OCCUR_DATE 
+										  ,CHANGE_MONTH 
+										  ,occur_sum 
+										  ,OVERDUE_DETAIL 
+										  ,balance 
+										  ,BANK_TYPE 
+										  ,n_cr_card_avg_used_sum 
+										  ,n_cr_card_max_cred_sum 
+										  ,nq_cr_card_cred_sum 
+										  ,nq_cr_card_max_cred_sum 
+										  ,nq_cr_card_avg_used_sum 
+										  ,n_cr_card_used_sum 
+										  ,NQ_CR_CARD_COMPANY_ORG_NUM 
+										  ,nq_cr_card_overdraft_balance 
+										  ,N_CR_CARD_ORG_NUM 
+										  ,n_cr_card_cred_sum 
+										  ,NQ_CR_CARD_ACC_NUM 
+										  ,nq_cr_card_min_cred_sum 
+										  ,N_CR_CARD_ACC_NUM 
+										  ,REPAYER_CNT 
+										  ,BAD_DEBT_NUM 
+										  ,bad_debt_balance 
+										  ,n_cr_card_min_cred_sum 
+										  ,CIRC_ACC_ACC_SUM 
+										  ,circ_acc_balance 
+										  ,circ_acc_cred_sum 
+										  ,CIRC_ACC_MANA_ORG_CNT 
+										  ,circ_acc_repay_avg6 
+										  ,CIRC_QUO_ACC_SUM 
+										  ,circ_quo_balance 
+										  ,circ_quo_cred_sum 
+										  ,CIRC_QUO_MANA_ORG_CNT 
+										  ,circ_quo_repay_avg6 
+										  ,NON_REV_ACC_SUM 
+										  ,non_rev_balance 
+										  ,non_rev_cred_sum 
+										  ,NON_REV_MANAGER_ORG_CNT 
+										  ,non_rev_repay_avg6 
+										  ,OVERDUE_ACC_TYPE_CNT 
+										  ,PRO_ACC_TOTAL 
+										  ,PRO_BUSI_TYPE_CNT 
+										  ,REC_ACC_TOTAL 
+										  ,rec_balance_total 
+										  ,REC_BUSS_TYPE_CNT 
+										  ,ACCOUNT_SIGN 
+										  ,ACCOUNT_TYPE 
+										  ,acc_cred_quota 
+										  ,BUSS_CATEGORY 
+										  ,buss_org_code 
+										  ,BUSS_ORG_TYPE 
+										  ,CESSION_REPAY_STATUS 
+										  ,COMMON_LOAN_SIGN 
+										  ,CREATE_DATE 
+										  ,CRED_SERIAL 
+										  ,CURRENCY 
+										  ,CUR_ACC_STATUS 
+										  ,cur_actual_repay_amout 
+										  ,cur_avg_overdraft_balance 
+										  ,cur_avg_use_quota 
+										  ,cur_balance 
+										  ,cur_cur_over_amount 
+										  ,CUR_CUR_OVER_NUM 
+										  ,cur_cur_repay_amout 
+										  ,CUR_FIVE_TYPE 
+										  ,CUR_INFO_REPORT_DATE 
+										  ,CUR_LARGE_DIVIDE_CNT 
+										  ,CUR_LAST_REPAY_DATE 
+										  ,cur_l_n_repay_principal 
+										  ,cur_l_overdraft_principal 
+										  ,CUR_M24_EDATE 
+										  ,CUR_M24_SDATE 
+										  ,cur_max_overdraft_balance 
+										  ,cur_max_use_quota 
+										  ,cur_no_issued_balanc 
+										  ,cur_n_n_repay_principal 
+										  ,CUR_PLAN_REPAY_DATE 
+										  ,CUR_P_MONTH 
+										  ,CUR_REST_REPAY_NUM 
+										  ,CUR_SPECIAL_CASE_CNT 
+										  ,CUR_SPECIAL_TRADE_CNT 
+										  ,cur_s_n_repay_principal 
+										  ,cur_t_n_repay_principal 
+										  ,cur_used_sum 
+										  ,CUR_Y5_EDATE 
+										  ,CUR_Y5_MONTH_CNT 
+										  ,CUR_Y5_SDATE 
+										  ,LABEL_CNT 
+										  ,LOAN_DISTRI_FORM 
+										  ,loan_sum 
+										  ,NEW_ACC_STATUS 
+										  ,new_balance 
+										  ,NEW_CLOSE_DATE 
+										  ,NEW_FIVE_TYPE 
+										  ,NEW_INFO_REPORT_DATE 
+										  ,NEW_LAST_REPAY_DATE 
+										  ,new_last_repay_sum 
+										  ,NEW_OUT_MONTH 
+										  ,NEW_REPAY_STATUE 
+										  ,REPAY_FREQ 
+										  ,REPAY_WAY 
+										  ,share_cred_quota 
+										  ,FIVE_TYPE2 
+										  ,VOUCHTYPE2 
+										  ,CURRENCYTYPE2 
+										  ,SPECIAL_TRADE_TYPE2  from PER_LOAN_DETAIL where report_id = #{REPORT_ID}
+	</update>
+	<update id="delY5" parameterType="java.util.Map" >
+		delete from PER_CUR_Y5_SHOW_INFO where report_id = #{REPORT_ID}
+	</update>
+	<update id="delM24" parameterType="java.util.Map" >
+		delete from PER_CUR_M24_SHOW_INFO where report_id = #{REPORT_ID}
+	</update>
+	<update id="delpld" parameterType="java.util.Map" >
+		delete from PER_LOAN_DETAIL where report_id = #{REPORT_ID}
+	</update>
+	<select id="querySyncAccount" parameterType="java.util.Map" resultType="pd">
+		select ID,CLIENT_TYPE from cifm_flow_status where SEND_STATUS != '1' OR LENGTH(SEND_STATUS) = 0 or SEND_STATUS is null
+	</select>
+</mapper>

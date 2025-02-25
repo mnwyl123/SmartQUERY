@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="KeyCustMaintainMapper">
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		      CUST_NO,
+			  CLIENT_TYPE,
+			  CLIENT_NAME,
+			  CREDENTIALS_NO,
+			  OPERATION_TYPE,
+			  ORG_NAME,
+			  ORG_CODE, 
+			  USER_NAME,
+			  USER_CODE,
+			  ADD_DATE,
+			  ADD_REASON,
+			  DELETE_DATE,
+			  DELETE_REASON,
+			  COMPANY
+		from  CIFM_KEY_CUST_MAINTAIN
+		where 
+			CUST_NO=#{CUST_NO}
+	</select>
+	<!-- 获取重点客户编号 -->
+	<select id="findId" parameterType="pd" resultType="pd">
+		select cast(max(FIND_ID) + 1 AS CHAR) FIND_ID FROM (select cast(substr(CUST_NO ,- 8) AS signed) FIND_ID from CIFM_KEY_CUST_MAINTAIN
+        where 
+            subStr(CUST_NO,0,8)=#{DATA_DATE}) a
+	</select>
+	<!--新增 -->
+	<insert id="insert" parameterType="pd">
+		insert into CIFM_KEY_CUST_MAINTAIN (
+              CUST_NO,
+			  CLIENT_TYPE,
+			  CLIENT_NAME,
+			  CREDENTIALS_NO,
+			  OPERATION_TYPE,
+			  ORG_NAME,
+			  ORG_CODE, 
+			  USER_NAME,
+			  USER_CODE,
+			  ADD_DATE,
+			  ADD_REASON,
+			  DELETE_DATE,
+			  DELETE_REASON,
+			  COMPANY
+             )
+        values(
+            #{CUST_NO},
+			#{CLIENT_TYPE},
+			#{CLIENT_NAME},
+			#{CREDENTIALS_NO},
+			#{OPERATION_TYPE},
+			#{ORG_NAME},
+			#{ORG_CODE}, 
+			#{USER_NAME},
+			#{USER_CODE},
+			#{ADD_DATE},
+			#{ADD_REASON},
+			#{DELETE_DATE},
+			#{DELETE_REASON},
+			#{COMPANY}
+            ) 
+	</insert>
+	<!-- 更新 -->
+	<update id="update" parameterType="pd" >
+		UPDATE
+			CIFM_KEY_CUST_MAINTAIN
+			set 
+			  ADD_DATE=#{ADD_DATE},
+              ADD_REASON=#{ADD_REASON},
+			  DELETE_DATE=#{DELETE_DATE},
+              DELETE_REASON=#{DELETE_REASON}
+			where 
+				CUST_NO=#{CUST_NO}
+	</update>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		      CUST_NO,
+			  CLIENT_TYPE,
+			  CLIENT_NAME,
+			  CREDENTIALS_NO,
+			  OPERATION_TYPE,
+			  ORG_NAME,
+			  ORG_CODE, 
+			  USER_NAME,
+			  USER_CODE,
+			  ADD_DATE,
+			  ADD_REASON,
+			  DELETE_DATE,
+			  DELETE_REASON
+		from  CIFM_KEY_CUST_MAINTAIN
+		where 
+			COMPANY = #{pd.COMPANY}
+		<if test="pd.CLIENT_TYPE !=null and pd.CLIENT_TYPE != ''"><!-- 检索 -->
+		and pd.CLIENT_TYPE = #{pd.pd.CLIENT_TYPE} 
+		</if>
+		<if test="pd.CLIENT_NAME != null and pd.CLIENT_NAME != ''">
+		and  CLIENT_NAME=#{pd.CLIENT_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_NO != null and pd.CREDENTIALS_NO != ''">
+		and  CREDENTIALS_NO=#{pd.CREDENTIALS_NO}
+		</if>
+	</select>
+	<delete id="delete" parameterType="pd">
+		delete from  CIFM_KEY_CUST_MAINTAIN
+		where 
+			CUST_NO=#{CUST_NO}
+	</delete>
+</mapper>

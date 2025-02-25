@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CompanyMapper">
+
+	<sql id="companyTableName">
+		SYS_COMPANY
+	</sql>
+	
+	<select id="companylistPage" parameterType="page" resultType="pd" >
+		select  c.COMP_CODE,
+				c.COMP_SHORT,
+				c.COMP_NAME,
+				c.USER_CODE,
+				c.LOGO_PATH,
+				a.LOCK_STATUS
+		from <include refid="companyTableName"></include> c, SYS_USER a
+		where
+			c.USER_CODE = a.USERNAME AND C.COMP_CODE = a.COMPANY
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+				c.COMP_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or 
+				c.COMP_SHORT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				or
+				c.COMP_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or
+				c.USER_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or
+				c.LOGO_PATH LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+		</if>
+	</select>
+	
+	<!-- 通过COMP_CODE获取数据 -->
+	<select id="findByCompCode" parameterType="pd" resultType="pd" >
+		select  c.COMP_CODE,
+				c.COMP_SHORT,
+				c.COMP_NAME,
+				c.USER_CODE,
+				c.LOGO_PATH
+		from <include refid="companyTableName"></include> c
+		where 
+			c.COMP_CODE = #{COMP_CODE}
+	</select>
+	
+	<!-- 新增法人 -->
+	<insert id="saveC" parameterType="pd" >
+		insert into <include refid="companyTableName"></include> (
+			COMP_CODE,COMP_SHORT,COMP_NAME,USER_CODE,LOGO_PATH
+		) values (
+			#{COMP_CODE},#{COMP_SHORT},#{COMP_NAME},#{USER_CODE},#{LOGO_PATH}
+		)
+	</insert>
+	<!-- 修改 -->
+	<update id="editC" parameterType="pd" >
+		update  <include refid="companyTableName"></include>
+			set COMP_SHORT				= #{COMP_SHORT},
+				COMP_NAME 				= #{COMP_NAME},
+				USER_CODE 				= #{USER_CODE},
+				LOGO_PATH				= #{LOGO_PATH}
+			where 
+				COMP_CODE = #{COMP_CODE}
+	</update>
+	<!-- 删除法人 -->
+	<delete id="deleteC" parameterType="pd" flushCache="false">
+		delete from <include refid="companyTableName"></include>
+		where 
+			COMP_CODE = #{COMP_CODE}
+	</delete>
+	<!-- 批量删除 -->
+	<delete id="deleteAllC" parameterType="String" >
+		delete from <include refid="companyTableName"></include>
+		where 
+			COMP_CODE in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	
+	<!-- 根据法人代码查询法人用户名 -->
+	<select id="findByCompCodeList" parameterType="String" resultType="pd" >
+		select  c.COMP_CODE,
+				c.COMP_SHORT,
+				c.COMP_NAME,
+				c.USER_CODE,
+				c.LOGO_PATH
+		from <include refid="companyTableName"></include> c
+		where COMP_CODE in 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                  #{item}
+         </foreach>
+	</select>
+	<!-- 对新建法人建立菜单 -->
+	<select id="buildMenu" parameterType="List" >
+                  insert into SYS_MENU(
+	                  	MENU_ID,
+				 		MENU_NAME,
+				 		MENU_NAME_EN,
+				 		MENU_URL,
+				 		PARENT_ID,
+				 		MENU_ICON,
+				 		ORDER_BY,
+				 		MENU_TYPE,
+				 		MENU_STATE,
+				 		MENU_GROUP_ID,
+				 		TRAN_CODE,
+				 		SYS_IND,
+				 		COMPANY
+                  )
+                  select
+                     MENU_ID,
+			 		MENU_NAME,
+			 		MENU_NAME_EN,
+			 		MENU_URL,
+			 		PARENT_ID,
+			 		MENU_ICON,
+			 		ORDER_BY,
+			 		MENU_TYPE,
+			 		MENU_STATE,
+			 		MENU_GROUP_ID,
+			 		TRAN_CODE,
+			 		SYS_IND,
+			 		COMPANY
+			 	from
+                <foreach item="item" index="index" collection="list" open="(" separator="union" close=")">
+                  	select 	
+                    	#{item.menuId} MENU_ID,
+				 		#{item.menuName} MENU_NAME,
+				 		#{item.menuNameEN} MENU_NAME_EN,
+				 		#{item.menuUrl} MENU_URL,
+				 		#{item.parentId} PARENT_ID,
+				 		#{item.menuIcon} MENU_ICON,
+				 		#{item.orderBy} ORDER_BY,
+				 		#{item.menuType} MENU_TYPE,
+				 		#{item.menuState} MENU_STATE,
+				 		#{item.menuGroupId} MENU_GROUP_ID,
+				 		#{item.tranCode} TRAN_CODE,
+				 		#{item.sysInd} SYS_IND,
+				 		#{item.company} COMPANY
+				 	from DUAL
+         </foreach> A
+	</select>
+	<select id="listAllComp" resultType="pd" >
+		select  c.COMP_CODE,
+				c.COMP_SHORT,
+				c.COMP_NAME,
+				c.USER_CODE,
+				c.LOGO_PATH
+		from <include refid="companyTableName"></include>c
+	</select>
+	<!-- fh313596790qq(pengyj) -->
+</mapper>

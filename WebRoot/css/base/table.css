@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+
+table.lightBlue,table.lightBlue th,table.lightBlue td {
+	border: solid 1px gray;
+	border-collapse: collapse; //
+	font-weight: normal;
+	font-size: 11pt;
+	font:normal normal normal 9pt Arial; 
+	cursor: arrow;
+}
+
+table.lightBlue{
+	border:2px solid #4A6994;	
+}
+
+table.lightBlue th {
+	border:1px solid #4A6994; 
+	border-bottom:2px solid #4A6994; 
+	background-color:#EFF7FF; 
+	color:#000000;
+	padding: 2px;
+	font-weight:bold;
+	text-align: center;
+}
+
+table.lightBlue td {
+	border:1px solid #4A6994; 
+	font:normal normal normal 9pt Arial; 
+	background-color:#FFFFFF; 
+	color:#000000;
+	padding: 2px;
+	text-align: left;
+}
+
+
+table.lightBlue tr.o {
+	background-color: aae0e0;
+}
+
+table.lightBlue tr.e {
+	background-color: #e0aae0;
+}

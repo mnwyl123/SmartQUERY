@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CostManageMapper">
+	
+	<!-- 费用对账列表 -->
+	<select id="getCRlistPage" parameterType="page" resultType="pd">
+		select 
+				<if test="pd.product_id != null and pd.product_id != ''">
+					NAME,
+				</if>
+				<if test="pd.product_id == null or pd.product_id == ''">
+					'全部产品' as NAME,
+				</if>
+				sum(PERQUERYCNT) PERQUERYCNT,
+				PERQUERYCOST,
+				sum(PERQUERYCOSTCNT) PERQUERYCOSTCNT,
+				sum(ORGQUERYCNT) ORGQUERYCNT,
+				ORGQUERYCOST,
+				sum(ORGQUERYCOSTCNT) ORGQUERYCOSTCNT,
+				sum(QUERYCOST) QUERYCOST
+				FROM (
+		SELECT
+			product_NAME NAME,
+			ifnull(PERQUERYCNT,'0') PERQUERYCNT,
+			PERQUERYCOST,
+			ifnull(PERQUERYCNT,'0')*PERQUERYCOST PERQUERYCOSTCNT,
+			ifnull(ORGQUERYCNT,'0') ORGQUERYCNT,
+			ORGQUERYCOST,
+			ifnull(ORGQUERYCNT,'0')*ORGQUERYCOST ORGQUERYCOSTCNT,
+			ifnull(PERQUERYCNT,'0')*PERQUERYCOST+ifnull(ifnull(ORGQUERYCNT,'0')*ORGQUERYCOST,'0') QUERYCOST
+			FROM
+			CIFM_PRODUCT a left join 
+			( SELECT
+                    pro_id,
+                    COUNT(1) PERQUERYCNT,
+                    PERQUERYCOST
+                FROM
+                    (
+                        SELECT
+                            pro_id,
+                            COUNT(1) PERQUERYCNT,
+                            (
+                                SELECT
+                                    COST
+                                FROM
+                                    CIFM_COST_CALCULATE
+                                WHERE
+                                    COST_TYPE='1') PERQUERYCOST,
+                            per.CREDENTIALS_NO,
+                            per.CLIENT_NAME,
+                            SUBSTR(pers.QUERY_TIME,1,10) QUERY_TIME
+                        FROM
+                            CIFM_FLOW_STATUS pers
+                        LEFT JOIN
+                            CIFM_PERSON_INFO per
+                        ON
+                            pers.ID=per.ID
+                        WHERE
+                            pers.INTERNAL = '2'
+                        AND CLIENT_TYPE = '1'
+                        AND pers.RESULTCODE = 'AAA000'
+                        <if test="pd.product_id != null and pd.product_id != ''">
+							and pro_id = #{pd.product_id}
+						</if>
+                        AND SUBSTR(pers.QUERY_TIME,1,10) BETWEEN  #{pd.START_DATE} and #{pd.END_DATE}
+                        GROUP BY
+                            per.CREDENTIALS_NO,
+                            per.CLIENT_NAME,
+                            SUBSTR(pers.QUERY_TIME,1,10),
+                            pro_id) pert
+                GROUP BY
+                    pro_id,
+                    PERQUERYCOST) b
+			on a.product_id = b.pro_id
+			left join 
+			(
+                SELECT
+                    pro_id,
+                    COUNT(1) ORGQUERYCNT,
+                    ORGQUERYCOST
+                FROM
+                    (
+                        SELECT
+                            pro_id,
+                            COUNT(1) ORGQUERYCNT,
+                            (
+                                SELECT
+                                    COST
+                                FROM
+                                    CIFM_COST_CALCULATE
+                                WHERE
+                                    COST_TYPE='2') ORGQUERYCOST,
+                            com.CHINA_CREDIT_CODE,
+                            com.COMPANY_NAME,
+                            SUBSTR(coms.QUERY_TIME,1,7) QUERY_TIME
+                        FROM
+                            CIFM_FLOW_STATUS coms
+                        LEFT JOIN
+                            CIFM_COMPANY_INFO com
+                        ON
+                            coms.ID=com.ID
+                        WHERE
+                            coms.INTERNAL = '2'
+                        AND CLIENT_TYPE = '2'
+                        AND coms.RESULTCODE = 'AAA000'
+                        <if test="pd.product_id != null and pd.product_id != ''">
+							and pro_id = #{pd.product_id}
+						</if>
+                        AND SUBSTR(coms.QUERY_TIME,1,10) BETWEEN  #{pd.START_DATE} and #{pd.END_DATE}
+                        GROUP BY
+                            com.CHINA_CREDIT_CODE,
+                            com.COMPANY_NAME,
+                            SUBSTR(coms.QUERY_TIME,1,7),
+                            pro_id) comt
+                GROUP BY
+                    pro_id,
+                    ORGQUERYCOST) c
+			on a.product_id = c.pro_id
+			<if test="pd.product_id != null and pd.product_id != ''">
+				where product_id = #{pd.product_id}
+			</if>
+			order by PERQUERYCNT desc ) A
+	</select>
+		
+	<!-- 费用对账新增(个人) -->
+	<insert id="saveCR_per" parameterType="pd">
+		INSERT INTO 
+		CIFM_COST_CALCULATE(
+			DATA_DATE,
+			COST_TYPE,
+			COST,
+			COMPANY)
+		VALUES(
+			#{DATA_DATE},
+			1,
+			#{PERQUERYCOST},
+			#{COMPANY})
+	</insert>
+	<!-- 费用对账新增(企业) -->
+	<insert id="saveCR_org" parameterType="pd">
+		INSERT INTO 
+		CIFM_COST_CALCULATE(
+			DATA_DATE,
+			COST_TYPE,
+			COST,
+			COMPANY)
+		VALUES(
+			#{DATA_DATE},
+			2,
+			#{ORGQUERYCOST},
+			#{COMPANY})
+	</insert>
+	<!-- 费用对账修改(个人) -->
+	<update id="updateCR_per" parameterType="pd">
+		UPDATE 
+			CIFM_COST_CALCULATE
+		SET
+			COST = #{PERQUERYCOST}
+		WHERE
+			 COST_TYPE = 1
+	</update>
+	<!-- 费用对账修改(企业) -->
+	<update id="updateCR_org" parameterType="pd">
+		UPDATE 
+			CIFM_COST_CALCULATE
+		SET
+			COST = #{ORGQUERYCOST}
+		WHERE
+			 COST_TYPE = 2
+	</update>
+	<!-- 根据查询时间查找记录(个人) -->
+	<select id="findByFindTime_per" parameterType="pd" resultType="pd">
+		SELECT 
+			COST
+		FROM	
+			CIFM_COST_CALCULATE
+		WHERE
+			 COST_TYPE = 1
+	</select>
+	<!-- 根据查询时间查找记录(企业) -->
+	<select id="findByFindTime_org" parameterType="pd" resultType="pd">
+		SELECT 
+			COST
+		FROM	
+			CIFM_COST_CALCULATE
+		WHERE
+			 COST_TYPE = 2
+	</select>
+	<!-- 费用分摊明细 -->
+	<select id="getCSDlistPage" parameterType="page" resultType="pd">
+		   SELECT
+			product_NAME NAME,
+			ifnull(PERQUERYCNT,'0') PERQUERYCNT,
+			PERQUERYCOST,
+			ifnull(PERQUERYCNT,'0')*PERQUERYCOST PERQUERYCOSTCNT,
+			ifnull(ORGQUERYCNT,'0') ORGQUERYCNT,
+			ORGQUERYCOST,
+			ifnull(ORGQUERYCNT,'0')*ORGQUERYCOST ORGQUERYCOSTCNT,
+			ifnull(PERQUERYCNT,'0')*PERQUERYCOST+ifnull(ORGQUERYCNT,'0')*ORGQUERYCOST QUERYCOSTCNT
+			FROM
+			CIFM_PRODUCT a left join 
+			(SELECT
+                    pro_id,
+                    COUNT(1) PERQUERYCNT,
+                    PERQUERYCOST
+                FROM
+                    (
+                        SELECT
+                            pro_id,
+                            COUNT(1) PERQUERYCNT,
+                            (
+                                SELECT
+                                    COST
+                                FROM
+                                    CIFM_COST_CALCULATE
+                                WHERE
+                                    COST_TYPE='1') PERQUERYCOST,
+                            per.CREDENTIALS_NO,
+                            per.CLIENT_NAME,
+                            SUBSTR(pers.QUERY_TIME,1,10) QUERY_TIME
+                        FROM
+                            CIFM_FLOW_STATUS pers
+                        LEFT JOIN
+                            CIFM_PERSON_INFO per
+                        ON
+                            pers.ID=per.ID
+                        WHERE
+                            pers.INTERNAL = '2'
+                        AND CLIENT_TYPE = '1'
+                        AND pers.RESULTCODE = 'AAA000'
+                        <if test="pd.product_id != null and pd.product_id != ''">
+							and pro_id = #{pd.product_id}
+						</if>
+                        AND SUBSTR(pers.QUERY_TIME,1,10) BETWEEN  #{pd.START_DATE} and #{pd.END_DATE}
+                        GROUP BY
+                            per.CREDENTIALS_NO,
+                            per.CLIENT_NAME,
+                            SUBSTR(pers.QUERY_TIME,1,10),
+                            pro_id) pert
+                GROUP BY
+                    pro_id,
+                    PERQUERYCOST) b
+			on a.product_id = b.pro_id
+			left join 
+			(
+                SELECT
+                    pro_id,
+                    COUNT(1) ORGQUERYCNT,
+                    ORGQUERYCOST
+                FROM
+                    (
+                        SELECT
+                            pro_id,
+                            COUNT(1) ORGQUERYCNT,
+                            (
+                                SELECT
+                                    COST
+                                FROM
+                                    CIFM_COST_CALCULATE
+                                WHERE
+                                    COST_TYPE='2') ORGQUERYCOST,
+                            com.CHINA_CREDIT_CODE,
+                            com.COMPANY_NAME,
+                            SUBSTR(coms.QUERY_TIME,1,7) QUERY_TIME
+                        FROM
+                            CIFM_FLOW_STATUS coms
+                        LEFT JOIN
+                            CIFM_COMPANY_INFO com
+                        ON
+                            coms.ID=com.ID
+                        WHERE
+                            coms.INTERNAL = '2'
+                        AND CLIENT_TYPE = '2'
+                        AND coms.RESULTCODE = 'AAA000'
+                        <if test="pd.product_id != null and pd.product_id != ''">
+							and pro_id = #{pd.product_id}
+						</if>
+                        AND SUBSTR(coms.QUERY_TIME,1,10) BETWEEN  #{pd.START_DATE} and #{pd.END_DATE}
+                        GROUP BY
+                            com.CHINA_CREDIT_CODE,
+                            com.COMPANY_NAME,
+                            SUBSTR(coms.QUERY_TIME,1,7),
+                            pro_id) comt
+                GROUP BY
+                    pro_id,
+                    ORGQUERYCOST) c
+			on a.product_id = c.pro_id
+			<where>
+				<if test="pd.product_id!= null and pd.product_id != ''">
+					product_id = #{pd.product_id}
+				</if>
+			</where>
+			order by PERQUERYCNT desc
+	</select>
+	<select id="hisGetCSDlistPage" parameterType="page" resultType="pd">
+    SELECT
+      NAME,
+      ORGQUERYCNT,
+      ORGQUERYCOST,
+      ORGQUERYCNT*ifnull(ORGQUERYCOST,0) ORGQUERYCOSTCNT,
+      PERQUERYCNT,
+      PERQUERYCOST,
+      PERQUERYCNT*ifnull(PERQUERYCOST,0) PERQUERYCOSTCNT,
+      ORGQUERYCNT*ifnull(ORGQUERYCOST,0)+PERQUERYCNT*ifnull(PERQUERYCOST,0) QUERYCOSTCNT
+    FROM
+      (SELECT
+        (SELECT NAME FROM SYS_ORG WHERE ORG_ID = M.ORG_ID) NAME,
+        (SELECT count(1) from fyftmx_temp1 where CLIENT_TYPE = 2 and org_id = m.org_id) ORGQUERYCNT,
+        (SELECT COST FROM CIFM_COST_CALCULATE WHERE DATA_DATE> #{pd.START_DATE} AND DATA_DATE &lt;  #{pd.END_DATE} AND COST_TYPE=2 AND COMPANY = #{pd.COMPANY}) ORGQUERYCOST,
+        (SELECT count(1) from fyftmx_temp1 where CLIENT_TYPE = 1 and org_id = m.org_id) PERQUERYCNT,
+        (SELECT COST FROM CIFM_COST_CALCULATE WHERE DATA_DATE> #{pd.START_DATE} AND DATA_DATE &lt;  #{pd.END_DATE} AND COST_TYPE=1 AND COMPANY =#{pd.COMPANY}) PERQUERYCOST
+      FROM
+        (SELECT DISTINCT ORG_ID,DATA_DATE FROM fyftmx_temp1) M      
+      WHERE
+        1=1
+        <if test="pd.ORGNAME != null and pd.ORGNAME != ''">
+					AND ORG_ID IN (SELECT ORG_ID FROM SYS_ORG START WITH NAME=#{pd.ORGNAME}
+						CONNECT BY PARENT_ID = PRIOR ORG_ID AND COMPANY = #{pd.COMPANY})
+				</if>
+    union 
+        SELECT 
+        '—' NAME,
+        (SELECT  NUM_ALL.NUM-NUM_COM.NUM  FROM (SELECT COUNT(1) NUM FROM CIFM_BANK_QUERY_FLOW where SUBSTR(TRIM(REPORT_TYPE),1,2)='企业') NUM_ALL,(SELECT COUNT(1) NUM FROM fyftmx_temp1 WHERE CLIENT_TYPE='2') NUM_COM) ORGQUERYCNT,
+        (SELECT COST FROM CIFM_COST_CALCULATE WHERE DATA_DATE> #{pd.START_DATE} AND DATA_DATE &lt;  #{pd.END_DATE} AND COST_TYPE=2 AND COMPANY = #{pd.COMPANY}) ORGQUERYCOST,
+        (SELECT  NUM_ALL.NUM-NUM_PER.NUM  FROM (SELECT COUNT(1) NUM FROM CIFM_BANK_QUERY_FLOW where SUBSTR(TRIM(REPORT_TYPE),1,2)='个人') NUM_ALL,(SELECT COUNT(1) NUM FROM fyftmx_temp1 WHERE CLIENT_TYPE='1') NUM_PER) PERQUERYCNT,
+        (SELECT COST FROM CIFM_COST_CALCULATE WHERE DATA_DATE> #{pd.START_DATE} AND DATA_DATE &lt;  #{pd.END_DATE} AND COST_TYPE=1 AND COMPANY =#{pd.COMPANY}) PERQUERYCOST
+      FROM
+        (SELECT  NUM_ALL.NUM-NUM_COM.NUM ORGQUERYCNT  FROM (SELECT COUNT(1) NUM FROM CIFM_BANK_QUERY_FLOW where SUBSTR(TRIM(REPORT_TYPE),1,2)='企业') NUM_ALL,(SELECT COUNT(1) NUM FROM fyftmx_temp1 WHERE CLIENT_TYPE='2') NUM_COM)M1,
+       (SELECT  NUM_ALL.NUM-NUM_PER.NUM  PERQUERYCNT FROM (SELECT COUNT(1) NUM FROM CIFM_BANK_QUERY_FLOW where SUBSTR(TRIM(REPORT_TYPE),1,2)='个人') NUM_ALL,(SELECT COUNT(1) NUM FROM fyftmx_temp1 WHERE CLIENT_TYPE='1') NUM_PER) M2     
+      WHERE
+        1=1
+        and   M1.ORGQUERYCNT!=0 and  M2.PERQUERYCNT!=0
+        and   M1.ORGQUERYCNT!=null and  M2.PERQUERYCNT!=null
+		 <if test="pd.ORGNAME != null and pd.ORGNAME != ''">
+				and 1=0
+		 </if>
+			) a
+	</select>
+	
+	<select id="getAllOrgNameByOrgID" parameterType="pd" resultType="pd">
+		SELECT 
+			DISTINCT NAME,ORG_CODE
+		FROM 
+			SYS_ORG
+		WHERE
+			COMPANY = #{COMPANY}
+	</select>
+	<select id="getAllProduct" resultType="pd">
+		SELECT 
+			DISTINCT product_id,product_name
+		FROM 
+			cifm_product
+	</select>
+	<!-- 清除费用明细临时表1 -->
+	<delete id="delMxTemp1" parameterType="pd">
+	   delete from fyftmx_temp1 where user_info = #{pd.company}
+	</delete>
+	
+	<!-- 清除费用明细临时表2 -->
+	<delete id="delMxTemp2" parameterType="pd">
+	   delete from fyftmx_temp2 where user_info = #{pd.company}
+	</delete>
+	
+	<!-- 插入费用明细临时表1 -->
+	<insert id="addMxTemp1" parameterType="pd">
+	   insert into  fyftmx_temp1 (
+	       TRADE_NO ,
+           DATA_DATE ,
+           CLIENT_TYPE,
+           ORG_ID ,
+	       user_info 
+	   )
+	   select TRADE_NO ,DATA_DATE ,CLIENT_TYPE,ORG_ID , #{pd.company} from 
+	   (SELECT
+  F.TRADE_NO,
+  SUBSTR(F.TRADE_TIME, 1, 7) DATA_DATE,
+  1 CLIENT_TYPE,
+  (SELECT
+    org_id
+  FROM
+    sys_user_org
+  WHERE user_id = G.user_sys_id) ORG_ID
+FROM
+ CIFM_BANK_QUERY_FLOW  F
+  INNER JOIN
+    (SELECT DISTINCT
+      E.Query_Time,
+      E.CREDENTIALS_NO,
+      D.user_sys_id
+    FROM
+      CIFM_PERSON_DETAIL E
+      INNER JOIN CIFM_FLOW_STATUS D
+        ON D.ID = E.ID) G
+    ON F.PRODUCT_DES1 = G.CREDENTIALS_NO
+    AND DATE_FORMAT(G.Query_Time, '%Y-%m-%d') = DATE_FORMAT(
+      DATE_FORMAT(
+        REPLACE(F.TRADE_TIME, '-', '/'),
+        'yyyy/mm/dd hh24:mi:ss'
+      ),
+      '%Y-%m-%d'
+    )
+WHERE SUBSTR(TRIM(F.REPORT_TYPE), 1, 2) = '个人'
+  AND SUBSTR(F.TRADE_TIME, 1, 7) >  #{pd.START_DATE} AND substr(F.TRADE_TIME,1,7) &lt;  #{pd.END_DATE} 
+   AND F.COMPANY =  #{pd.COMPANY}
+ UNION
+ALL
+SELECT
+  F.TRADE_NO TRADE_NO,
+  SUBSTR(F.TRADE_TIME, 1, 7) DATA_DATE,
+  2 CLIENT_TYPE,
+  (SELECT
+    org_id
+  FROM
+    sys_user_org
+  WHERE user_id = G.user_sys_id) ORG_ID
+FROM
+  CIFM_BANK_QUERY_FLOW F
+  INNER JOIN
+    (SELECT DISTINCT
+      E.Query_Time,
+      E.CHINA_CREDIT_CODE,
+      D.user_sys_id
+    FROM
+      CIFM_company_DETAIL E
+      INNER JOIN CIFM_FLOW_STATUS D
+        ON D.ID = E.ID) G
+    ON F.PRODUCT_DES1 = G.CHINA_CREDIT_CODE
+    AND DATE_FORMAT(G.Query_Time, '%Y-%m-%d') = DATE_FORMAT(
+      DATE_FORMAT(
+        REPLACE(F.TRADE_TIME, '-', '/'),
+        'yyyy/mm/dd hh24:mi:ss'
+      ),
+      '%Y-%m-%d'
+    )
+WHERE SUBSTR(TRIM(F.REPORT_TYPE), 1, 2) = '企业'
+  AND SUBSTR(F.TRADE_TIME, 1, 7) > #{pd.START_DATE} AND substr(F.TRADE_TIME,1,7) &lt;  #{pd.END_DATE} 
+   AND F.COMPANY =  #{pd.COMPANY}) a
+	</insert>
+	
+	<!-- 插入费用明细临时表2 -->
+	<insert id="addMxTemp2" parameterType="pd">
+	insert into fyftmx_temp2(
+	DATA_DATE ,
+     ORG_ID,
+     pro_id,
+	 user_info)
+	 select 	DATA_DATE , ORG_ID,  pro_id, #{pd.company} from (
+	 SELECT
+  SUBSTR(F.TRADE_TIME, 1, 7) DATA_DATE,
+  (SELECT
+    org_id
+  FROM
+    sys_user_org
+  WHERE user_id = G.user_sys_id) ORG_ID,
+  G.pro_id
+FROM
+  CIFM_BANK_QUERY_FLOW F
+  INNER JOIN
+    (SELECT DISTINCT
+      E.Query_Time,
+      E.CREDENTIALS_NO,
+      D.user_sys_id,
+      D.pro_id
+    FROM
+      CIFM_PERSON_DETAIL E
+      INNER JOIN CIFM_FLOW_STATUS D
+        ON D.ID = E.ID) G
+    ON F.PRODUCT_DES1 = G.CREDENTIALS_NO
+    AND DATE_FORMAT (G.Query_Time, '%Y-%m-%d') = DATE_FORMAT (
+       DATE_FORMAT(
+        REPLACE(F.TRADE_TIME, '-', '/'),
+        'yyyy/mm/dd hh24:mi:ss'
+      ),
+      '%Y-%m-%d'
+    )
+WHERE SUBSTR(TRIM(F.REPORT_TYPE), 1, 2) = '个人'
+  AND SUBSTR(F.TRADE_TIME, 1, 7) > #{pd.START_DATE} AND substr(F.TRADE_TIME,1,7) &lt;  #{pd.END_DATE} 
+   AND F.COMPANY =#{pd.COMPANY}
+ UNION
+SELECT
+  SUBSTR(F.TRADE_TIME, 1, 7) DATA_DATE,
+  (SELECT
+    org_id
+  FROM
+    sys_user_org
+  WHERE user_id = G.user_sys_id) ORG_ID,
+  G.pro_id
+FROM
+ CIFM_BANK_QUERY_FLOW  F
+  INNER JOIN
+    (SELECT DISTINCT
+      E.Query_Time,
+      E.CHINA_CREDIT_CODE,
+      D.user_sys_id,
+      D.pro_id
+    FROM
+      CIFM_company_DETAIL E
+      INNER JOIN CIFM_FLOW_STATUS D
+        ON D.ID = E.ID) G
+    ON F.PRODUCT_DES1 = G.CHINA_CREDIT_CODE
+    AND DATE_FORMAT (G.Query_Time, '%Y-%m-%d') = DATE_FORMAT (
+      DATE_FORMAT (
+        REPLACE(F.TRADE_TIME, '-', '/'),
+        'yyyy/mm/dd hh24:mi:ss'
+      ),
+      '%Y-%m-%d'
+    )
+WHERE SUBSTR(TRIM(F.REPORT_TYPE), 1, 2) = '企业'
+  AND SUBSTR(F.TRADE_TIME, 1, 7) > #{pd.START_DATE} AND substr(F.TRADE_TIME,1,7) &lt;  #{pd.END_DATE} 
+   AND F.COMPANY = #{pd.COMPANY})a
+	</insert>
+	
+</mapper>

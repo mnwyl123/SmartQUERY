@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PersonReportInqMapper">
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+	    SELECT 
+	      A.ID,
+	      A.CLIENT_NAME,
+	      A.CREDENTIALS_TYPE,
+	      A.CREDENTIALS_NO,
+	      A.QUERY_VERSION,
+	      B.QUERY_TIME,
+	      B.APPLICATION_TIME,
+	      B.CHECK_TIME,
+	      B.USER_SYS_ID,
+	      B.STATUS
+	    FROM(
+	       SELECT 
+	          B.ID,
+	          DATE_FORMAT(B.QUERY_TIME,'%Y-%m-%d %H:%i:%s') QUERY_TIME,
+	          DATE_FORMAT(B.APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
+	          DATE_FORMAT(B.CHECK_TIME,'%Y-%m-%d %H:%i:%s') CHECK_TIME,
+	          B.USER_SYS_ID,
+	          B.ORG_ID,
+	          B.STATUS
+	        FROM
+	          CIFM_FLOW_STATUS B
+	        WHERE
+	          B.STATUS IN('05','06') or B.RESULTCODE = 'AAA000'
+	       )B
+	    INNER JOIN
+	      CIFM_PERSON_INFO A
+	    ON
+	      A.ID=B.ID
+	    INNER JOIN
+	      SYS_ORG D
+	    ON
+	      B.ORG_ID=D.ORG_ID
+	    WHERE 1=1
+	    <if test="pd.USERNAME !='adminYLBANK'.toString()">
+	      and B.USER_SYS_ID=#{pd.USERID}
+	    </if>  
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME !=  ''">
+			and
+				A.CLIENT_NAME=#{pd.CLIENT_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				A.CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				A.CREDENTIALS_NO=#{pd.CREDENTIALS_NO}
+		</if>
+		<if test="pd.QUERY_TIME!= null and pd.QUERY_TIME != ''">
+			and
+				substr(B.QUERY_TIME,1,10)=#{pd.QUERY_TIME}
+				<!-- #{pd.QUERY_TIME} -->
+		</if>
+		order by B.QUERY_TIME desc
+	</select>
+	<select id="hisDatalistPage" parameterType="page" resultType="pd">
+	    SELECT 
+	      A.ID,
+	      A.CLIENT_NAME,
+	      A.CREDENTIALS_TYPE,
+	      A.CREDENTIALS_NO,
+	      A.QUERY_VERSION,
+	      B.QUERY_TIME,
+	      B.APPLICATION_TIME,
+	      B.CHECK_TIME,
+	      B.USER_SYS_ID,
+	      B.STATUS
+	    FROM(
+	       SELECT 
+	          B.ID,
+	          DATE_FORMAT(B.QUERY_TIME,'%Y-%m-%d %H:%i:%s') QUERY_TIME,
+	          DATE_FORMAT(B.APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
+	          DATE_FORMAT(B.CHECK_TIME,'%Y-%m-%d %H:%i:%s') CHECK_TIME,
+	          B.USER_SYS_ID,
+	          B.ORG_ID,
+	          B.STATUS
+	        FROM
+	          CIFM_FLOW_STATUS B
+	        WHERE
+	          B.STATUS IN('05','06') or B.RESULTCODE = 'AAA000'
+	          and b.pro_id in (select pro_id from sys_user_pro where user_id = #{pd.USERID})
+	       )B
+	    INNER JOIN
+	      CIFM_PERSON_INFO A
+	    ON
+	      A.ID=B.ID
+	    INNER JOIN
+	      SYS_ORG D
+	    ON
+	      B.ORG_ID=D.ORG_ID
+	    WHERE 1=1 
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME !=  ''">
+			and
+				A.CLIENT_NAME=#{pd.CLIENT_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				A.CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				A.CREDENTIALS_NO=#{pd.CREDENTIALS_NO}
+		</if>
+		<if test="pd.QUERY_TIME!= null and pd.QUERY_TIME != ''">
+			and
+				substr(B.QUERY_TIME,1,10)=#{pd.QUERY_TIME}
+				<!-- #{pd.QUERY_TIME} -->
+		</if>
+		order by B.QUERY_TIME desc
+	</select>	
+	<!-- 记录是否打印 -->
+	<update id="updateIsPrint" parameterType="pd" >
+		UPDATE
+				CIFM_FLOW_STATUS
+			set 
+				IS_PRINT= #{IS_PRINT}
+			where 
+				ID= #{ID}
+	</update>
+	<!-- 查询系统设置的最高查询次数 -->
+	<select id="findPrintNum"  parameterType="String" resultType="pd">
+		SELECT 
+			VALUE
+		FROM 
+			SERVER_MESSAGE_INFO 
+		WHERE CODE=#{_parameter}
+	</select>
+		<!-- 查询系统设置的最高查询次数 -->
+	<select id="findActualNum"  parameterType="pd" resultType="pd">
+		SELECT 
+			ifnull(IS_PRINT,'0')  IS_PRINT
+		FROM 
+			CIFM_FLOW_STATUS 
+		WHERE ID= #{ID}
+	</select>
+	<select id="testlistPage" parameterType="page" resultType="pd">
+	    SELECT 
+	      A.ID,
+	      A.CLIENT_NAME,
+	      A.CREDENTIALS_TYPE,
+	      A.CREDENTIALS_NO,
+	      A.QUERY_VERSION,
+	      B.QUERY_TIME,
+	      B.APPLICATION_TIME,
+	      B.CHECK_TIME,
+	      B.USER_SYS_ID,
+	      B.STATUS,
+	      c.NAME,
+	      B.REPORT_ID
+	    FROM(
+	       SELECT 
+	          B.ID,
+	          DATE_FORMAT(B.QUERY_TIME,'%Y-%m-%d %H:%i:%s') QUERY_TIME,
+	          DATE_FORMAT(B.APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
+	          DATE_FORMAT(B.CHECK_TIME,'%Y-%m-%d %H:%i:%s') CHECK_TIME,
+	          B.USER_SYS_ID,
+	          B.ORG_ID,
+	          B.STATUS,
+	          B.REPORT_ID
+	        FROM
+	          CIFM_FLOW_STATUS B
+	         where b.INTERNAL = '2'
+	       )B
+	    INNER JOIN
+	      CIFM_PERSON_INFO A
+	    ON
+	      A.ID=B.ID
+	    INNER JOIN
+	      SYS_ORG D
+	    ON
+	      B.ORG_ID=D.ORG_ID
+	    inner join sys_user c
+	    on c.USER_ID = b.USER_SYS_ID
+	    WHERE
+	      D.COMPANY=#{pd.COMPANY}
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME !=  ''">
+			and
+				A.CLIENT_NAME=#{pd.CLIENT_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				A.CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				A.CREDENTIALS_NO=#{pd.CREDENTIALS_NO}
+		</if>
+		order by B.APPLICATION_TIME desc
+	</select>
+	<select id="oldlistPage" parameterType="page" resultType="pd">
+	    SELECT 
+	      A.ID,
+	      A.CLIENT_NAME,
+	      A.CREDENTIALS_TYPE,
+	      A.CREDENTIALS_NO,
+	      A.QUERY_VERSION,
+	      B.QUERY_TIME,
+	      B.APPLICATION_TIME,
+	      B.CHECK_TIME,
+	      B.USER_SYS_ID,
+	      B.STATUS,
+	      c.NAME,
+	      B.REPORT_ID
+	    FROM(
+	       SELECT 
+	          B.ID,
+	          DATE_FORMAT(B.QUERY_TIME,'%Y-%m-%d %H:%i:%s') QUERY_TIME,
+	          DATE_FORMAT(B.APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
+	          DATE_FORMAT(B.CHECK_TIME,'%Y-%m-%d %H:%i:%s') CHECK_TIME,
+	          B.USER_SYS_ID,
+	          B.ORG_ID,
+	          B.STATUS,
+	          B.REPORT_ID
+	        FROM
+	          CIFM_FLOW_STATUS B
+	         where b.INTERNAL = '2'
+	       )B
+	    INNER JOIN
+	      CIFM_PERSON_INFO A
+	    ON
+	      A.ID=B.ID
+	    INNER JOIN
+	      SYS_ORG D
+	    ON
+	      B.ORG_ID=D.ORG_ID
+	    inner join sys_user c
+	    on c.USER_ID = b.USER_SYS_ID
+	    WHERE
+	      D.COMPANY=#{pd.COMPANY}
+		<if test="pd.CLIENT_NAME!= null and pd.CLIENT_NAME !=  ''">
+			and
+				A.CLIENT_NAME=#{pd.CLIENT_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_TYPE!= null and pd.CREDENTIALS_TYPE != ''">
+			and
+				A.CREDENTIALS_TYPE=#{pd.CREDENTIALS_TYPE}
+		</if>
+		<if test="pd.CREDENTIALS_NO!= null and pd.CREDENTIALS_NO != ''">
+			and
+				A.CREDENTIALS_NO=#{pd.CREDENTIALS_NO}
+		</if>
+		order by B.APPLICATION_TIME desc
+	</select>
+	<delete id="deletePER_BASIC" parameterType="pd">
+	    delete from PER_BASIC
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="deletePER_OTHER_IDENTITY" parameterType="pd">
+	    delete from PER_OTHER_IDENTITY
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="deletePER_PHONE_INFO" parameterType="pd">
+	    delete from PER_PHONE_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="deletePER_SPOU" parameterType="pd">
+	    delete from PER_SPOU
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="deletePER_LIVE" parameterType="pd">
+	    delete from PER_LIVE
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_CAREER" parameterType="pd">
+	    delete from PER_CAREER
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_LOAN_SUMMARY" parameterType="pd">
+	    delete from PER_LOAN_SUMMARY
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_LOAN_PROMPT_DETAIL" parameterType="pd">
+	    delete from PER_LOAN_PROMPT_DETAIL
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_OVERDUE_SUMMARY_INFO" parameterType="pd">
+	    delete from PER_OVERDUE_SUMMARY_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_LOAN_REPAYER" parameterType="pd">
+	    delete from PER_LOAN_REPAYER
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_PUBLIC_SUMMARY_INFO" parameterType="pd">
+	    delete from PER_PUBLIC_SUMMARY_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_QUERY_SUMMARY" parameterType="pd">
+	    delete from PER_QUERY_SUMMARY
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_LOAN_DETAIL" parameterType="pd">
+	    delete from PER_LOAN_DETAIL
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_CUR_M24_SHOW_INFO" parameterType="pd">
+	    delete from PER_CUR_M24_SHOW_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_CUR_Y5_SHOW_INFO" parameterType="pd">
+	    delete from PER_CUR_Y5_SHOW_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_SPECIAL_TRADE" parameterType="pd">
+	    delete from PER_SPECIAL_TRADE
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_SPECIAL_CASE_INFO" parameterType="pd">
+	    delete from PER_SPECIAL_CASE_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_LARGE_DIVIDE_INFO" parameterType="pd">
+	    delete from PER_LARGE_DIVIDE_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_LABEL_INFO" parameterType="pd">
+	    delete from PER_LABEL_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_CRED_BASE_INFO" parameterType="pd">
+	    delete from PER_CRED_BASE_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_REPAYER" parameterType="pd">
+	    delete from PER_REPAYER
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_AFTER_PAY_INFO" parameterType="pd">
+	    delete from PER_AFTER_PAY_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_OWE_TAXES" parameterType="pd">
+	    delete from PER_OWE_TAXES
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_VERDICT" parameterType="pd">
+	    delete from PER_VERDICT
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_INFORCE" parameterType="pd">
+	    delete from PER_INFORCE
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_PENALTIES" parameterType="pd">
+	    delete from PER_PENALTIES
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_PROVIDENT_FUND_PAY" parameterType="pd">
+	    delete from PER_PROVIDENT_FUND_PAY
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_LOW_SECURITY" parameterType="pd">
+	    delete from PER_LOW_SECURITY
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_QUALIFICATION" parameterType="pd">
+	    delete from PER_QUALIFICATION
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_ADMINI_REWARD" parameterType="pd">
+	    delete from PER_ADMINI_REWARD
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_WHOLE_LABEL_INFO" parameterType="pd">
+	    delete from PER_WHOLE_LABEL_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_QUERY_DETAIL" parameterType="pd">
+	    delete from PER_QUERY_DETAIL
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_RECOVER_INFO_DETAIL" parameterType="pd">
+	    delete from PER_RECOVER_INFO_DETAIL
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+	<delete id="PER_AFTER_PAY_OWE_INFO" parameterType="pd">
+	    delete from PER_AFTER_PAY_OWE_INFO
+	    where REPORT_ID=#{REPORT_ID}
+	</delete>
+</mapper>

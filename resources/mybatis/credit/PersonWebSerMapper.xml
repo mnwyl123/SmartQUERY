@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PersonWebSerMapper">
+    
+   	<!-- 通过系统用户名获取人行用户名-->
+	<select id="findUsernamePerBank" parameterType="String" resultType="String">
+		select 
+			USERNAME_PERBANK   
+		FROM SYS_USER
+		where 
+			USERNAME = #{_parameter}
+	</select>
+	<!-- 通过人行用户名获取人行密码-->
+	<select id="findPasswordPerBank" parameterType="String" resultType="String">
+		select 
+			CURRENT_PASSWORD   
+		FROM CIFM_CREDIT_ACCT_MANAGE
+		where 
+			CREDIT_CODE = #{_parameter}
+	</select>
+	<!-- 查询流程表所需值 -->
+	<select id="findFs" parameterType="String" resultType="pd">
+		SELECT A.ORG_CODE,A.ORG_ID,C.USER_ID,C.IP,C.MAC,C.LOCK_STATUS,C.USERNAME_PERBANK,C.USERNAME_PERBANK_ORG
+		  FROM SYS_ORG A
+		       INNER JOIN SYS_USER_ORG B ON A.ORG_ID = B.ORG_ID
+		       INNER JOIN SYS_USER C ON B.USER_ID = C.USER_ID
+		 WHERE C.USERNAME = #{_parameter}
+	</select>
+   	
+	<!--存入请求信息表-->
+	<insert id="saveToPersonInfo" parameterType="pd">
+		insert into CIFM_PERSON_INFO
+		(
+			ID,
+			QUERYORGCODE,
+			USERNAME,
+			ORIGINATEORGCODE,
+			ORIGINATEUSERCODE,
+			SERVICECODE,
+			CLIENT_NAME,
+			CREDENTIALS_TYPE,
+			CREDENTIALS_NO,
+			QUERY_REASON)
+  		values (
+  			#{ID},
+  			#{QueryOrgCode},
+  			#{UserName},
+  			#{OriginateOrgCode},
+  			#{OriginateUserCode},
+  			#{ServiceCode},
+	  		ENCRYPT_DEC(#{Name}),
+	        #{IDType},
+	        ENCRYPT_DEC(#{IDNum}),
+	        #{QueryReason}
+		)
+	</insert>
+	<!--存入流程状态表-->
+	<insert id="saveToFs" parameterType="pd">
+		insert into CIFM_FLOW_STATUS
+		(
+			ID,
+       		USER_SYS_ID,
+       		ORG_ID,
+		 	APPLICATION_TIME,
+			CHECK_SYS_ID,
+	  		STATUS,
+	  		IP,
+	  		MAC,
+	  		QUERY_TIME,
+	  		CLIENT_TYPE)
+  		values (
+	  		#{ID},
+	        #{USER_SYS_ID},
+	        #{ORG_ID},
+	        TO_DATE(#{APPLICATION_TIME},'YYYY-MM-DD HH24:MI:SS'),
+			#{CHECK_SYS_ID},
+	  		#{STATUS},
+	  		#{IP},
+	  		#{MAC},
+	  		TO_DATE(#{QUERY_TIME},'YYYY-MM-DD HH24:MI:SS'),
+	  		#{CLIENT_TYPE}
+		)
+	</insert>
+	<!-- 存储应答信息-->
+	<insert id="saveResult" parameterType="pd">
+		insert into OBJ_CHECK_ITEM_ATT
+		(
+			ID,
+			RESULTCODE,
+			RESULTDESC,
+			OBJCHECKID,
+			ENCLOSUREFLAG,
+			ENCLOSUREINF
+			)
+  		values (
+  			#{ID},
+	  		#{ResultCode},
+	        #{ResultDesc},
+	        #{ObjCheckID},
+	        #{EnclosureFlag},
+	        #{EnclosureInf}
+		)
+	</insert>
+	<!--更新请求信息表数据-->
+	<update id="updatePersonInfo" parameterType="pd">
+		UPDATE
+			CIFM_PERSON_INFO
+			set 
+				REPORTNAME=#{REPORTNAME}
+			where 
+				ID=#{ID}
+	</update>
+	<!-- 修改流程表 -->
+	<update id="updateFs" parameterType="pd" >
+		UPDATE
+			CIFM_FLOW_STATUS
+			set 
+				QUERY_TIME=TO_DATE(#{QUERY_TIME},'YYYY-MM-DD HH24:MI:SS'),
+				RESULTCODE=#{RESULTCODE},
+				RESULTDESC=#{RESULTDESC},
+				STATUS=#{STATUS},
+				REPORT_ID=#{REPORT_ID},
+				INTERNAL=#{INTERNAL}
+			where 
+				ID=#{ID}
+	</update>
+	
+</mapper>

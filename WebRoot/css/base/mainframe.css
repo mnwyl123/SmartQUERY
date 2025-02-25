@@ -1,0 +1,111 @@
+@CHARSET "UTF-8";
+
+
+.main-body {	
+	height:100%;width:100%;overflow: auto;
+}
+.ui-layout-north {
+	overflow:hidden; padding-bottom:2px; border-bottom:solid gray 1px;
+	background-image: url(images/mainframe/Bg_Top1.jpg); 
+	background-repeat:repeat-x;
+	height:77px;
+}
+
+#logo {
+	float:left;
+	height:50px;width:300px;
+	background-image:url(images/mainframe/Logo1.jpg);
+	background-repeat:no-repeat;
+}
+
+#banner-right {
+	float:right;
+	height:50px;width:60%px;
+	padding-right:1em;
+	/*
+	background-image:url(images/mainframe/Bg_Top_right.jpg);
+	*/
+	background-image: url(images/mainframe/Bg_Top1.jpg); 
+	background-repeat:no-repeat;
+	background-position:top right;	
+}
+
+#banner-right a:link{
+	color:#000;
+	font-size:12px;
+	text-decoration:none;
+}
+
+#banner-right a:hover {
+	color:#fff;
+	text-decoration:underline;
+}
+
+#banner-right a:active,#banner-right a:visited {
+	color:#000;
+	text-decoration:none;
+}
+
+#topNavBar {
+	clear:both;
+	height:27px;width:100%;
+	background-image:url(images/mainframe/Bg_Nav.jpg);
+}
+
+
+.title-td-version {
+	background-image: url(images/mainframe/Bg_Top.jpg); 
+	background-repeat:repeat-x;
+	width:80px;
+	font-size:12pt;
+	font-weight:bold;
+}
+
+.title-td-table span {
+	margin-left:4px;margin-right:4px;
+}
+
+.nav-table {
+	background-image: url(images/mainframe/Bg_Nav.jpg); 
+	background-repeat:repeat-x;
+	width:100%;
+	height:100%;
+}
+.nav-td-local-l {
+	color:#494949;
+	overflow:hidden;
+	margin-left:6px;
+}
+.nav-td-local-r {
+	color:#494949;
+	overflow:hidden;
+	width: 100%; 
+	height: 100%; 
+	text-overflow : ellipsis; 
+	overflow : hidden;
+	margin-left:2px;
+}
+.nav-button:hover {
+	background-image: url(images/mainframe/Bg_Nav_Selected.jpg); 
+	background-repeat:repeat-x; 
+	cursor:hand;
+	color:#FFFFFF;
+	font-weight:bold;
+}
+.nav-button {
+	width:80px;
+	height:100%;
+	color:#000000;
+	font-weight:bold;
+}
+.nav-button-divider{
+	background-image: url(images/mainframe/Bg_Nav_Divider.jpg);
+	background-repeat:no-repeat;
+	width:1px;
+}
+.west_title {
+	background-image: url(images/mainframe/Bg_Left_Title.jpg);
+	background-repeat:repeat-x;
+	border-bottom:1px solid #494949;
+	margin-left:5px;
+}

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CompanyRegisterMapper">
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select * from (
+		SELECT  
+				A.ID,
+		        A.COMPANY_NAME COMPANY_NAME,
+                A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+                A.QUERY_REASON,
+                A.CUST_MANAGER,
+                A.REMARKS,
+                D.NAME CHECK_SYS_NAME,
+                C.NAME USER_NAME,
+                DATE_FORMAT(B.CHECK_TIME,'%Y-%m-%d') APPLICATION_TIME,
+                CASE WHEN B.IS_PRINT='1' THEN '是' ELSE '否' END IS_PRINT,
+                A.BUSINESS_STATUS STATUS,
+                CASE WHEN B.STATUS='06' THEN '是' ELSE '否' END IS_GET,
+                C.USERNAME SEARCHER_ID,
+				F.NAME ORG_NAME,
+				case
+				when B.CHANNEL_QUERY_NO is null then '1'
+				when G.sum = '3' then '1'
+				when G.sum = '0' or G.sum is null then '0'
+				else '2' end as FLAG,
+                B.CHANNEL_QUERY_NO
+          FROM CIFM_COMPANY_INFO A
+          INNER JOIN CIFM_FLOW_STATUS B
+        ON A.ID = B.ID 
+        INNER JOIN SYS_USER C
+        ON B.USER_SYS_ID=C.USER_ID 
+        INNER JOIN SYS_USER D 
+        ON B.CHECK_SYS_ID =D.USER_ID
+        INNER JOIN SYS_USER_ORG E 
+		ON B.USER_SYS_ID= E.USER_ID 
+		INNER JOIN SYS_ORG F 
+		ON E.ORG_ID=F.ORG_ID
+		left JOIN (select ID,count(1) sum from ( select ID,APPLICATION_TYPE from id_url group by ID,APPLICATION_TYPE) a group by ID) G
+		ON B.ID = G.ID
+        WHERE 1=1 and F.COMPANY=#{pd.company}
+        <!--<if test="pd.sign!= null and pd.sign != ''">
+			<if test="pd.sign=='1'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d')= str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+			<if test="pd.sign=='2'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d') &gt; str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+			<if test="pd.sign=='3'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d') &lt; str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+		</if>-->
+      
+        <if test="pd.USERID== null or pd.USERID == ''">
+			AND C.USER_ID in(select user_id from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERID!= null and pd.USERID != ''">
+			AND C.USER_ID=#{pd.USERID}
+		</if>
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''">
+			and
+				A.COMPANY_NAME = #{pd.COMPANY_NAME}
+		</if>
+		<if test="pd.CHINA_CREDIT_CODE!= null and pd.CHINA_CREDIT_CODE != ''">
+			and
+				A.CHINA_CREDIT_CODE = #{pd.CHINA_CREDIT_CODE}
+		</if>
+		<if test="pd.SEARCHER_ID!= null and pd.SEARCHER_ID != ''">
+			and
+				C.USERNAME = #{pd.SEARCHER_ID}
+		</if>
+		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
+			and
+				F.NAME = #{pd.ORG_NAME}
+		</if>
+		<!-- <if test="pd.USER_NAME!= null and pd.USER_NAME != ''">
+			and
+				C.NAME=#{pd.USER_NAME}
+		</if> -->
+		) p
+		where 1=1
+        <if test="pd.FLAG!= null and pd.FLAG != ''">
+            AND FLAG=#{pd.FLAG}
+        </if>
+	</select>
+	<!-- 列表 -->
+	<select id="hisDatalistPage" parameterType="page" resultType="pd">
+		SELECT  
+				A.ID,
+		        A.COMPANY_NAME COMPANY_NAME,
+                A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+                A.QUERY_REASON,
+                A.CUST_MANAGER,
+                A.REMARKS,
+                D.NAME CHECK_SYS_NAME,
+                C.NAME USER_NAME,
+                DATE_FORMAT(B.CHECK_TIME,'%Y-%m-%d') APPLICATION_TIME,
+                CASE WHEN B.IS_PRINT='1' THEN '是' ELSE '否' END IS_PRINT,
+                A.BUSINESS_STATUS STATUS,
+                CASE WHEN B.STATUS='06' THEN '是' ELSE '否' END IS_GET,
+                C.USERNAME SEARCHER_ID,
+				F.NAME ORG_NAME
+          FROM CIFM_COMPANY_INFO_HIS A
+          INNER JOIN CIFM_FLOW_STATUS_HIS B
+        ON A.ID = B.ID 
+        INNER JOIN SYS_USER C
+        ON B.USER_SYS_ID=C.USER_ID 
+        INNER JOIN SYS_USER D 
+        ON B.CHECK_SYS_ID =D.USER_ID
+        INNER JOIN SYS_USER_ORG E
+		ON B.USER_SYS_ID= E.USER_ID 
+		INNER JOIN SYS_ORG F 
+		ON E.ORG_ID=F.ORG_ID
+        WHERE 1=1 and F.COMPANY=#{pd.company}
+        <if test="pd.sign!= null and pd.sign != ''">
+			<if test="pd.sign=='1'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d')= str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+			<if test="pd.sign=='2'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d') &gt; str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+			<if test="pd.sign=='3'.toString()">
+				AND str_to_date(b.application_time,'%Y-%m-%d') &lt; str_to_date(#{pd.APPLICATION_TIME},'%Y-%m-%d')
+			</if>
+		</if>
+        <if test="pd.USERID== null or pd.USERID == ''">
+			AND C.USER_ID in(select user_id from sys_user where company=#{pd.company})
+		</if>
+		<if test="pd.USERID!= null and pd.USERID != ''">
+			AND C.USER_ID=#{pd.USERID}
+		</if>
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''">
+			and
+				A.COMPANY_NAME = #{pd.COMPANY_NAME}
+		</if>
+		<if test="pd.CHINA_CREDIT_CODE!= null and pd.CHINA_CREDIT_CODE != ''">
+			and
+				A.CHINA_CREDIT_CODE = #{pd.CHINA_CREDIT_CODE}
+		</if>
+		<if test="pd.SEARCHER_ID!= null and pd.SEARCHER_ID != ''">
+			and
+				C.USERNAME = #{pd.SEARCHER_ID}
+		</if>
+		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
+			and
+				F.NAME = #{pd.ORG_NAME}
+		</if>
+		<!-- <if test="pd.USER_NAME!= null and pd.USER_NAME != ''">
+			and
+				C.NAME=#{pd.USER_NAME}
+		</if> -->
+	</select>
+	<!-- 添加备注 -->
+	<update id="update" parameterType="pd" >
+		UPDATE
+			CIFM_COMPANY_INFO
+			set 
+				REMARKS=#{REMARKS},
+				BUSINESS_STATUS=#{STATUS}
+			where 
+				ID=#{ID}
+	</update>
+	<!-- 导出 -->
+	<select id="listAll" parameterType="page" resultType="pd">
+		SELECT  
+				A.ID,
+		        A.COMPANY_NAME COMPANY_NAME,
+                A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+                A.QUERY_REASON,
+                A.CUST_MANAGER,
+                A.REMARKS,
+                D.NAME CHECK_SYS_NAME,
+                C.NAME USER_NAME,
+                DATE_FORMAT(B.CHECK_TIME,'%Y-%m-%d') APPLICATION_TIME,
+                CASE WHEN B.IS_PRINT='1' THEN '是' ELSE '否' END IS_PRINT,
+                A.BUSINESS_STATUS STATUS,
+                CASE WHEN B.STATUS='06' THEN '是' ELSE '否' END IS_GET 
+          FROM CIFM_COMPANY_INFO A
+          INNER JOIN CIFM_FLOW_STATUS B
+        ON A.ID = B.ID 
+        INNER JOIN SYS_USER C
+        ON B.USER_SYS_ID=C.USER_ID 
+        INNER JOIN SYS_USER D 
+        ON B.CHECK_SYS_ID =D.USER_ID
+        WHERE 1=1 AND C.USER_ID=#{pd.USERID}
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''">
+			and
+				A.COMPANY_NAME = #{pd.COMPANY_NAME}
+		</if>
+		<if test="pd.CHINA_CREDIT_CODE!= null and pd.CHINA_CREDIT_CODE != ''">
+			and
+				A.CHINA_CREDIT_CODE = #{pd.CHINA_CREDIT_CODE}
+		</if>
+		order by B.CHECK_TIME desc
+	</select>
+</mapper>

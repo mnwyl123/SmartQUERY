@@ -1,0 +1,1235 @@
+<html><head></head><body>
+	<table name="com_actual_controller">
+      <tr>
+        <td code="type_identity_num" encry="true">身份标识号码</td>
+        <td code="type_identity" encry="true">身份类型</td>
+        <td code="name_identity" encry="true">名称</td>
+        <td code="type_identity_logo" encry="false">身份标识类型</td>
+      </tr>
+    </table>
+    <table name="com_borrom_repay">
+      <tr>
+        <td code="balance_num_recover" encry="false">被追偿账户余额</td>
+        <td code="balance_num_other_focus" encry="false">其他借贷交易账户关注类余额</td>
+        <td code="num_other_trans_borrow" encry="false">其他借贷交易账户数</td>
+        <td code="balance_num_other_bad" encry="false">其他借贷交易账户不良类余额</td>
+        <td code="amount_repay_recover_others" encry="false">其他借贷交易的还款责任金额</td>
+        <td code="type_respon" encry="false">责任类型</td>
+        <td code="num_amonut_account" encry="false">被追偿账户数</td>
+        <td code="balance_num_other_trans_borrow" encry="false">其他借贷交易账户余额</td>
+        <td code="amount_repay_recover" encry="false">被追偿账户的还款责任金额</td>
+      </tr>
+    </table>
+    <table name="com_bor_discount">
+      <tr>
+        <td code="type_org" encry="false">业务管理机构类型</td>
+        <td code="repay_resp_type" encry="false">相关还款责任类型</td>
+        <td code="over_sum" encry="false">逾期总额</td>
+        <td code="five_cla" encry="false">五级分类</td>
+        <td code="num_account" encry="false">账户数</td>
+        <td code="len_sum" encry="false">借款金额</td>
+        <td code="balance_num" encry="false">余额</td>
+        <td code="smart_bus" encry="false">业务种类细分</td>
+        <td code="over_principal" encry="false">逾期本金</td>
+        <td code="repay_resp_bala" encry="false">相关还款责任金额</td>
+        <td code="code_org" encry="false">业务管理机构代码</td>
+        <td code="num_guar_contra" encry="false">保证合同编号</td>
+        <td code="dis_org_id" encry="false">贴现账户分机构汇总信息编号</td>
+      </tr>
+    </table>
+    <table name="com_bor_undiscount">
+      <tr>
+        <td code="over_month" encry="false">逾期月数</td>
+        <td code="type_business" encry="false">业务种类</td>
+        <td code="type_bor" encry="false">主借款人身份类别</td>
+        <td code="repay_resp_bala" encry="false">相关还款责任金额</td>
+        <td code="smart_bus" encry="false">业务种类细分</td>
+        <td code="five_cla" encry="false">五级分类</td>
+        <td code="over_sum" encry="false">逾期总额</td>
+        <td code="stat_repay" encry="false">还款状态</td>
+        <td code="num_month_remain" encry="false">剩余还款月数</td>
+        <td code="cred_id" encry="false">账户编号</td>
+        <td code="currency_repay" encry="false">币种（相关还款责任金额）</td>
+        <td code="code_org" encry="false">业务管理机构代码</td>
+        <td code="currency" encry="false">币种</td>
+        <td code="line_credit" encry="false">信用额度</td>
+        <td code="date_open" encry="false">开立日期</td>
+        <td code="balance_num" encry="false">余额</td>
+        <td code="num_guar_contra" encry="false">保证合同编号</td>
+        <td code="len_sum" encry="false">借款金额</td>
+        <td code="due_time_date" encry="false">到期日期</td>
+        <td code="date_info_report" encry="false">信息报告日期</td>
+        <td code="type_acc" encry="false">账户类型</td>
+        <td code="type_repay_pes" encry="false">相关还款责任人类型</td>
+        <td code="type_org" encry="false">业务管理机构类型</td>
+        <td code="over_principal" encry="false">逾期本金</td>
+      </tr>
+    </table>
+    <table name="com_car_ass_lia_ns_info">
+      <tr>
+        <td code="set_aside_funds" encry="false">拨出经费</td>
+        <td code="tax_sale" encry="false">销售税金</td>
+        <td code="in_car" encry="false">事业收入</td>
+        <td code="bala_car" encry="false">事业结余</td>
+        <td code="dra_fun_so" encry="false">一般基金</td>
+        <td code="oth_should_pay" encry="false">其他应付款</td>
+        <td code="in_fis_sub" encry="false">财政补助收入</td>
+        <td code="material" encry="false">材料</td>
+        <td code="bank_deposit" encry="false">银行存款</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="should_paper" encry="false">应收票据</td>
+        <td code="pay_out_top" encry="false">上缴上级支出</td>
+        <td code="pay_spefun" encry="false">专款支出</td>
+        <td code="asset_sum" encry="false">资产合计</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="sum_lia" encry="false">负债部类总计</td>
+        <td code="should_budget_par" encry="false">应缴预算款</td>
+        <td code="other_should_par" encry="false">其他应收款</td>
+        <td code="income_others" encry="false">其他收入</td>
+        <td code="dia_into_spefund" encry="false">拨入专款</td>
+        <td code="should_car_para" encry="false">应缴财政专户款</td>
+        <td code="defe_reven" encry="false">预收账款</td>
+        <td code="sum_asset_class" encry="false">资产部类总计</td>
+        <td code="bala_mang" encry="false">经营结余</td>
+        <td code="mon_spe" encry="false">专用基金</td>
+        <td code="carr_for_sel_infras" encry="false">结转自筹基建</td>
+        <td code="pay_bus" encry="false">经营支出</td>
+        <td code="out_car" encry="false">事业支出</td>
+        <td code="dia_out_spefun" encry="false">拨出专款</td>
+        <td code="should_par" encry="false">应付账款</td>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="top_in_fis" encry="false">上级补助收入</td>
+        <td code="sum_set" encry="false">净资产合计</td>
+        <td code="fixed_fund" encry="false">固定基金</td>
+        <td code="invest_fund" encry="false">投资基金</td>
+        <td code="dra_fun" encry="false">事业基金</td>
+        <td code="lia_sum" encry="false">负债合计</td>
+        <td code="record_borrow" encry="false">借记款项</td>
+        <td code="foreign_invest" encry="false">对外投资</td>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="finish_goods" encry="false">产成品</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="should_pay_tax" encry="false">应交税金</td>
+        <td code="pay_sum" encry="false">支出合计</td>
+        <td code="the_cost" encry="false">成本费用</td>
+        <td code="un_asset" encry="false">无形资产</td>
+        <td code="fis_asset" encry="false">固定资产</td>
+        <td code="pre_par" encry="false">预付账款</td>
+        <td code="money" encry="false">现金</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="should_pay_bill" encry="false">应付票据</td>
+        <td code="should_re_acc" encry="false">应收账款</td>
+        <td code="detach_subsidy" encry="false">对附属单位补助</td>
+        <td code="income_sum" encry="false">收入合计</td>
+        <td code="income_bus" encry="false">经营收入</td>
+        <td code="in_aff_pay" encry="false">附属单位缴款</td>
+      </tr>
+    </table>
+    <table name="com_car_ass_lia_ot_info">
+      <tr>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="unfina_bala" encry="false">非财政补助结余</td>
+        <td code="mon_spe" encry="false">专用基金</td>
+        <td code="unactiv_mony" encry="false">非流动资产基金</td>
+        <td code="wait_asset_caus" encry="false">待处置资产损溢</td>
+        <td code="fis_asset" encry="false">固定资产</td>
+        <td code="long_term_invest" encry="false">长期投资</td>
+        <td code="inventory" encry="false">存货</td>
+        <td code="fina_aid" encry="false">财政补助结转</td>
+        <td code="pay_longtim" encry="false">长期应付款</td>
+        <td code="unflow_asset_sum" encry="false">非流动资产合计</td>
+        <td code="pre_par" encry="false">预付账款</td>
+        <td code="unfina_aid" encry="false">非财政补助结转</td>
+        <td code="fina_bala" encry="false">财政补助结余</td>
+        <td code="dra_fun" encry="false">事业基金</td>
+        <td code="borr_longtim" encry="false">长期借款</td>
+        <td code="should_salary" encry="false">应付职工薪酬</td>
+        <td code="should_contr_para" encry="false">应缴国库款</td>
+        <td code="un_asset_price" encry="false">无形资产原价</td>
+        <td code="line_car_should" encry="false">财政应返还额度</td>
+        <td code="short_term_inves" encry="false">短期投资</td>
+        <td code="sum_asset" encry="false">资产总计</td>
+        <td code="price_fix_asset" encry="false">固定资产原价</td>
+        <td code="should_par" encry="false">应收账款</td>
+        <td code="money_fund" encry="false">货币资金</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="sum_sell" encry="false">累计摊销</td>
+        <td code="other_flow_asset" encry="false">其他流动资产</td>
+        <td code="sum_set" encry="false">净资产合计</td>
+        <td code="unactiv_sum" encry="false">非流动负债合计</td>
+        <td code="oth_should_pay" encry="false">其他应付款</td>
+        <td code="defe_reven" encry="false">预收账款</td>
+        <td code="should_car_para" encry="false">应缴财政专户款</td>
+        <td code="sum_dis_old" encry="false">累计折旧</td>
+        <td code="flow_asset_sum" encry="false">流动资产合计</td>
+        <td code="should_paper" encry="false">应付票据</td>
+        <td code="sum_lia" encry="false">负债合计</td>
+        <td code="flow_lia_sum" encry="false">流动负债合计</td>
+        <td code="should_reven" encry="false">应付账款</td>
+        <td code="short_time_borr" encry="false">短期借款</td>
+        <td code="un_asset" encry="false">无形资产</td>
+        <td code="engineering" encry="false">在建工程</td>
+        <td code="other_should_par" encry="false">其他应收款</td>
+        <td code="should_re_bill" encry="false">应收票据</td>
+        <td code="bal_set_sum" encry="false">负债和净资产总计</td>
+        <td code="bala_mang" encry="false">经营结余</td>
+        <td code="bala_car" encry="false">事业结余</td>
+        <td code="oth_flow_lia" encry="false">其他流动负债</td>
+        <td code="should_pay_tax" encry="false">应缴税费</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+      </tr>
+    </table>
+    <table name="com_car_ass_out_ns_info">
+      <tr>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="normal_balance" encry="false">正常收入结余</td>
+        <td code="in_car" encry="false">事业收入</td>
+        <td code="pay_spefun" encry="false">专款支出</td>
+        <td code="income_sum" encry="false">收入总计</td>
+        <td code="in_aff_pay" encry="false">附属单位缴款</td>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="pay_last_year_car" encry="false">收回以前年度事业支出</td>
+        <td code="top_in_fis" encry="false">上级补助收入</td>
+        <td code="dia_into_spefund" encry="false">拨入专款</td>
+        <td code="sma_income_bus" encry="false">经营收入小计</td>
+        <td code="income_bus" encry="false">经营收入</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="with_dra_fun" encry="false">提取专用基金</td>
+        <td code="buss_sum" encry="false">经营结余</td>
+        <td code="pay_sum" encry="false">支出总计</td>
+        <td code="in_fis_sub" encry="false">对附属单位补助</td>
+        <td code="pay_out_top" encry="false">上缴上级支出</td>
+        <td code="sma_sum_car" encry="false">事业收入小计</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="out_dra_fun" encry="false">转入事业基金</td>
+        <td code="should_pay_tax" encry="false">应交所得税</td>
+        <td code="pay_car_sum" encry="false">事业支出小计</td>
+        <td code="pay_car_fis" encry="false">财政补助支出</td>
+        <td code="sma_diainto_spefun" encry="false">拨入专款小计</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="bala_other_dis" encry="false">其他结余分配</td>
+        <td code="balan_dis" encry="false">结余分配</td>
+        <td code="car_balance" encry="false">事业结余</td>
+        <td code="sum_spefun" encry="false">专款小计</td>
+        <td code="dia_out_spefun" encry="false">拨出专款</td>
+        <td code="bus_smar_sum" encry="false">经营支出小计</td>
+        <td code="tax_sale_in" encry="false">销售税金</td>
+        <td code="tax_sale" encry="false">销售税金</td>
+        <td code="pay_nobudg_out" encry="false">预算外资金支出</td>
+        <td code="out_car" encry="false">事业支出</td>
+        <td code="income_others" encry="false">其他收入</td>
+        <td code="income_notbudg_out" encry="false">预算外资金收入</td>
+        <td code="befor_year_busloss" encry="false">以前年度经营亏损</td>
+        <td code="pay_bus" encry="false">经营支出</td>
+        <td code="carr_for_sel_infras" encry="false">结转自筹基建</td>
+        <td code="set_aside_funds" encry="false">拨出经费</td>
+        <td code="in_fis_sub_in" encry="false">财政补助收入</td>
+      </tr>
+    </table>
+    <table name="com_car_ass_out_ot_info">
+      <tr>
+        <td code="out_fis_sub" encry="false">事业支出（财政补助支出）</td>
+        <td code="bala_car_iss" encry="false">本期事业结转结余</td>
+        <td code="pay_out_top" encry="false">上缴上级支出</td>
+        <td code="with_dra_fun" encry="false">提取专用基金</td>
+        <td code="out_car_unfis" encry="false">事业支出（非财政补助支出）</td>
+        <td code="out_car" encry="false">事业类支出</td>
+        <td code="in_aff_pay" encry="false">附属单位上缴收入</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="should_pay_tax" encry="false">应缴企业所得税</td>
+        <td code="bala_fis_onyear" encry="false">本年非财政补助结余</td>
+        <td code="bala_in_year" encry="false">本年非财政补助结转结余</td>
+        <td code="income_others" encry="false">其他收入</td>
+        <td code="top_in_fis" encry="false">上级补助收入</td>
+        <td code="bala_bus_iss" encry="false">本期经营结余</td>
+        <td code="in_fis_sub" encry="false">财政补助收入</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="out_others" encry="false">其他支出</td>
+        <td code="incom_dona" encry="false">（其他收入科目下）捐赠收入</td>
+        <td code="bala_befor_year" encry="false">弥补以前年度亏损后的经营结余</td>
+        <td code="income_bus" encry="false">经营收入</td>
+        <td code="out_aff_pay" encry="false">对附属单位补助支出</td>
+        <td code="in_car_clas" encry="false">事业类收入</td>
+        <td code="bala_fis_sub" encry="false">本期财政补助结转结余</td>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="bala_unfis" encry="false">非财政补助结转</td>
+        <td code="pay_bus" encry="false">经营支出</td>
+        <td code="in_car" encry="false">事业收入</td>
+        <td code="out_dra_fun" encry="false">转入事业基金</td>
+      </tr>
+    </table>
+    <table name="com_contro_person">
+      <tr>
+        <td code="date_update_act" encry="false">更新日期</td>
+        <td code="control_num" encry="false">主要组成人员个数</td>
+      </tr>
+    </table>
+    <table name="com_credit_basic_info">
+      <tr>
+        <td code="address_edi" encry="true">登记地址</td>
+        <td code="year_setup" encry="false">成立年份</td>
+        <td code="state_cx" encry="false">存续状态</td>
+        <td code="sub_industry" encry="false">所属行业</td>
+        <td code="scale_ent" encry="false">企业规模</td>
+        <td code="addre_buss" encry="true">办公/经营地址</td>
+        <td code="type_organ" encry="false">组织机构类型</td>
+        <td code="license_date" encry="true">登记证书有效截止日期</td>
+        <td code="type_economic" encry="false">经济类型</td>
+      </tr>
+    </table>
+    <table name="com_credit_grant_sum">
+      <tr>
+        <td code="total_non_rev_credt" encry="false">非循环信用额度合计</td>
+        <td code="total_rev_credt" encry="false">循环信用额度合计</td>
+        <td code="use_total_non_rev_credt" encry="false">已使用的非循环信用额度合计</td>
+        <td code="use_total_rev_credt" encry="false">已使用的循环信用额度合计</td>
+        <td code="remain_total_rev_credt" encry="false">剩余可用的循环额度合计</td>
+        <td code="remain_total_non_rev_credt" encry="false">剩余可用的非循环额度合计</td>
+        <td code="whet_credit_limt" encry="false">是否包含授信限额</td>
+      </tr>
+    </table>
+    <table name="com_credit_info_data">
+      <tr>
+        <td code="currency" encry="false">币种</td>
+        <td code="type_org" encry="false">业务管理机构类型</td>
+        <td code="code_org" encry="false">业务管理机构代码</td>
+        <td code="cr_used_sum" encry="false">已用额度</td>
+        <td code="type_cerd" encry="false">授信额度类型</td>
+        <td code="cr_credit_sum" encry="false">授信额度</td>
+        <td code="cr_lim" encry="false">授信限额</td>
+        <td code="end_date" encry="false">终止日期</td>
+        <td code="cr_lim_id" encry="false">授信限额编号</td>
+        <td code="effec_date" encry="false">生效日期</td>
+        <td code="date_info_report" encry="false">信息报告日期</td>
+        <td code="cred_id" encry="false">授信协议编号</td>
+        <td code="quota_cyc_mark" encry="false">额度循环标志</td>
+      </tr>
+    </table>
+    <table name="com_debt_change_hist_summ">
+      <tr>
+        <td code="num_focus_debt_balance" encry="false">关注类负债账户数</td>
+        <td code="focus_debt_balance" encry="false">关注类负债余额</td>
+        <td code="month" encry="false">月份</td>
+        <td code="all_num_debt_balance" encry="false">全部负债账户数</td>
+        <td code="over_principal" encry="false">逾期本金</td>
+        <td code="over_sum" encry="false">逾期总额</td>
+        <td code="num_over_debt" encry="false">逾期账户数</td>
+        <td code="num_over_principal" encry="false">逾期本金账户数</td>
+        <td code="bad_debt_balance" encry="false">不良类负债余额</td>
+        <td code="all_debt_balance" encry="false">全部负债余额</td>
+        <td code="num_account_bad_debt" encry="false">不良类负债账户数</td>
+      </tr>
+    </table>
+    <table name="com_finan_scal">
+      <tr>
+        <td code="type_contr_scal" encry="false">融资控制类型</td>
+        <td code="the_size" encry="false">规模</td>
+        <td code="info_id" encry="false">信息编号</td>
+        <td code="years" encry="false">年度</td>
+        <td code="sub_list" encry="false">所属名录</td>
+      </tr>
+    </table>
+    <table name="com_guarantee_det">
+      <tr>
+        <td code="in_ninety_day_bal_num" encry="false">90 天内到期的余额</td>
+        <td code="advances" encry="false">垫款标志</td>
+        <td code="guar_trans_species_niche" encry="false">担保交易业务种类细分</td>
+        <td code="after_ninety_day_bal_num" encry="false">90 天后到期的余额</td>
+        <td code="num_acc_settle" encry="false">已结清账户数</td>
+        <td code="five_cla" encry="false">五级分类</td>
+        <td code="guar_accout_id" encry="false">担保账户分机构汇总信息编号</td>
+        <td code="type_org" encry="false">业务管理机构类型</td>
+        <td code="num_outstand_account" encry="false">未结清账户数</td>
+        <td code="code_org" encry="false">业务管理机构代码</td>
+        <td code="balance_num" encry="false">余额</td>
+        <td code="in_thirty_day_bal_num" encry="false">30 天内到期的余额</td>
+        <td code="in_sixty_day_bal_num" encry="false">60 天内到期的余额</td>
+      </tr>
+    </table>
+    <table name="com_guar_acct_info">
+      <tr>
+        <td code="margin_percent" encry="false">保证金比例</td>
+        <td code="five_cla_zb" encry="false">五级分类</td>
+        <td code="balance_num_zb" encry="false">在报余额</td>
+        <td code="date_report_info_zb" encry="false">在报信息报告日期</td>
+        <td code="exposure_to_zb" encry="false">在报风险敞口</td>
+        <td code="advances_zb" encry="false">在报代偿（垫款）标志</td>
+        <td code="state_lend_account_act_zb" encry="false"></td>
+        <td code="date_close_zb" encry="false">在报关闭日期</td>
+        <td code="type_org" encry="false">业务管理机构类型</td>
+        <td code="guar_accout_id" encry="false">担保账户编号</td>
+        <td code="type_acc_guar" encry="false">担保账户类型</td>
+        <td code="num_cred_agree" encry="false">授信协议编号</td>
+        <td code="date_open" encry="false">开立日期</td>
+        <td code="currency" encry="false">币种</td>
+        <td code="others_repay_ensure_way" encry="false">其他还款保证方式</td>
+        <td code="code_org" encry="false">业务管理机构代码</td>
+        <td code="guar_trans_species_niche" encry="false">担保交易业务种类细分</td>
+        <td code="report_id_zb" encry="false"></td>
+        <td code="common_debt_indenti_zb" encry="false">在报共同债务标识</td>
+        <td code="due_time_date" encry="false">到期日期</td>
+        <td code="balance_num" encry="false">金额</td>
+        <td code="way_counter_guar" encry="false">反担保方式</td>
+      </tr>
+    </table>
+    <table name="com_guar_trans_in">
+      <tr>
+        <td code="num_secured_notrans" encry="false">担保交易分类汇总条目数量(已结清)</td>
+        <td code="num_secured_trans_cat" encry="false">担保交易分类汇总条目数量(未结清)</td>
+      </tr>
+    </table>
+    <table name="com_guar_trans_info_outs">
+      <tr>
+        <td code="num_account" encry="false">账户数</td>
+        <td code="asset_quality_clas" encry="false">资产质量分类</td>
+        <td code="balance_num" encry="false">余额</td>
+        <td code="buss_type" encry="false">业务类型</td>
+      </tr>
+    </table>
+    <table name="com_guar_trans_info_set">
+      <tr>
+        <td code="buss_type" encry="false">业务类型</td>
+        <td code="asset_quality_cla" encry="false">资产质量分类</td>
+        <td code="num_account" encry="false">账户数</td>
+      </tr>
+    </table>
+    <table name="com_guar_trans_respon_info">
+      <tr>
+        <td code="num_account" encry="false">账户数</td>
+        <td code="balance_num_focus_bad" encry="false">不良类余额</td>
+        <td code="balance_num_focus" encry="false">关注类余额</td>
+        <td code="balance_num" encry="false">余额</td>
+        <td code="type_respon" encry="false">责任类型</td>
+        <td code="amount_repay_recover" encry="false">还款责任金额</td>
+      </tr>
+    </table>
+    <table name="com_ident_basic">
+      <tr>
+        <td code="num_ent_indent" encry="true">企业身份标识号码</td>
+        <td code="type_ent_ident" encry="true">企业身份标识类型</td>
+      </tr>
+    </table>
+    <table name="com_imex_supervision">
+      <tr>
+        <td code="info_id" encry="false">信息编号</td>
+        <td code="start_date" encry="false">生效日期</td>
+        <td code="super_level" encry="false">监管级别</td>
+        <td code="super_council" encry="false">管辖直属局</td>
+        <td code="super_org" encry="false">监管部门</td>
+        <td code="end_date" encry="false">截止日期</td>
+      </tr>
+    </table>
+    <table name="com_info_credit">
+      <tr>
+        <td code="recover_current_debt" encry="false">被追偿的借贷交易余额</td>
+        <td code="num_admini_puni" encry="false">行政处罚记录条数</td>
+        <td code="focus_current_debt" encry="false">关注类借贷交易余额</td>
+        <td code="over_debt" encry="false">不良类借贷交易余额</td>
+        <td code="secured_over_debt" encry="false">不良类担保交易余额</td>
+        <td code="focus_sec_trans_ba" encry="false">关注类担保交易余额</td>
+        <td code="num_no_cret_tra_acc" encry="false">非信贷交易账户数</td>
+        <td code="first_repay_liab_year" encry="false">首次有相关还款责任的年份</td>
+        <td code="unclear_org" encry="false">当前有未结清信贷交易的机构数</td>
+        <td code="tax_arrens_num" encry="false">欠税记录条数</td>
+        <td code="num_judg_record" encry="false">民事判决记录条数</td>
+        <td code="num_enforce_record" encry="false">强制执行记录条数</td>
+        <td code="first_trade_year" encry="false">首次有信贷交易的年份</td>
+        <td code="secured_trans_balance" encry="false">担保交易余额</td>
+        <td code="current_debt" encry="false">借贷交易余额</td>
+        <td code="relation_org" encry="false">发生信贷交易的机构数</td>
+      </tr>
+    </table>
+    <table name="com_insp_mjgoods">
+      <tr>
+        <td code="mj_id" encry="false">免验号</td>
+        <td code="appr_depart_name" encry="false">批准部门</td>
+        <td code="info_id" encry="false">信息编号</td>
+        <td code="mj_name" encry="false">免验商品名称</td>
+        <td code="date_end" encry="false">截止日期</td>
+      </tr>
+    </table>
+    <table name="com_insp_quara">
+      <tr>
+        <td code="appr_depart_name" encry="false">批准部门</td>
+        <td code="exp_com_name" encry="false">出口商品名称</td>
+        <td code="date_effe" encry="false">生效日期</td>
+        <td code="quara_id" encry="false">信息编号</td>
+      </tr>
+    </table>
+    <table name="com_investor">
+      <tr>
+        <td code="num_invest" encry="false">主要出资人个数</td>
+        <td code="reig_capital" encry="false">注册资本（折人民币合计）</td>
+        <td code="date_update_invest" encry="false">更新日期(注册人)</td>
+      </tr>
+    </table>
+    <table name="com_investor_info">
+      <tr>
+        <td code="inve_cred_num" encry="true">身份标识号码</td>
+        <td code="inve_percent" encry="true">出资比例</td>
+        <td code="inve_name" encry="true">出资方</td>
+        <td code="type_invest" encry="false">类型</td>
+        <td code="type_invest_ident" encry="false">出资人身份类别</td>
+        <td code="inve_cred_type" encry="true">身份标识类型</td>
+      </tr>
+    </table>
+    <table name="com_judge_record">
+      <tr>
+        <td code="court_filing" encry="false">立案法院</td>
+        <td code="litig_sub" encry="false">诉讼标的</td>
+        <td code="judge_result" encry="false">判决/调解结果</td>
+        <td code="serial" encry="false">民事判决记录编号</td>
+        <td code="judge_start_date" encry="false">判决/调解生效日期</td>
+        <td code="close_style" encry="false">结案方式</td>
+        <td code="litig_sum" encry="false">诉讼标的金额（元）</td>
+        <td code="litig_reason" encry="false">案由</td>
+        <td code="litig_pro" encry="false">审判程序</td>
+        <td code="case_num" encry="false">案号</td>
+        <td code="litig_status" encry="false">诉讼地位</td>
+        <td code="filing_date" encry="false">立案日期</td>
+      </tr>
+    </table>
+    <table name="com_lack_interest">
+      <tr>
+        <td code="currency" encry="false">币种</td>
+        <td code="date_report" encry="false">信息报告日期</td>
+        <td code="num_lack" encry="false">欠息信息编号</td>
+        <td code="type_org" encry="false">业务管理机构类型</td>
+        <td code="code_org" encry="false">业务管理机构代码</td>
+        <td code="lack_inte_balance" encry="false">欠息余额</td>
+        <td code="lack_inte_type" encry="false">欠息类型</td>
+        <td code="balance_change_date" encry="false">余额变化日期</td>
+      </tr>
+    </table>
+    <table name="com_lend_account">
+      <tr>
+        <td code="num_cred_agree" encry="false">授信协议编号</td>
+        <td code="cred_line" encry="false">信用额度</td>
+        <td code="jio_loan_mark" encry="false">共同借款标识</td>
+        <td code="guar_way" encry="false">担保方式</td>
+        <td code="date_close" encry="false">关闭日期</td>
+        <td code="due_time" encry="false">到期日期</td>
+        <td code="time_lim_len" encry="false">借款期限</td>
+        <td code="num_lend_account" encry="false">借贷账户编号</td>
+        <td code="state_lend_account_act" encry="false">账户活动状态</td>
+        <td code="type_account_lend" encry="false">借贷账户类型</td>
+        <td code="date_account_open" encry="false">开户日期</td>
+        <td code="big_lend_bus" encry="false">借贷业务种类大类</td>
+        <td code="smart_lend_bus" encry="false">借贷业务种类细分</td>
+        <td code="issue_way" encry="false">发放形式</td>
+        <td code="other_repay_way" encry="false">其他还款保证方式</td>
+        <td code="len_sum" encry="false">借款金额</td>
+        <td code="currency" encry="false">币种</td>
+        <td code="code_bus_mana_org" encry="false">业务管理机构代码</td>
+        <td code="serial" encry="false">编号</td>
+        <td code="num_spe_trans" encry="false">特定交易个数</td>
+        <td code="num_repay_record" encry="false">还款表现记录条数</td>
+        <td code="type_bus_mana_org" encry="false">业务管理机构类型</td>
+        <td code="date_info_report" encry="false">信息报告日期</td>
+      </tr>
+    </table>
+    <table name="com_lend_trans">
+      <tr>
+        <td code="num_month_fz" encry="false">负债历史月份数</td>
+        <td code="num_other_trans" encry="false">未结清其他借贷交易分类汇总条目数量</td>
+        <td code="over_sum" encry="false">未结清逾期总额</td>
+        <td code="advaes_acc_balance" encry="false">未结清垫款业务余额</td>
+        <td code="over_interst_other" encry="false">未结清逾期利息及其他</td>
+        <td code="last_ads_acc_date" encry="false">未结清垫款最近一次还款日期</td>
+        <td code="assets_disp_num" encry="false">未结清资产处置业务账户数</td>
+        <td code="num_advances_account" encry="false">未结清垫款业务账户数</td>
+        <td code="assets_disp_balance" encry="false">未结清资产处置业务余额</td>
+        <td code="last_disp_date" encry="false">未结清最近一次处置日期</td>
+        <td code="over_principal" encry="false">未结清逾期本金</td>
+        <td code="yadvances_account_balance" encry="false">已结清垫款业务金额</td>
+        <td code="ydate_completion" encry="false">已结清处置完成日期</td>
+        <td code="ynum_other_trans_yj" encry="false">已结清其他借贷交易分类汇总条目数量</td>
+        <td code="yassets_disp_num" encry="false">已结清资产处置业务账户数</td>
+        <td code="ynum_advances_account" encry="false">已结清垫款业务账户数</td>
+        <td code="ydate_settlement" encry="false">已结清结清日期</td>
+        <td code="yassets_disp_balance" encry="false">已结清资产处置业务金额</td>
+      </tr>
+    </table>
+    <table name="com_lend_trans_other">
+      <tr>
+        <td code="num_account" encry="false">账户数</td>
+        <td code="balance_num" encry="false">余额</td>
+        <td code="asset_quality_clas" encry="false">资产质量分类</td>
+        <td code="buss_type" encry="false">业务类型</td>
+      </tr>
+    </table>
+    <table name="com_lend_trans_se_type">
+      <tr>
+        <td code="num_account" encry="false">账户数</td>
+        <td code="asset_quality_classification" encry="false">资产质量分类</td>
+        <td code="buss_type" encry="false">业务类型</td>
+      </tr>
+    </table>
+    <table name="com_main_member">
+      <tr>
+        <td code="date_update_senior" encry="false">更新日期</td>
+        <td code="num_pepl" encry="false">主要组成人员个数</td>
+      </tr>
+    </table>
+    <table name="com_obtain_certifi">
+      <tr>
+        <td code="certifi_date" encry="false">认证日期</td>
+        <td code="content_certifi" encry="false">认证内容</td>
+        <td code="date_end" encry="false">截止日期</td>
+        <td code="certifi_type" encry="false">认证类型</td>
+        <td code="certifi_id" encry="false">认证记录编号</td>
+        <td code="certifi_name" encry="false">认证部门</td>
+      </tr>
+    </table>
+    <table name="com_obtain_license">
+      <tr>
+        <td code="obtain_id" encry="false">许可记录编号</td>
+        <td code="content_license" encry="false">许可内容</td>
+        <td code="obtain_name" encry="false">许可部门</td>
+        <td code="date_obtain" encry="false">许可日期</td>
+        <td code="date_end" encry="false">截止日期</td>
+        <td code="type_obtain" encry="false">许可类型</td>
+      </tr>
+    </table>
+    <table name="com_obtain_qual">
+      <tr>
+        <td code="content_qual" encry="false">资质内容</td>
+        <td code="qual_type" encry="false">资质类型</td>
+        <td code="app_date" encry="false">批准日期</td>
+        <td code="date_end" encry="false">截止日期</td>
+        <td code="qual_id" encry="false">资质记录编号</td>
+        <td code="qual_name" encry="false">认定部门</td>
+      </tr>
+    </table>
+    <table name="com_obtain_reward">
+      <tr>
+        <td code="date_end" encry="false">截止日期</td>
+        <td code="content_reward" encry="false">奖励事实</td>
+        <td code="reward_name" encry="false">奖励名称</td>
+        <td code="date_start" encry="false">授予日期</td>
+        <td code="reward_org_name" encry="false">奖励部门</td>
+        <td code="reward_id" encry="false">奖励记录编号</td>
+      </tr>
+    </table>
+    <table name="com_patent_case">
+      <tr>
+        <td code="info_id" encry="false">信息编号</td>
+        <td code="effective_year" encry="false">专利有效期</td>
+        <td code="patent_no" encry="false">专利号</td>
+        <td code="patent_name" encry="false">专利名称</td>
+        <td code="grant_date" encry="false">授予日期</td>
+        <td code="app_date" encry="false">申请日期</td>
+      </tr>
+    </table>
+    <table name="com_penalties">
+      <tr>
+        <td code="penalties_sitation" encry="false">处罚执行情况</td>
+        <td code="penalties_comapny" encry="false">处罚机构</td>
+        <td code="penalties_sum" encry="false">处罚金额（元）</td>
+        <td code="serial" encry="false">行政处罚记录编号</td>
+        <td code="ilehal_behavior" encry="false">违法行为</td>
+        <td code="start_date" encry="false">处罚日期</td>
+        <td code="penalties_id" encry="false">处罚决定书文号</td>
+        <td code="reconsideration_result" encry="false">行政复议结果</td>
+        <td code="penalties_decidion" encry="false">处罚决定</td>
+      </tr>
+    </table>
+    <table name="com_profit_info_seven_info">
+      <tr>
+        <td code="inves_income" encry="false">投资净收益</td>
+        <td code="buss_profits" encry="false">营业利润</td>
+        <td code="unflow_loss" encry="false">非流动资产损失（其中：非流动资产处置损失)</td>
+        <td code="incom_join_venture" encry="false">对联营企业和合营企业的投资收益</td>
+        <td code="buss_other_pay" encry="false">营业外支出</td>
+        <td code="sale_cost" encry="false">销售费用</td>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="income_cost" encry="false">营业成本</td>
+        <td code="buss_other_incom" encry="false">营业外收入</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="loss_redu" encry="false">资产减值损失</td>
+        <td code="net_profit" encry="false">净利润</td>
+        <td code="dilu_ear_per_share" encry="false">稀释每股收益</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="bus_tax_other" encry="false">营业税金及附加</td>
+        <td code="every_net_income" encry="false">基本每股收益</td>
+        <td code="sum_profits" encry="false">利润总额</td>
+        <td code="mana_cost" encry="false">管理费用</td>
+        <td code="income_bus" encry="false">营业收入</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="chang_incom" encry="false">公允价值变动净收益</td>
+        <td code="fina_cost" encry="false">财务费用</td>
+        <td code="income_tax" encry="false">所得税费用</td>
+      </tr>
+    </table>
+    <table name="com_provid_fund_pay_record">
+      <tr>
+        <td code="serial" encry="false">编号</td>
+        <td code="pay_to_date" encry="false">缴至年月</td>
+        <td code="num_pep" encry="false">职工人数</td>
+        <td code="first_pay_date" encry="false">初缴年月</td>
+        <td code="pay_recod_num_provid" encry="false">缴费记录条数</td>
+        <td code="pay_status" encry="false">缴费状态</td>
+        <td code="total_arrear_sum" encry="false">累计欠费金额</td>
+        <td code="date_pay_recent" encry="false">最近一次缴费日期</td>
+        <td code="static_date" encry="false">统计年月</td>
+        <td code="ser_no" encry="false">账户编号</td>
+        <td code="employ_num" encry="false">缴费基数（元）</td>
+      </tr>
+    </table>
+    <table name="com_provid_pay_record_year">
+      <tr>
+        <td code="total_arrear_sum" encry="false">累计欠费金额</td>
+        <td code="static_date" encry="false">统计年月</td>
+        <td code="serial" encry="false">编号</td>
+        <td code="last_pay_date" encry="false">缴费状态</td>
+        <td code="cur_should_pay" encry="false">本月应缴金额</td>
+        <td code="cur_actual_pay" encry="false">本月实缴金额</td>
+      </tr>
+    </table>
+    <table name="com_public_info_detail">
+      <tr>
+        <td code="total_arrear_sum" encry="false">累计欠费金额</td>
+        <td code="pay_status" encry="false">缴费状态</td>
+        <td code="static_date" encry="false">统计年月</td>
+        <td code="cur_should_pay" encry="false">本月应缴金额</td>
+        <td code="cur_actual_pay" encry="false">本月实缴金额</td>
+        <td code="serial" encry="false">编号</td>
+      </tr>
+    </table>
+    <table name="com_pub_cost_pay_record">
+      <tr>
+        <td code="total_arrear_sum" encry="false">累计欠费金额</td>
+        <td code="pay_recod_num_pub" encry="false">缴费记录条数</td>
+        <td code="type_business" encry="false">业务类型</td>
+        <td code="pub_pay_id" encry="false">公用事业缴费账户编号</td>
+        <td code="serial" encry="false">编号</td>
+        <td code="pub_com_name" encry="false">公用事业单位名称</td>
+        <td code="static_date" encry="false">统计年月</td>
+        <td code="pay_status" encry="false">缴费状态</td>
+      </tr>
+    </table>
+    <table name="com_rat_info">
+      <tr>
+        <td code="rat_date" encry="false">评级日期</td>
+        <td code="rat_id" encry="false">评级信息编号</td>
+        <td code="rat_res" encry="false">评级结果</td>
+        <td code="rat_name" encry="false">评级机构</td>
+      </tr>
+    </table>
+    <table name="com_rat_info_obj">
+      <tr>
+        <td code="date_t" encry="false">添加日期</td>
+        <td code="sta_cont" encry="false">标注或声明内容</td>
+        <td code="obj_type" encry="false">对象类型</td>
+        <td code="sta_type" encry="false">标注及声明类型</td>
+        <td code="obj_logo" encry="false">对象标识</td>
+      </tr>
+    </table>
+    <table name="com_repay_guar">
+      <tr>
+        <td code="code_org" encry="false">业务管理机构代码</td>
+        <td code="guar_accout_id" encry="false">担保账户分机构汇总信息编号</td>
+        <td code="repay_resp_bala" encry="false">相关还款责任金额</td>
+        <td code="num_guar_contra" encry="false">保证合同编号</td>
+        <td code="type_org" encry="false">业务管理机构类型</td>
+        <td code="balance_num" encry="false">余额</td>
+        <td code="num_account" encry="false">账户数</td>
+        <td code="five_cla" encry="false">五级分类</td>
+        <td code="smart_bus" encry="false">业务种类细分</td>
+        <td code="guar_sum" encry="false">担保金额</td>
+        <td code="repay_resp_type" encry="false">相关还款责任类型</td>
+      </tr>
+    </table>
+    <table name="com_repay_info">
+      <tr>
+        <td code="over_month" encry="false">逾期月数</td>
+        <td code="balance_num" encry="false">余额</td>
+        <td code="over_sum" encry="false">逾期总额</td>
+        <td code="date_five_cla" encry="false">五级分类认定日期</td>
+        <td code="rece_repay_onece_time" encry="false">最近一次实际还款日期</td>
+        <td code="rece_repay_sum" encry="false">最近一次应还总额</td>
+        <td code="serial" encry="false">编号</td>
+        <td code="num_month_remain" encry="false">剩余还款月数</td>
+        <td code="five_cla" encry="false">五级分类</td>
+        <td code="rece_repay_onece_form" encry="false">最近一次还款形式</td>
+        <td code="balance_num_date_change" encry="false">余额变化日期</td>
+        <td code="rece_repay_onece_sum" encry="false">最近一次实际还款总额</td>
+        <td code="rece_repay_onece_conve_date" encry="false">最近一次约定还款日期</td>
+        <td code="over_principal" encry="false">逾期本金</td>
+        <td code="date_report_info" encry="false">信息报告日期</td>
+      </tr>
+    </table>
+    <table name="com_repay_rep_num">
+      <tr>
+        <td code="num_repay_lia" encry="false">还款责任类型数量(借贷)</td>
+        <td code="num_repay_lia_db" encry="false">还款责任类型数量（担保）</td>
+      </tr>
+    </table>
+    <table name="com_report_info">
+      <tr>
+        <td code="obj_lab_item" encry="false">异议标注数目</td>
+        <td code="rate_exchange" encry="false">美元折人民币汇率</td>
+        <td code="org_code" encry="true">机构信用代码（查询机构代码）</td>
+        <td code="ent_name" encry="true">企业名称</td>
+        <td code="sum_ent_ident" encry="false">企业身份标识个数</td>
+        <td code="report_time" encry="true">报告生成时间</td>
+        <td code="query_reason" encry="true">查询原因</td>
+        <td code="effe_date_rate" encry="false">汇率有效日期</td>
+      </tr>
+    </table>
+    <table name="com_senior_manager_info">
+      <tr>
+        <td code="senior_name" encry="true">姓名</td>
+        <td code="sneior_cred_num" encry="true">证件号码</td>
+        <td code="sneior_cred_type" encry="true">证件类型</td>
+        <td code="senior_duties" encry="true">职位</td>
+      </tr>
+    </table>
+    <table name="com_spetrans_info">
+      <tr>
+        <td code="serial" encry="false">编号</td>
+        <td code="trans_sum" encry="false">交易金额</td>
+        <td code="month_change_due_time" encry="false">到期日期变更月数</td>
+        <td code="trans_info" encry="false">交易明细信息</td>
+        <td code="date_trans" encry="false">交易日期</td>
+        <td code="type_trans" encry="false">交易类型</td>
+      </tr>
+    </table>
+    <table name="com_sup_org">
+      <tr>
+        <td code="hight_insti_type" encry="false">类型</td>
+        <td code="date_update_hight" encry="false">更新日期</td>
+        <td code="hight_inti_idet_type" encry="false">身份标识类型</td>
+        <td code="hight_num" encry="false">身份标识号码</td>
+        <td code="hight_insti_name" encry="false">名称</td>
+      </tr>
+    </table>
+    <table name="com_tax_arrears_record">
+      <tr>
+        <td code="tax_arrears_date" encry="false">欠税统计时间</td>
+        <td code="tax_arrens_id" encry="false">欠税记录编号</td>
+        <td code="tax_authorities" encry="false">主管税务机关名称</td>
+        <td code="tax_arrears_sum" encry="false">欠税总额</td>
+      </tr>
+    </table>
+    <table name="com_tx_acc_org">
+      <tr>
+        <td code="over_principal_sum" encry="false">逾期本金合计</td>
+        <td code="five_type" encry="false">五级分类</td>
+        <td code="num_acc_settle_sum" encry="false">已结清账户贴现金额合计</td>
+        <td code="num_org_info" encry="false">贴现账户分机构汇总信息编号</td>
+        <td code="over_sum" encry="false">逾期总额合计</td>
+        <td code="type_org" encry="false">业务管理机构类型</td>
+        <td code="num_acc_settle" encry="false">已结清账户数</td>
+        <td code="balance_num_sum" encry="false">余额合计</td>
+        <td code="code_org" encry="false">业务管理机构代码</td>
+        <td code="num_outstand_account" encry="false">未结清账户数</td>
+        <td code="type_business" encry="false">业务种类</td>
+      </tr>
+    </table>
+    <table name="com_verdict">
+      <tr>
+        <td code="litig_reason" encry="false">执行案由</td>
+        <td code="serial" encry="false">强制执行记录编号</td>
+        <td code="court_name" encry="false">执行法院</td>
+        <td code="goal_sym_sum" encry="false">已执行标的金额（元）</td>
+        <td code="goal_sym" encry="false">已执行标的</td>
+        <td code="apply_sym" encry="false">申请执行标的</td>
+        <td code="register_date" encry="false">立案日期</td>
+        <td code="settle_style" encry="false">结案方式</td>
+        <td code="result" encry="false">案件状态</td>
+        <td code="case_num" encry="false">案号</td>
+        <td code="apply_sym_sum" encry="false">申请执行标的金额（元）</td>
+      </tr>
+    </table>
+    <table name="com_cash_flow_seven_info">
+      <tr>
+        <td code="rece_comp_bus_cash" encry="false">取得子公司及其他营业单位支付的现金净额</td>
+        <td code="incres_tax" encry="false">递延所得税负债增加</td>
+        <td code="fix_loss" encry="false">固定资产报废损失</td>
+        <td code="increas_withholding" encry="false">预提费用增加</td>
+        <td code="start_seme_cash_bal" encry="false">期初现金及现金等价物余额</td>
+        <td code="take_borro_rece_cash" encry="false">取得借款收到的现金</td>
+        <td code="pay_other_cash" encry="false">支付其他与投资活动有关的现金</td>
+        <td code="sum_buss_cash_out" encry="false">经营活动现金流出小计</td>
+        <td code="pay_employ_cash" encry="false">支付给职工以及为职工支付的现金</td>
+        <td code="buy_cash" encry="false">购买商品、接受劳务支付的现金</td>
+        <td code="sum_buss_cash_in" encry="false">经营活动现金流入小计</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="long_term_amor" encry="false">长期待摊费用摊销</td>
+        <td code="smart_sum_acti" encry="false">筹资活动现金流入小计</td>
+        <td code="invest_rece_cash" encry="false">取得投资收益所收到的现金</td>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="cash_star_ba" encry="false">现金等价物的期初余额</td>
+        <td code="reduce_tax" encry="false">递延所得税资产减少</td>
+        <td code="depreciation" encry="false">固定资产折旧、油气资产折耗、生产性生物资产折旧</td>
+        <td code="pay_cash" encry="false">分配股利、利润或偿付利息所支付的现金</td>
+        <td code="cash_long_term" encry="false">购建固定资产无形资产和其他长期资产所支付的现金</td>
+        <td code="pay_some_tax" encry="false">支付的各项税费</td>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="rece_other_ac_cash" encry="false">收到其他与筹资活动有关的现金</td>
+        <td code="long_term_invest" encry="false">处置固定资产无形资产和其他长期资产所收回的现金净额</td>
+        <td code="pay_buss_other_cash" encry="false">支付其他与经营活动有关的现金</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="increas_in" encry="false">现金及现金等价物净增加额</td>
+        <td code="year_company_debt" encry="false">一年内到期的可转换公司债券</td>
+        <td code="net_profit" encry="false">净利润</td>
+        <td code="raise_acti_flow" encry="false">筹资活动现金流出小计</td>
+        <td code="cash_inve_absor" encry="false">吸收投资收到的现金</td>
+        <td code="smart_sum_ca_invest" encry="false">投资活动现金流出小计</td>
+        <td code="rece_inst_cash_other" encry="false">收到其他与投资活动有关的现金</td>
+        <td code="others_no" encry="false">（不涉及现金收支的投资和筹资活动科目下）其他</td>
+        <td code="debt_capital" encry="false">债务转为资本</td>
+        <td code="others" encry="false">（净利润调节为经营活动现金流量科目下）其他</td>
+        <td code="public_loss" encry="false">公允价值变动损失</td>
+        <td code="asset_prepare" encry="false">资产减值准备</td>
+        <td code="bus_activ_cash" encry="false">经营活动产生的现金流量净额</td>
+        <td code="buss_should_reduce" encry="false">经营性应收项目的减少</td>
+        <td code="cash_bala_end" encry="false">现金的期末余额</td>
+        <td code="reduce_invent" encry="false">存货的减少</td>
+        <td code="asset_loss" encry="false">处置固定资产无形资产和其他长期资产的损失</td>
+        <td code="amortization" encry="false">无形资产摊销</td>
+        <td code="end_seme_cash_bal" encry="false">期末现金及现金等价物余额</td>
+        <td code="seme_cash_bal" encry="false">现金及现金等价物净增加额</td>
+        <td code="sum_inve_cash_in" encry="false">投资活动现金流入小计</td>
+        <td code="bus_acti_cash_folw" encry="false">经营活动产生的现金流量净额</td>
+        <td code="cash_bus_company" encry="false">处置子公司及其他营业单位收到的现金净额</td>
+        <td code="rece_invest_cash" encry="false">收回投资所收到的现金</td>
+        <td code="tax_receive" encry="false">收到的税费返还</td>
+        <td code="cash" encry="false">销售商品和提供劳务收到的现金</td>
+        <td code="cash_end_ba" encry="false">现金等价物的期末余额</td>
+        <td code="cash_bala_star" encry="false">现金的期初余额</td>
+        <td code="buss_should_incres" encry="false">经营性应付项目的增加</td>
+        <td code="amortization_reduce" encry="false">待摊费用减少</td>
+        <td code="invest_cash_net" encry="false">投资活动产生的现金流量净额</td>
+        <td code="invest_pay_cash" encry="false">投资所支付的现金</td>
+        <td code="tax_receive_others" encry="false">收到其他与经营活动有关的现金</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="asset_fix_cap" encry="false">融资租入固定资产</td>
+        <td code="invest_loss" encry="false">投资损失</td>
+        <td code="fina_char" encry="false">财务费用</td>
+        <td code="impact_exchange_rate" encry="false">汇率变动对现金及现金等价物的影响</td>
+        <td code="raise_acti_line" encry="false">筹集活动产生的现金流量净额</td>
+        <td code="pay_others_cash" encry="false">支付其他与筹资活动有关的现金</td>
+        <td code="repay_pay_cash" encry="false">偿还债务所支付的现金</td>
+      </tr>
+    </table>
+    <table name="com_cash_flow_two_info">
+      <tr>
+        <td code="pay_some_tax" encry="false">支付的各项税费</td>
+        <td code="sum_inve_cash_in" encry="false">投资活动现金流入小计</td>
+        <td code="buss_should_incres" encry="false">经营性应付项目的增加</td>
+        <td code="impact_exchange_rate" encry="false">汇率变动对现金的影响</td>
+        <td code="cash_star_ba" encry="false">现金等价物的期初余额</td>
+        <td code="invest_loss" encry="false">投资损失</td>
+        <td code="fix_loss" encry="false">固定资产报废损失</td>
+        <td code="amortization" encry="false">无形资产摊销</td>
+        <td code="raise_acti_line" encry="false">筹集活动产生的现金流量净额</td>
+        <td code="invest_cash_net" encry="false">投资活动产生的现金流量净额</td>
+        <td code="receive_other_cash" encry="false">收到的其他与投资活动有关的现金</td>
+        <td code="pay_others_cash_bu" encry="false">支付的其他与经营活动有关的现金</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="fina_char" encry="false">财务费用</td>
+        <td code="seme_cash_bal" encry="false">现金及现金等价物净增加额</td>
+        <td code="smart_sum_ca_invest" encry="false">投资活动现金流出小计</td>
+        <td code="long_term_invest" encry="false">处置固定资产无形资产和其他长期资产所收回的现金净额</td>
+        <td code="sum_buss_cash_out" encry="false">经营活动现金流出小计</td>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="repay_pay_cash" encry="false">偿还债务所支付的现金</td>
+        <td code="borr_rece_cash" encry="false">借款所收到的现金</td>
+        <td code="fixed_fund_old" encry="false">固定资产拆旧</td>
+        <td code="raise_acti_flow" encry="false">筹资活动现金流出小计</td>
+        <td code="pay_others_cash_buss" encry="false">支付的其他与筹资活动有关的现金</td>
+        <td code="buy_cash" encry="false">购买商品、接受劳务支付的现金</td>
+        <td code="rece_other_ac_cash" encry="false">收到的其他与经营活动有关的现金</td>
+        <td code="cash_good" encry="false">销售商品和提供劳务收到的现金</td>
+        <td code="pay_cash" encry="false">分配股利、利润或偿付利息所支付的现金</td>
+        <td code="invest_rece_cash" encry="false">取得投资收益所收到的现金</td>
+        <td code="bus_acti_cash_folw" encry="false">经营活动产生的现金流量净额</td>
+        <td code="cash_bala_star" encry="false">现金的期初余额</td>
+        <td code="others" encry="false">（净利润调节为经营活动现金流量科目下）其他</td>
+        <td code="defe_tax_credit" encry="false">递延税款贷项</td>
+        <td code="asset_reduce" encry="false">计提的资产减值准备</td>
+        <td code="inve_other_acti_cash" encry="false">支付的其他与投资活动有关的现金</td>
+        <td code="invest_pay_cash" encry="false">投资所支付的现金</td>
+        <td code="sum_buss_cash_in" encry="false">经营活动现金流入小计</td>
+        <td code="tax_receive" encry="false">收到的税费返还</td>
+        <td code="pay_employ_cash" encry="false">支付给职工以及为职工支付的现金</td>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="cash_end_ba" encry="false">现金等价物的期末余额</td>
+        <td code="cash_bala_end" encry="false">现金的期末余额</td>
+        <td code="year_company_debt" encry="false">一年内到期的可转换公司债券</td>
+        <td code="long_term_amor" encry="false">长期待摊费用摊销</td>
+        <td code="net_profit" encry="false">净利润</td>
+        <td code="smart_sum_acti" encry="false">筹资活动现金流入小计</td>
+        <td code="rece_other_ac_cash_i" encry="false">收到的其他与筹资活动有关的现金</td>
+        <td code="cash_inve_absor" encry="false">吸收投资所收到的现金</td>
+        <td code="cash_long_term" encry="false">购建固定资产无形资产和其他长期资产所支付的现金</td>
+        <td code="rece_invest_cash" encry="false">收回投资所收到的现金</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="asset_fix_cap" encry="false">融资租入固定资产</td>
+        <td code="debt_capital" encry="false">债务转为资本</td>
+        <td code="buss_should_reduce" encry="false">经营性应收项目的减少</td>
+        <td code="increas_withholding" encry="false">预提费用增加</td>
+        <td code="amortization_reduce" encry="false">待摊费用减少</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="others_no" encry="false">（不涉及现金收支的投资和筹资活动科目下）其他</td>
+        <td code="bus_acti_cash_fo" encry="false">经营活动产生的现金流量净额</td>
+        <td code="reduce_invent" encry="false">存货的减少</td>
+        <td code="asset_loss" encry="false">处置固定资产无形资产和其他长期资产的损失</td>
+        <td code="seme_cash_bal_in" encry="false">现金及现金等价物净增加额</td>
+      </tr>
+    </table>
+    <table name="com_debt_hist_info">
+      <tr>
+        <td code="other_should_par_s" encry="false">其他应收款</td>
+        <td code="supp_capital" encry="false">（盈余公积科目下）补充流动资本</td>
+        <td code="state_capital" encry="false">国家资本</td>
+        <td code="should_par" encry="false">应付账款</td>
+        <td code="sum_asset" encry="false">资产总计</td>
+        <td code="other_lon_goods" encry="false">（其他长期资产科目下）特准储备物资</td>
+        <td code="deferr_asset_pay" encry="false">（递延资产科目下）固定资产改良支出</td>
+        <td code="fix_asset_pri" encry="false">固定资产原价</td>
+        <td code="inventory_mater" encry="false">存货原材料</td>
+        <td code="pre_par" encry="false">预付账款</td>
+        <td code="should_paper_in" encry="false">应收票据</td>
+        <td code="money_fund" encry="false">货币资金</td>
+        <td code="num_find" encry="false">业务管理机构</td>
+        <td code="find_id" encry="false">财务报表编号</td>
+        <td code="foreign_capital" encry="false">外商资本</td>
+        <td code="lia_sum" encry="false">负债合计</td>
+        <td code="defe_tax_credit" encry="false">递延税款贷项</td>
+        <td code="others_long_tdebt" encry="false">其他长期负债</td>
+        <td code="pay_longtim" encry="false">长期应付款</td>
+        <td code="should_debt" encry="false">应付债券</td>
+        <td code="defe_reven" encry="false">预收账款</td>
+        <td code="other_long_invest" encry="false">其他长期资产</td>
+        <td code="should_expo_tax" encry="false">应收出口退税</td>
+        <td code="should_sub_acc" encry="false">应收补贴款</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="total_debt_owner_sum" encry="false">负债和所有者权益总计</td>
+        <td code="surplus_re_g" encry="false">（盈余公积科目下）公益金</td>
+        <td code="capital_reserves" encry="false">资本公积</td>
+        <td code="estima_debt" encry="false">预计负债</td>
+        <td code="withholding" encry="false">预提费用</td>
+        <td code="should_pay_tax" encry="false">应交税金</td>
+        <td code="short_time_borr" encry="false">短期借款</td>
+        <td code="sum_fix_asset" encry="false">固定资产合计</td>
+        <td code="flow_asset_sum" encry="false">流动资产合计</td>
+        <td code="total_owner_equity" encry="false">所有者权益合计</td>
+        <td code="foreign_trans_diff" encry="false">外币报表折算差额</td>
+        <td code="surplus_re_cap" encry="false">（盈余公积科目下）法定盈余公积</td>
+        <td code="private_capital" encry="false">个人资本</td>
+        <td code="con_state_capital" encry="false">（法人资本科目下）国有法人资本</td>
+        <td code="colle_capital" encry="false">集体资本</td>
+        <td code="oth_flow_lia" encry="false">其他流动负债</td>
+        <td code="other_should_fu_pa" encry="false">其他应付款</td>
+        <td code="should_welfare" encry="false">应付福利费</td>
+        <td code="should_wage" encry="false">应付工资</td>
+        <td code="sum_dis" encry="false">固定资产净值</td>
+        <td code="merger_price" encry="false">合并价差</td>
+        <td code="long_term_invest" encry="false">长期投资</td>
+        <td code="surplus_re_b" encry="false">未确认的投资损失</td>
+        <td code="con_coll_capital" encry="false">（法人资本科目下）集体法人资本</td>
+        <td code="spe_storage_fund" encry="false">（其他长期负债科目下）特准储备基金</td>
+        <td code="flow_lia_sum" encry="false">流动负债合计</td>
+        <td code="should_paper" encry="false">应付票据</td>
+        <td code="deferr_asset_repair" encry="false">（递延资产科目下）固定资产修理</td>
+        <td code="deferr_asset" encry="false">递延资产</td>
+        <td code="fix_asset_clean" encry="false">固定资产清理</td>
+        <td code="fix_asset_pri_redu" encry="false">固定资产值减值准备</td>
+        <td code="long_term_in" encry="false">一年内到期的长期债权投资</td>
+        <td code="short_term_inves" encry="false">短期投资</td>
+        <td code="paid_in_capital" encry="false">实收资本</td>
+        <td code="minority_equity" encry="false">少数股东权益</td>
+        <td code="spe_should_par" encry="false">专项应付款</td>
+        <td code="year_long_term_debt" encry="false">一年内到期的长期负债</td>
+        <td code="other_should_par" encry="false">其他应交款</td>
+        <td code="should_profit" encry="false">应付利润</td>
+        <td code="deferr_borr_tax" encry="false">递延税款借项</td>
+        <td code="un_asset_sum" encry="false">无形及其他资产合计</td>
+        <td code="land_use_right" encry="false">无形资产科目下）土地使用权</td>
+        <td code="engineering" encry="false">在建工程</td>
+        <td code="engin_mater" encry="false">工程物资</td>
+        <td code="sum_dis_old" encry="false">累计折旧</td>
+        <td code="inventory" encry="false">存货</td>
+        <td code="should_account" encry="false">应收账款</td>
+        <td code="should_divi" encry="false">应收股利</td>
+        <td code="sm_report_ty" encry="false">报表类型细分</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="undis_profit" encry="false">未分配利润</td>
+        <td code="sum_long_term_debt" encry="false">长期负债合计</td>
+        <td code="borr_longtim" encry="false">长期借款</td>
+        <td code="fix_asset_worth" encry="false">固定资产净额</td>
+        <td code="long_term_cred_inve" encry="false">长期债权投资</td>
+        <td code="long_term_equi_inve" encry="false">长期股权投资</td>
+        <td code="other_flow_asset" encry="false">其他流动资产</td>
+        <td code="wait_asset_loss" encry="false">待处理流动资产净损失</td>
+        <td code="amor" encry="false">待摊费用</td>
+        <td code="should_interst" encry="false">应收利息</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="surplus_reserves" encry="false">盈余公积</td>
+        <td code="corpor_capital" encry="false">法人资本</td>
+        <td code="un_asset" encry="false">无形资产</td>
+        <td code="fix_asset_loss" encry="false">待处理固定资产净损失</td>
+        <td code="long_term_sum" encry="false">长期投资合计</td>
+        <td code="inventort_prd" encry="false">存货产成品</td>
+        <td code="fut_margin" encry="false">期货保证金</td>
+      </tr>
+    </table>
+    <table name="com_financial_seven_info">
+      <tr>
+        <td code="long_term_rece" encry="false">长期应收款</td>
+        <td code="others_unflows_debt" encry="false">其他非流动负债</td>
+        <td code="should_wage" encry="false">应付职工薪酬</td>
+        <td code="should_paper" encry="false">应付票据</td>
+        <td code="unflow_asset" encry="false">非流动资产合计</td>
+        <td code="fix_asset_clean" encry="false">固定资产清理</td>
+        <td code="unflow_asset_end" encry="false">一年内到期的非流动资产</td>
+        <td code="inventory" encry="false">存货</td>
+        <td code="money_fund" encry="false">货币资金</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="surplus_reserves" encry="false">盈余公积</td>
+        <td code="receive_money" encry="false">实收资本（或股本）</td>
+        <td code="pay_longtim" encry="false">长期应付款</td>
+        <td code="defe_reven" encry="false">预收账款</td>
+        <td code="oil_gas_asset" encry="false">油气资产</td>
+        <td code="long_term_equi_inve" encry="false">长期股权投资</td>
+        <td code="asset_mark_fina" encry="false">可供出售的金融资产</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="total_debt_owner_sum" encry="false">负债和所有者权益合计</td>
+        <td code="sum_debt" encry="false">负债合计</td>
+        <td code="incres_dy" encry="false">递延所得税负债</td>
+        <td code="estima_debt" encry="false">预计负债</td>
+        <td code="spe_should_par" encry="false">专项应付款</td>
+        <td code="borr_longtim" encry="false">长期借款</td>
+        <td code="flow_lia_sum" encry="false">流动负债合计</td>
+        <td code="reduce_asset" encry="false">递延所得税资产</td>
+        <td code="pay_dep" encry="false">开发支出</td>
+        <td code="un_asset" encry="false">无形资产</td>
+        <td code="engin_mater" encry="false">工程物资</td>
+        <td code="should_divi_in" encry="false">应收股利</td>
+        <td code="should_interst" encry="false">应收利息</td>
+        <td code="pre_par" encry="false">预付账款</td>
+        <td code="should_account" encry="false">应收账款</td>
+        <td code="trans_asset_fix" encry="false">交易性金融资产</td>
+        <td code="years_unflows_debt" encry="false">一年内到期的非流动负债</td>
+        <td code="other_should_fu_pa" encry="false">其他应付款</td>
+        <td code="should_divi" encry="false">应付股利</td>
+        <td code="should_profit" encry="false">应付利息</td>
+        <td code="end_date_invest" encry="false">持有至到期投资</td>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="total_owner_equity" encry="false">所有者权益合计</td>
+        <td code="undis_profit" encry="false">未分配利润</td>
+        <td code="reduce_div" encry="false">减：库存股</td>
+        <td code="flow_lia_sum_un" encry="false">非流动负债合计</td>
+        <td code="should_pay_tax" encry="false">应交税费</td>
+        <td code="should_par" encry="false">应付账款</td>
+        <td code="asset_produc_biolo" encry="false">生产性生物资产</td>
+        <td code="fix_asset" encry="false">固定资产</td>
+        <td code="invest_build" encry="false">投资性房地产</td>
+        <td code="flow_asset_sum" encry="false">流动资产合计</td>
+        <td code="other_flow_asset" encry="false">其他流动资产</td>
+        <td code="other_should_par" encry="false">其他应收款</td>
+        <td code="should_paper_in" encry="false">应收票据</td>
+        <td code="capital_reserves" encry="false">资本公积</td>
+        <td code="should_debt" encry="false">应付债券</td>
+        <td code="oth_flow_lia" encry="false">其他流动负债</td>
+        <td code="short_time_borr" encry="false">短期借款</td>
+        <td code="long_term_amor" encry="false">长期待摊费用</td>
+        <td code="engineering" encry="false">在建工程</td>
+        <td code="trans_info_debt" encry="false">交易性金融负债</td>
+        <td code="other_unflow_asset" encry="false">其他非流动资产</td>
+        <td code="goodwill" encry="false">商誉</td>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="sum_asset" encry="false">资产总计</td>
+      </tr>
+    </table>
+    <table name="com_profit_info_two_info">
+      <tr>
+        <td code="profits_loss_min" encry="false">少数股东损益</td>
+        <td code="extra_sur_money" encry="false">提取法定公益金</td>
+        <td code="extra_sur_res" encry="false">提取法定盈余公积</td>
+        <td code="sur_res_loss" encry="false">盈余公积补亏</td>
+        <td code="uncomfi_inves_loss" encry="false">未确认的投资损失</td>
+        <td code="other_pay" encry="false">其他支出</td>
+        <td code="profits_befor" encry="false">（其他科目下）用以前年度含量工资节余弥补利润</td>
+        <td code="income_invest" encry="false">投资收益</td>
+        <td code="buss_profits" encry="false">营业利润</td>
+        <td code="operating_expen" encry="false">营业费用</td>
+        <td code="defe_income" encry="false">递延收益</td>
+        <td code="bus_tax_other" encry="false">主营业务税金及附加</td>
+        <td code="exp_prd_cost" encry="false">（主营业务成本科目下）出口产品销售成本</td>
+        <td code="exp_income_prd" encry="false">（主营业务收入科目下）出口产品销售收入</td>
+        <td code="income_bus" encry="false">主营业务收入</td>
+        <td code="loss_debt" encry="false">（营业外支出科目下）债务重组损失</td>
+        <td code="income_sale_asset" encry="false">（营业外收入科目下）出售无形资产收益</td>
+        <td code="income_future" encry="false">期货收益</td>
+        <td code="cost_buss" encry="false">主营业务成本</td>
+        <td code="num_org" encry="false">业务管理机构代码</td>
+        <td code="num_fina" encry="false">业务管理机构</td>
+        <td code="loss_tax_befor" encry="false">（未分配利润科目下）应由以后年度税前利润弥补的亏损</td>
+        <td code="divi_pay_prefer" encry="false">应付优先股股利</td>
+        <td code="others_profits" encry="false">其他（利润）</td>
+        <td code="fine_income" encry="false">（营业外收入科目下）罚款净收入</td>
+        <td code="mana_cost" encry="false">管理费用</td>
+        <td code="buss_profits_z" encry="false">主营业务利润</td>
+        <td code="income_other" encry="false">其他（收入）</td>
+        <td code="operating_expense" encry="false">经营费用</td>
+        <td code="report_year" encry="false">报表年份</td>
+        <td code="other_invest_profits" encry="false">（可供投资者分配的利润科目下）其他</td>
+        <td code="buss_pay" encry="false">营业外支出</td>
+        <td code="non_money_benefits" encry="false">（营业外收入科目下）非货币性交易收益</td>
+        <td code="others" encry="false">其他（业务成本）</td>
+        <td code="net_buss" encry="false">主营业务收入净额</td>
+        <td code="fina_id" encry="false">财务报表编号</td>
+        <td code="pay_divi_pt" encry="false">应付普通股股利</td>
+        <td code="single_reten_prof" encry="false">单项留用的利润</td>
+        <td code="fine_cost" encry="false">（营业外支出科目下）罚款支出</td>
+        <td code="discount" encry="false">销售折扣与折让</td>
+        <td code="extra_develop_fund" encry="false">提取企业发展基金</td>
+        <td code="extra_emply_wefare" encry="false">提取职工奖励及福利基金</td>
+        <td code="supp_flows_asset" encry="false">补充流动资本</td>
+        <td code="sum_profits" encry="false">利润总额</td>
+        <td code="income_buss_yyw" encry="false">营业外收入</td>
+        <td code="in_income_prd" encry="false">（主营业务收入科目下）进口产品销售收入</td>
+        <td code="undis_profit" encry="false">未分配利润</td>
+        <td code="profits_invest_fp" encry="false">可供投资者分配的利润</td>
+        <td code="others_kfp" encry="false">（可供分配的利润科目下）其他</td>
+        <td code="other_adjust_reason" encry="false">其他调整因素</td>
+        <td code="wage_carry_forward" encry="false">（其他支出）结转的含量工资包干节余</td>
+        <td code="pay_div_asset" encry="false">转作资本的普通股股利</td>
+        <td code="extra_yygj" encry="false">提取任意盈余公积</td>
+        <td code="profit_invest" encry="false">利润归还投资</td>
+        <td code="extra_reserve" encry="false">提取储备基金</td>
+        <td code="assigen_profit" encry="false">可供分配的利润</td>
+        <td code="star_year_undoprofit" encry="false">年初未分配利润</td>
+        <td code="tax" encry="false">所得税</td>
+        <td code="donate_cost" encry="false">（营业外支出科目下）捐赠支出</td>
+        <td code="loss_fix_asset" encry="false">（营业外支出科目下）处置固定资产净损失</td>
+        <td code="income_company_ks" encry="false">（补贴收入科目下）补贴前亏损的企业补贴收入</td>
+        <td code="income_subsidies" encry="false">补贴收入</td>
+        <td code="smart_type_report" encry="false">报表类型细分</td>
+        <td code="report_type" encry="false">报表类型</td>
+        <td code="income_asset_shyi" encry="false">（营业外收入科目下）处置固定资产净收益</td>
+        <td code="others_cost" encry="false">其他（费用）</td>
+        <td code="fina_cost" encry="false">财务费用</td>
+        <td code="buss_other_profits" encry="false">其他业务利润</td>
+        <td code="income_dg" encry="false">代购代销收入</td>
+        <td code="net_profit" encry="false">净利润</td>
+      </tr>
+    </table>
+</body></html>

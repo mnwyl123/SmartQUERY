@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TABLELIST>
+	<TABLE NAME="PER_QUERY_DETAIL" VALUE="查询信息">
+		<FIELDS>
+			<field CODE="CLIENT_NAME">被查询者姓名</field>
+			<field CODE="CREDENTIALS_TYPE">被查询者证件类型</field>
+			<field CODE="CREDENTIALS_NO">被查询者证件号码</field>
+			<field CODE="QUERY_ORG_CODE">查询机构</field>
+			<field CODE="QUERY_REASON">查询原因</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_BASIC" VALUE="身份信息">
+		<FIELDS>
+			<field CODE="CLIENT_SEX">性别</field>
+			<field CODE="CLIENT_BIRTHDAY">出生日期</field>
+			<field CODE="MARITAL_STATUS">婚姻状况</field>	
+			<field CODE="PHONE_CNT">编号</field>
+			<field CODE="EDUCATION">学历</field>
+			<field CODE="DEGREE">学位</field>
+			<field CODE="WORK_STATUS">就业状况</field>
+			<field CODE="NATIONALITY">国籍</field>
+			<field CODE="EMAIL">电子邮箱</field>
+			<field CODE="MAILING_ADDRESS">通讯地址</field>
+			<field CODE="RESIDENCE_ADDRESS">户籍地址</field>
+			<field CODE="PHONE_NUM">手机号码</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_PHONE_INFO" VALUE="电话号码信息">
+		<FIELDS>
+			<field CODE="PHONE_CNT">编号</field>
+			<field CODE="PHONE_NUM">手机号码</field>
+			<field CODE="UPDATE_DATE">信息更新日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_SPOU" VALUE="配偶信息">
+		<FIELDS>
+			<field CODE="SPOU_NAME">姓名</field>
+			<field CODE="SPOU_CREDENTIALS_TYPE">证件类型</field>
+			<field CODE="SPOU_CREDENTIALS_NO">证件号码</field>
+			<field CODE="SPOU_COMPANY">工作单位</field>
+			<field CODE="SPOU_TEL">联系电话</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LIVE" VALUE="居住信息">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="RESIDENTIAL_ADDRESS">居住地址</field>
+			<field CODE="RESIDENTIAL_CONDITION">居住状况</field>
+			<field CODE="HOUSE_TEL">住宅电话</field>
+			<field CODE="UPDATE_TIME">信息更新日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_CAREER" VALUE="职业信息">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="COMPANY_NAME">工作单位</field>
+			<field CODE="COMPANY_NATURE">单位性质</field>
+			<field CODE="COMPANY_ADDRESS">单位地址</field>
+			<field CODE="COMPANY_TEL">单位电话</field>
+			<field CODE="CAREER">职业</field>
+			<field CODE="INDUSTRY">行业</field>
+			<field CODE="DUTIES">职务</field>
+			<field CODE="JOB_TITLE">职称</field>
+			<field CODE="ENTER_YEAR">进入本单位年份</field>
+			<field CODE="UPDATE_TIME">信息更新日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="信贷交易信息提示">
+		<FIELDS>
+			<field CODE="BUSI_MAJOR_CLASS">业务大类</field>
+			<field CODE="BUSI_TYPE">业务类型</field>
+			<field CODE="ACC_SUM">账户数</field>
+			<field CODE="FIR_BUSS_MONTH">首笔业务发放月份</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="被追偿信息汇总">
+		<FIELDS>
+			<field CODE="BUSS_TYPE">业务类型</field>
+			<field CODE="ACC_SUM">账户数</field>
+			<field CODE="BALANCE">余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_ASSETS_DISPOSAL" VALUE="被追偿信息明细">
+		<FIELDS>
+			<!--  <field CODE="COMPANY_NAME">管理机构</field>
+			<field CODE="ACC_SUM">业务种类</field>
+			<field CODE="RECEIVE_DATE">债权接收日期</field>
+			<field CODE="AGGREGATE_AMOUNT">债权金额</field>
+			<field CODE="ACC_SUM1">债权转移时的还款状态</field>
+			<field CODE="BALANCE">账户状态</field>
+			<field CODE="BUSS_TYPE">账户关闭日期</field> -->
+			<field CODE="BUSS_ORG_CODE">管理机构</field>
+			<field CODE="BUSS_CATEGORY">业务种类</field>
+			<field CODE="RECEIVE_DATE">债权接收日期</field>
+			<field CODE="AGGREGATE_AMOUNT">债权金额</field>
+			<field CODE="CESSION_REPAY_STATUS">债权转移时的还款状态</field>
+			<field CODE="NEW_ACC_STATUS">账户状态</field>
+			<field CODE="NEW_BALANCE">余额</field>
+			<field CODE="NEW_LAST_REPAY_DATE">最近一次还款日期</field>
+			<field CODE="STOP_DATE">状态截止日</field>
+			<field CODE="NEW_CLOSE_DATE">账户关闭日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_SPECIAL_TRADE" VALUE="特殊交易信息"><!-- 20191112 -->
+		<FIELDS>
+			<field CODE="SPECIAL_TRADE_TYPE">特殊交易类型</field>
+			<field CODE="OCCUR_DATE">发生日期</field>
+			<field CODE="CHANGE_MONTH">变更月数</field>
+			<field CODE="OCCUR_SUM">发生金额</field>
+			<field CODE="OVERDUE_DETAIL">明细记录</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="呆账信息汇总">
+		<FIELDS>
+			<field CODE="BAD_DEBT_NUM">呆账账户数</field>
+			<field CODE="BAD_DEBT_BALANCE">呆账余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="信息提示">
+		<FIELDS>
+			<field CODE="PER_HOUSE_LOAN_NUM">个人住房贷款笔数</field>
+			<field CODE="PER_COMME_LOAN_NUM">个人商用房（包括商住两用）贷款笔数</field>
+			<field CODE="OTHER_LOAN_NUM">其他贷款笔数</field>
+			<field CODE="FIRST_LOAN_REL_MON">首笔贷款发放月份</field>
+			<field CODE="CR_CARD_ACC_NUM">贷记卡账户数</field>
+			<field CODE="FIRST_CARD_REL_MON">首张贷记卡发卡月份</field>
+			<field CODE="Q_CR_CARD_ACC_NUM">准贷记卡账户数</field>
+			<field CODE="Q_FIRST_CARD_REL_MON">首张准贷记卡发卡月份</field>
+			<field CODE="DECLART_NUM">本人声明数目</field>
+			<field CODE="OBJECTION_NUM">异议标注数目</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="数字解读">
+		<FIELDS>
+			<field CODE="DIGITAL_INTERPRE">数字解读</field>
+			<field CODE="RELATIVE_POSITIONT">相对位置</field>
+			<field CODE="DIGITAL_INTERPRE_DES">说明</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="逾期及违约信息概要">
+		<FIELDS>
+			<field CODE="LOAN_BAD_DEBT_NUM">笔数0</field>
+			<field CODE="LOAN_BAD_DEBT_BALANCE">余额1</field>
+			<field CODE="ASSET_NUM">笔数2</field>
+			<field CODE="ASSET_BALANCE">余额3</field>
+			<field CODE="ASSURER_NUM">笔数4</field>
+			<field CODE="ASSURER_BALANCE">余额5</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="逾期（透支）信息汇总">
+		<FIELDS>
+			<field CODE="ACCOUNT_TYPE">逾期账户类型</field>
+			<field CODE="ACC_SUM">逾期账户数</field>
+			<field CODE="MONTH_CNT">月份数</field>
+			<field CODE="SINGLE_MONTH_MAX_AMOUNT">单月最高逾期/透支总额</field>
+			<field CODE="MAX_MONTH_CNT">最长逾期/透支月数</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="逾期信息汇总">
+		<FIELDS>
+			<field CODE="LOAN_NUM">笔数0</field>
+			<field CODE="LOAN_MON_NUM">月份数1</field>
+			<field CODE="LOAN_MON_OVER_SUM">单月最高逾期总额2</field>
+			<field CODE="LOAN_OVER_MON_NUM">最长逾期月数3</field>
+			<field CODE="CR_CARD_OVER_ACC_NUM">账户数4</field>
+			<field CODE="CR_CARD_OVER_MON_NUM">月份数5</field>
+			<field CODE="CR_CARD_MON_OVER_SUM">单月最高逾期总额6</field>
+			<field CODE="CR_CARD_OVER_LONG_MON_NUM">最长逾期月数7</field>
+			<field CODE="Q_CR_CARD_OVER_ACC_NUM">账户数8</field>
+			<field CODE="Q_CR_CARD_OVER_MON_NUM">月份数9</field>
+			<field CODE="Q_CR_CARD_OVER_MON_BALANCE">单月最高透支余额10</field>
+			<field CODE="Q_CR_CARD_OVER_LONG_MON_NUM">最长透支月数11</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="非循环贷账户信息汇总">
+		<FIELDS>
+			<field CODE="NON_REV_MANAGER_ORG_CNT">管理机构数</field>
+			<field CODE="NON_REV_ACC_SUM">账户数</field>
+			<field CODE="NON_REV_CRED_SUM">授信总额</field>
+			<field CODE="NON_REV_BALANCE">余额</field>
+			<field CODE="NON_REV_REPAY_AVG6">最近6个月平均应还款</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="循环额度下分账户信息汇总">
+		<FIELDS>
+			<field CODE="CIRC_QUO_MANA_ORG_CNT">管理机构数</field>
+			<field CODE="CIRC_QUO_ACC_SUM">账户数</field>
+			<field CODE="CIRC_QUO_CRED_SUM">授信总额</field>
+			<field CODE="CIRC_QUO_BALANCE">余额</field>
+			<field CODE="CIRC_QUO_REPAY_AVG6">最近6个月平均应还款</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="循环贷账户信息汇总">
+		<FIELDS>
+			<field CODE="CIRC_ACC_MANA_ORG_CNT">管理机构数</field>
+			<field CODE="CIRC_ACC_ACC_SUM">账户数</field>
+			<field CODE="CIRC_ACC_CRED_SUM">授信总额</field>
+			<field CODE="CIRC_ACC_BALANCE">余额</field>
+			<field CODE="CIRC_ACC_REPAY_AVG6">最近6个月平均应还款</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="贷记卡账户信息汇总">
+		<FIELDS>
+			<field CODE="N_CR_CARD_ORG_NUM">发卡机构数</field>
+			<field CODE="N_CR_CARD_ACC_NUM">账户数</field>
+			<field CODE="N_CR_CARD_CRED_SUM">授信总额</field>
+			<field CODE="N_CR_CARD_MAX_CRED_SUM">单家机构最高授信额</field>
+			<field CODE="N_CR_CARD_MIN_CRED_SUM">单家机构最低授信额</field>
+			<field CODE="N_CR_CARD_USED_SUM">已用额度</field>
+			<field CODE="N_CR_CARD_AVG_USED_SUM">最近6个月平均使用额度</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="准贷记卡账户信息汇总">
+		<FIELDS>
+			<field CODE="NQ_CR_CARD_ORG_NUM">发卡机构数</field>
+			<field CODE="NQ_CR_CARD_ACC_NUM">账户数</field>
+			<field CODE="NQ_CR_CARD_CRED_SUM">授信总额</field>
+			<field CODE="NQ_CR_CARD_MAX_CRED_SUM">单家机构最高授信额</field>
+			<field CODE="NQ_CR_CARD_MIN_CRED_SUM">单家机构最低授信额</field>
+			<field CODE="NQ_CR_CARD_OVERDRAFT_BALANCE">透支余额</field>
+			<field CODE="NQ_CR_CARD_AVG_USED_SUM">最近6个月平均透支余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="相关还款责任信息汇总">
+		<FIELDS>
+			<field CODE="BORROWER_CATEGORY">借款人身份类别</field>
+			<field CODE="REPAY_TYPE">还款责任类型</field>
+			<field CODE="ACC_SUM">账户数</field>
+			<field CODE="REPAY_SUM">还款责任金额</field>
+			<field CODE="BALANCE">余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_REPAYER" VALUE="相关还款责任明细">
+		<FIELDS>
+			<field CODE="BUSS_ORG_CODE">管理机构</field>
+			<field CODE="BUSS_CATEGORY">业务种类</field>
+			<field CODE="CREATE_DATE">开立日期</field>
+			<field CODE="EXPI_DATE">到期日期</field>
+			<field CODE="REPAYER_TYPE">责任人类型</field>
+			<field CODE="REPAY_SUM">还款责任金额</field>
+			<field CODE="CURRENCY">币种</field>
+			<field CODE="CONTRACT_NUM">保证合同编号</field>
+			<field CODE="BALANCE">余额</field>
+			<field CODE="FIVE_TYPE">五级分类</field>
+			<field CODE="REPAY_STATUS">还款状态</field>
+			<field CODE="OVERDRAFT_MONTH_CNT">逾期月数</field>
+			<field CODE="BORROWER_CATEGORY">主借款人身份类别</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_AFTER_PAY_OWE_INFO" VALUE="后付费业务欠费信息汇总">
+		<FIELDS>
+			<field CODE="BUSS_TYPE">业务类型</field>
+			<field CODE="ARRE_ACC_NUM">账户数</field>
+			<field CODE="ARRE_SUM">欠费金额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_PUBLIC_SUMMARY_INFO" VALUE="公共信息汇总">
+		<FIELDS>
+			<field CODE="PUBLIC_INFO_TYPE">信息类型</field>
+			<field CODE="RECORD_NUM">记录数</field>
+			<field CODE="INVOLVE_SUM">涉及金额</field>
+		</FIELDS>
+	</TABLE>
+	
+	
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="未销户准贷记卡信息汇总">
+		<FIELDS>
+			<field CODE="N_NQ_CR_CARD_COMPANY_ORG_NUM">发卡法人机构数</field>
+			<field CODE="N_NQ_CR_CARD_ORG_NUM">发卡机构数</field>
+			<field CODE="N_NQ_CR_CARD_ACC_NUM">账户数</field>
+			<field CODE="N_NQ_CR_CARD_CRED_SUM">授信总额</field>
+			<field CODE="N_NQ_CR_CARD_MAX_CRED_SUM">单家行最高授信额</field>
+			<field CODE="N_NQ_CR_CARD_MIN_CRED_SUM">单家行最低授信额</field>
+			<field CODE="N_NQ_CR_CARD_OVERDRAFT_BALANCE">透支余额</field>
+			<field CODE="N_NQ_CR_CARD_AVG_USED_SUM">最近6个月平均透支余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="对外担保信息汇总">
+		<FIELDS>
+			<field CODE="GUARANTEE_NUM">担保笔数</field>
+			<field CODE="GUARANTEE_SUM">担保金额</field>
+			<field CODE="GUARANTEE_BALANCE">担保本金余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_ASSETS_DISPOSAL" VALUE="资产处置信息">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="COMPANY_NAME">代偿机构</field>
+			<field CODE="RECEIVE_DATE">最近一次代偿日期</field>
+			<field CODE="AGGREGATE_AMOUNT">累计代偿金额</field>
+			<field CODE="LAST_REPAY_DATE">最近一次还款日期</field>
+			<field CODE="RECEIVE_BALANCE">余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_ASSETS_DISPOSAL" VALUE="保证人代偿信息">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="COMPANY_NAME">代偿机构</field>
+			<field CODE="RECEIVE_DATE">最近一次代偿日期</field>
+			<field CODE="AGGREGATE_AMOUNT">累计代偿金额</field>
+			<field CODE="LAST_REPAY_DATE">最近一次还款日期</field>
+			<field CODE="BALANCE">余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_SUMMARY" VALUE="查询代偿记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="COMPANY_NAME">代偿机构</field>
+			<field CODE="RECEIVE_DATE">最近一次代偿日期</field>
+			<field CODE="AGGREGATE_AMOUNT">累计代偿金额</field>
+			<field CODE="LAST_REPAY_DATE">最近一次还款日期</field>
+			<field CODE="BALANCE">余额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_DETAIL" VALUE="贷款交易信息明细">
+		<FIELDS>
+			<field CODE="BUSS_ORG_CODE">管理机构</field>
+			<field CODE="ACCOUNT_SIGN">账户标识</field>
+			<field CODE="CREATE_DATE">开立日期</field>
+			<field CODE="EXPIRY_DATE">到期日期</field>
+			<field CODE="LOAN_SUM">借款金额</field>			
+			<field CODE="ACC_CRED_QUOTA">账户授信额度</field>
+			<field CODE="CURRENCY">账户币种</field>
+			<field CODE="BUSS_CATEGORY">业务种类</field>
+			<field CODE="VOUCHTYPE">担保方式</field>
+			<field CODE="REPAY_NUM">还款期数</field>
+			<field CODE="REPAY_FREQ">还款频率</field>
+			<field CODE="REPAY_WAY">还款方式</field>
+			<field CODE="COMMON_LOAN_SIGN">共同借款标志</field>
+			<field CODE="LOAN_DISTRI_FORM">贷款发放形式</field>	<!-- 20191120新增 -->
+			<field CODE="CRED_SERIAL">授信协议标识</field>	<!-- 20191120新增 -->	
+			
+			<!-- 最近一个月 -->	
+			<field CODE="CUR_ACC_STATUS">账户状态1</field>
+			<field CODE="CUR_FIVE_TYPE">五级分类1</field>
+			<field CODE="CUR_BALANCE">余额1</field>
+			<field CODE="CUR_REST_REPAY_NUM">剩余还款期数</field>
+			<field CODE="CUR_CUR_REPAY_AMOUT">本月应还款</field>
+			<field CODE="CUR_PLAN_REPAY_DATE">应还款日</field>
+			<field CODE="CUR_ACTUAL_REPAY_AMOUT">本月实还款</field>
+			<field CODE="CUR_LAST_REPAY_DATE">最近一次还款日期1</field>
+			<field CODE="CUR_CUR_OVER_NUM">当前逾期期数</field>
+			<field CODE="CUR_CUR_OVER_AMOUNT">当前逾期总额</field>
+			<field CODE="CUR_T_N_REPAY_PRINCIPAL">逾期31—60天未还本金</field>
+			<field CODE="CUR_S_N_REPAY_PRINCIPAL">逾期61－90天未还本金</field>
+			<field CODE="CUR_N_N_REPAY_PRINCIPAL">逾期91－180天未还本金</field>
+			<field CODE="CUR_L_N_REPAY_PRINCIPAL">逾期180天以上未还本金</field>
+			
+			<!-- 最新 -->
+			<field CODE="NEW_ACC_STATUS">账户状态2</field>
+			<field CODE="NEW_FIVE_TYPE">五级分类2</field>
+			<field CODE="NEW_BALANCE">余额2</field>
+			<field CODE="NEW_LAST_REPAY_DATE_TP">还款日期</field>
+			<field CODE="REPAY_SUM">还款金额</field>
+			<field CODE="NEW_REPAY_STATUE">当前还款状态</field>
+			<field CODE="NEW_LAST_REPAY_DATE">最近一次还款日期2</field>
+			<field CODE="NEW_OUT_MONTH">转出月份</field>
+			<field CODE="STOP_DATE">状态截止日</field>
+			<field CODE="NEW_CLOSE_DATE">账户关闭日期</field>
+			
+			<field CODE="P_MONTH">月份</field>
+			<field CODE="REPAY_STATUS">还款状态</field>
+			<field CODE="OVERDRAFT_SUM">逾期总额</field>
+			
+			<!-- <field CODE="REPAY_RECORD">*月的还款记录</field>
+			<field CODE="OVER_MONTH">逾期月份</field>
+			<field CODE="OVER_MONTH_NUM">逾期持续月数</field>
+			<field CODE="OVER_SUM">逾期金额</field>
+			<field CODE="SPECIAL_TRADE_TYPE">特殊交易类型</field>
+			<field CODE="OCCUR_DATE">发生日期</field>
+			<field CODE="CHANGE_MONTH">变更月数</field>
+			<field CODE="OCCUR_SUM">发生金额</field>
+			<field CODE="OVERDUE_DETAIL">明细记录</field>
+			<field CODE="INSTRUCTION">贷款机构说明</field>
+			<field CODE="INSTRUCTION">本人声明</field>
+			<field CODE="INSTRUCTION">异议标注</field>
+			<field CODE="ADD_DATE">添加日期</field>
+			<field CODE="ORG_DES">贷款机构说明</field>
+			<field CODE="ORG_DES_DATE">贷款机构说明添加日期</field>
+			<field CODE="OWNER_DECLARE">本人声明</field>
+			<field CODE="OWNER_DECLARE_DATE">本人声明添加日期</field>
+			<field CODE="OBJECTIONS">异议标注</field>
+			<field CODE="OBJECTIONS_DATE">异议标注添加日期</field> -->
+			
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOAN_DETAIL" VALUE="贷款交易信息5年明细">
+		<FIELDS>
+			<field CODE="P_MONTH">月份</field>
+			<field CODE="REPAY_STATUS">还款状态</field>
+			<field CODE="OVERDRAFT_SUM">逾期总额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LARGE_DIVIDE_INFO" VALUE="大额专项分期信息">
+		<FIELDS>
+			<field CODE="DIV_QUOTA">大额专项分期额度</field>
+			<field CODE="EFFE_DATE">分期额度生效日期</field>
+			<field CODE="EXPI_DATE">分期额度到期日期</field>
+			<field CODE="USED_SUM">已用分期金额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_CREDIT_DETAIL" VALUE="贷记卡交易信息明细">
+		<FIELDS>
+			<field CODE="CR_REL_CARD_ORG">发卡机构</field>
+			<field CODE="BUSSID">账户标识</field>
+			<field CODE="CR_REL_CARD_DATE">开立日期</field>
+			<field CODE="CR_CREDIT_SUM">账户授信额度</field>
+			<field CODE="CR_SHARE_CREDIT_SUM">共享授信额度</field>
+			<field CODE="CURRENCYTYPE">币种</field>
+			<field CODE="CARDTYPE">业务种类</field>
+			<field CODE="VOUCHTYPE">担保方式</field>
+			
+			<field CODE="CR_ACC_STATUS">账户状态</field>		
+			<field CODE="BALANCE">余额</field>
+			<field CODE="CR_USED_SUM">已用额度</field>
+			
+			<field CODE="TMP1">未出单的大额专项分期余额</field>
+			<field CODE="TMP2">剩余分期期数</field>
+			
+			<field CODE="CR_AVG_USED_SUM">最近6个月平均使用额度</field>
+			<field CODE="CR_USED_MAX_SUM">最大使用额度</field>
+			
+			<field CODE="CR_BILL_DATE">账单日</field>
+			<field CODE="CR_SHOULD_REPAY_AMOUT">本月应还款</field>
+			<field CODE="CR_ACTUAL_REPAY_AMOUT">本月实还款</field>
+			<field CODE="CR_LAST_REPAY_DATE">最近一次还款日期</field>
+			<field CODE="CR_CUR_OVER_NUM">当前逾期期数</field>
+			<field CODE="CR_CUR_OVER_AMOUT">当前逾期总额</field>
+			
+			<field CODE="P_MONTH">月份</field>
+			<field CODE="REPAY_STATUS">还款状态</field>
+			<field CODE="OVERDRAFT_SUM">逾期总额</field>
+			
+			<!-- <field CODE="CR_REPAY_RECORD">*月的还款记录</field>
+			<field CODE="OVER_MONTH">逾期月份</field>
+			<field CODE="OVER_MONTH_NUM">逾期持续月数</field>
+			<field CODE="OVER_SUM">逾期金额</field>
+			<field CODE="SPECIAL_TRADE_TYPE">特殊交易类型</field>
+			<field CODE="OCCUR_DATE">发生日期</field>
+			<field CODE="CHANGE_MONTH">变更月数</field>
+			<field CODE="OCCUR_SUM">发生金额</field>
+			<field CODE="OVERDUE_DETAIL">明细记录</field>		
+			<field CODE="ORG_DES">发卡机构说明</field>
+			<field CODE="ORG_DES_DATE">发卡机构说明添加日期</field>
+			<field CODE="OWNER_DECLARE">本人声明</field>
+			<field CODE="OWNER_DECLARE_DATE">本人声明添加日期</field>
+			<field CODE="OBJECTIONS">异议标注</field>
+			<field CODE="OBJECTIONS_DATE">异议标注添加日期</field>
+			<field CODE="INSTRUCTION">贷款机构说明</field>
+			<field CODE="INSTRUCTION">本人声明</field>
+			<field CODE="INSTRUCTION">异议标注</field>
+			<field CODE="ADD_DATE">添加日期</field> -->
+		</FIELDS>
+	</TABLE>
+	<!-- 20191120添加 （由于添加字段与原来的不同，担心别的地方用到了老的配置信息，所以进行了新加）-->
+	<TABLE NAME="PER_CREDIT_CARD_DETAIL" VALUE="贷记卡交易明细信息">
+		<FIELDS>
+			<field CODE="BUSS_ORG_CODE">发卡机构</field>
+			<field CODE="ACCOUNT_SIGN">账户标识</field>
+			<field CODE="CREATE_DATE">开立日期</field>
+			<field CODE="ACC_CRED_QUOTA">账户授信额度</field>
+			<field CODE="SHARE_CRED_QUOTA">共享授信额度</field>
+			<field CODE="CURRENCY">币种</field>
+			<field CODE="BUSS_CATEGORY">业务种类</field>
+			<field CODE="VOUCHTYPE">担保方式</field>
+			<field CODE="CRED_SERIAL">授信协议标识</field>
+			
+			<field CODE="CUR_ACC_STATUS">账户状态1</field>
+			<field CODE="CUR_BALANCE">余额1</field>
+			<field CODE="CUR_USED_SUM">已用额度</field>
+			<field CODE="CUR_NO_ISSUED_BALANC">未出单的大额专项分期余额</field>
+			<field CODE="CUR_REST_REPAY_NUM">剩余分期期数</field>
+			<field CODE="CUR_PLAN_REPAY_DATE">账单日</field>
+			<field CODE="CUR_AVG_USE_QUOTA">最近6个月平均使用额度</field>
+			<field CODE="CUR_MAX_USE_QUOTA">最大使用额度</field>
+			<field CODE="CUR_REPAY_AMOUT">本月应还款</field>
+			<field CODE="ACTUAL_REPAY_AMOUT">本月实还款</field>
+			<field CODE="CUR_LAST_REPAY_DATE">最近一次还款日期1</field>
+			<field CODE="CUR_CUR_OVER_NUM">当前逾期期数</field>
+			<field CODE="CUR_CUR_OVER_AMOUNT">当前逾期总额</field>
+			
+			<field CODE="STOP_DATE">状态截止日</field>
+			<field CODE="NEW_ACC_STATUS">账户状态2</field>
+			<field CODE="NEW_BALANCE">余额2</field>
+			<field CODE="NEW_LAST_REPAY_DATE_TP">还款日期</field>
+			<field CODE="REPAY_SUM">还款金额</field>
+			<field CODE="NEW_REPAY_STATUE">当前还款状态</field>
+			<field CODE="NEW_LAST_REPAY_DATE">最近一次还款日期2</field>
+			<field CODE="NEW_CLOSE_DATE">销户日期</field>
+			
+			<field CODE="CUR_Y5_SDATE">最近5年起始年月</field>
+			<field CODE="CUR_Y5_EDATE">最近5年截止年月</field>
+			
+			<field CODE="P_MONTH">月份</field>
+			<field CODE="REPAY_STATUS">还款状态</field>
+			<field CODE="OVERDRAFT_SUM">逾期总额</field>
+		</FIELDS>
+	</TABLE>
+	
+	<TABLE NAME="PER_SPECIAL_CASE_INFO" VALUE="特殊事件说明信息">
+		<FIELDS>
+			<field CODE="CASE_TYPE">特殊事件类型</field>
+			<field CODE="S_HEPP_MONTH">特殊事件发生月份</field>
+		</FIELDS>
+	</TABLE>
+	
+	<!-- 20191120添加 （由于添加字段与原来的不同，担心别的地方用到了老的配置信息，所以进行了新加）-->
+	<TABLE NAME="PER_QUASICREDIT_CARD_DETAIL" VALUE="准贷记卡交易明细信息">
+		<FIELDS>
+			<field CODE="BUSS_ORG_CODE">发卡机构</field>
+			<field CODE="ACCOUNT_SIGN">账户标识</field>
+			<field CODE="CREATE_DATE">开立日期</field>
+			<field CODE="ACC_CRED_QUOTA">账户授信额度</field>
+			<field CODE="SHARE_CRED_QUOTA">共享授信额度</field>
+			<field CODE="CURRENCY">币种</field>
+			<field CODE="BUSS_CATEGORY">业务种类</field>
+			<field CODE="VOUCHTYPE">担保方式</field>
+			<field CODE="CRED_SERIAL">授信协议标识</field>
+			
+			<field CODE="CUR_ACC_STATUS">账户状态1</field>
+			<field CODE="CUR_BALANCE">透支余额</field>
+			<field CODE="CUR_PLAN_REPAY_DATE">账单日</field>
+			<field CODE="CUR_AVG_OVERDRAFT_BALANCE">最近 6 个月平均透支余额</field>
+			<field CODE="CUR_MAX_OVERDRAFT_BALANCE">最大透支余额</field>
+			<field CODE="ACTUAL_REPAY_AMOUT">本月实还款</field>
+			<field CODE="CUR_LAST_REPAY_DATE">最近一次还款日期1</field>
+			<field CODE="CUR_L_OVERDRAFT_PRINCIPAL">透支 180 天以上未付余额</field>
+			
+			<field CODE="STOP_DATE">状态截止日</field>
+			<field CODE="NEW_ACC_STATUS">账户状态2</field>
+			<field CODE="NEW_BALANCE">余额2</field>
+			<field CODE="NEW_LAST_REPAY_DATE_TP">还款日期</field>
+			<field CODE="REPAY_SUM">还款金额</field>
+			<field CODE="NEW_REPAY_STATUE">当前还款状态</field>
+			<field CODE="NEW_LAST_REPAY_DATE">最近一次还款日期2</field>
+			<field CODE="NEW_CLOSE_DATE">销户日期</field>
+			
+			<field CODE="CUR_Y5_SDATE">最近5年起始年月</field>
+			<field CODE="CUR_Y5_EDATE">最近5年截止年月</field>
+			
+			<field CODE="P_MONTH">月份</field>
+			<field CODE="REPAY_STATUS">还款状态</field>
+			<field CODE="OVERDRAFT_SUM">逾期总额</field>
+		</FIELDS>
+	</TABLE>
+	
+	<TABLE NAME="PER_LABEL_INFO" VALUE="标注声明信息">
+		<FIELDS>
+			<field CODE="L_CONTENT">标注或声明内容</field>
+			<field CODE="ADD_DATE">添加日期</field>
+			<field CODE="L_TYPE">标注及声明类型</field>
+		</FIELDS>
+	</TABLE>
+	
+		
+	
+	<TABLE NAME="PER_Q_CREDIT_DETAIL" VALUE="准贷记卡交易信息明细">
+		<FIELDS>
+			<field CODE="Q_CR_ACC_STATUS">账户状态</field>
+			<field CODE="Q_CR_USED_SUM">透支余额</field>
+			<field CODE="Q_CR_AVG_USED_SUM">最近6个月平均透支余额</field>
+			<field CODE="Q_CR_USED_MAX_SUM">最大透支余额</field>
+			<field CODE="Q_CR_BILL_DATE">账单日</field>
+			<field CODE="Q_CR_ACTUAL_REPAY_AMOUT">本月实还款</field>
+			<field CODE="Q_CR_LAST_REPAY_DATE">最近一次还款日期</field>
+			<field CODE="UNREPAY_BALANCE">透支180天以上未付余额</field>
+			
+			<field CODE="Q_CR_REL_CARD_ORG">发卡机构</field>
+			<field CODE="BUSSID">账户标识</field>
+			<field CODE="Q_CR_REL_CARD_DATE">开立日期</field>
+			<field CODE="Q_CR_CREDIT_SUM">账户授信额度</field>
+			<field CODE="Q_CR_SHARE_CREDIT_SUM">共享授信额度</field>
+			<field CODE="CURRENCYTYPE">币种</field>
+			<field CODE="VOUCHTYPE">担保方式</field>
+			
+			<field CODE="P_MONTH">月份</field>
+			<field CODE="REPAY_STATUS">还款状态</field>
+			<field CODE="OVERDRAFT_SUM">逾期总额</field>
+			<!-- <field CODE="OCCUR_DATE">发生日期</field>
+			<field CODE="CHANGE_MONTH">变更月数</field>
+			<field CODE="OCCUR_SUM">发生金额</field>
+			<field CODE="OVERDUE_DETAIL">明细记录</field>
+			<field CODE="ORG_DES">发卡机构说明</field>
+			<field CODE="ORG_DES_DATE">发卡机构说明添加日期</field>
+			<field CODE="OWNER_DECLARE">本人声明</field>
+			<field CODE="OWNER_DECLARE_DATE">本人声明添加日期</field>
+			<field CODE="OBJECTIONS">异议标注</field>
+			<field CODE="OBJECTIONS_DATE">异议标注添加日期</field>
+			<field CODE="INSTRUCTION">贷款机构说明</field>
+			<field CODE="INSTRUCTION">本人声明</field>
+			<field CODE="INSTRUCTION">异议标注</field>
+			<field CODE="ADD_DATE">添加日期</field> -->
+		</FIELDS>
+	</TABLE>
+	
+	<TABLE NAME="PER_CRED_BASE_INFO" VALUE="授信协议信息">
+		<FIELDS>
+			<field CODE="BUSS_ORG_CODE">管理机构</field>
+			<field CODE="CRED_SIGN">授信协议标识</field>
+			<field CODE="EFFE_DATE">生效日期</field>
+			<field CODE="EXPI_DATE">到期日期</field>
+			<field CODE="CRED_QUOTA_USE">授信额度用途</field>
+			<field CODE="CRED_QUOTA">授信额度</field>
+			<field CODE="CRED_LIMIT">授信限额</field>
+			<field CODE="CRED_LIMIT_NUM">授信限额编号</field>
+			<field CODE="USED_QUOTA">已用额度</field>
+			<field CODE="CURRENCY">币种</field>
+		</FIELDS>
+	</TABLE>
+	
+	<TABLE NAME="PER_EXTERNAL_GUARANTEE_DETAIL" VALUE="对外担保信息">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="LOAN_GRANT_ORG">担保贷款发放机构</field>
+			<field CODE="LOAN_CONTRACT_SUM">担保贷款合同金额</field>
+			<field CODE="LOAN_GRANT_DATE">担保贷款发放日期</field>
+			<field CODE="LOAN_STOP_DATE">担保贷款到期日期</field>
+			<field CODE="GUARANTEE_SUM">担保金额</field>
+			<field CODE="GUARANTEE_BALANCE">担保贷款本金余额</field>
+			<field CODE="LOAN_FIVE_CALSS">担保贷款五级分类</field>
+			<field CODE="SETTLE_ACCOUNT_DATE">应还款日</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_EXTERNAL_GUARANTEE_DETAIL" VALUE="对外信用卡担保信息">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="LOAN_GRANT_ORG">担保信用卡发放机构</field>
+			<field CODE="LOAN_CONTRACT_SUM">担保信用卡授信额度</field>
+			<field CODE="LOAN_GRANT_DATE">担保信用卡发卡日期</field>
+			<field CODE="GUARANTEE_SUM">担保金额</field>
+			<field CODE="GUARANTEE_BALANCE">担保信用卡已用额度</field>
+			<field CODE="SETTLE_ACCOUNT_DATE">账单日</field>
+		</FIELDS>
+	</TABLE>
+	
+	<TABLE NAME="PER_AFTER_PAY_INFO" VALUE="后付费记录">
+		<FIELDS>
+			<field CODE="ORG_NAME">机构名称</field>
+			<field CODE="ORG_TYPE">业务类型</field>
+			<field CODE="OPEN_DATE">业务开通日期</field>
+			<field CODE="PAY_COST_STATUS">当前缴费状态</field>
+			<field CODE="OWE_SUM">当前欠费金额</field>
+			<field CODE="CHG_ACC_YM">记账年月</field>
+			<field CODE="PAY_COST_RECORD">最近 24 个月缴费记录</field><!-- 20191122新增 -->
+		</FIELDS>
+	</TABLE>
+	
+	<TABLE NAME="PER_OWE_TAXES" VALUE="欠税记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="TAX_AUTHORITY">主管税务机关</field>
+			<field CODE="OWE_TAX_SUM">欠税总额</field>
+			<field CODE="OWE_TAX_DATE">欠税统计日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_VERDICT" VALUE="民事判决记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="COURT_NAME">立案法院</field>
+			<field CODE="CAUSE">案由</field>
+			<field CODE="REGISTER_DATE">立案日期</field>
+			<field CODE="SETTLE_STYLE">结案方式</field>
+			<field CODE="RESULT">判决/调解结果</field>
+			<field CODE="SETTLE_DATE">判决/调解生效日期</field>
+			<field CODE="GOAL_SYM">诉讼标的</field>
+			<field CODE="GOAL_SYM_SUM">诉讼标的金额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_INFORCE" VALUE="强制执行记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="EXEC_COURT">执行法院</field>
+			<field CODE="CAUSE">执行案由</field>
+			<field CODE="REGISTER_DATE">立案日期</field>
+			<field CODE="SETTLE_STYLE">结案方式</field>
+			<field CODE="RESULT">案件状态</field>
+			<field CODE="SETTLE_DATE">结案日期</field>
+			<field CODE="APPLY_SYM">申请执行标的</field>
+			<field CODE="APPLY_SYM_VALUE">申请执行标的价值</field>
+			<field CODE="GOAL_SYM">已执行标的</field>
+			<field CODE="GOAL_SYM_SUM">已执行标的金额</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_PENALTIES" VALUE="行政处罚记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="PENALTIES_COMAPNY">处罚机构</field>
+			<field CODE="PENALTIES_CONTENTS">处罚内容</field>
+			<field CODE="PENALTIES_SUM">处罚金额</field>
+			<field CODE="START_DATE">生效日期</field>
+			<field CODE="STOP_DATE">截止日期</field>
+			<field CODE="RECONSIDERATION_RESULT">行政复议结果</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_PROVIDENT_FUND_PAY" VALUE="住房公积金参缴记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="PAY_PLACE">参缴地</field>
+			<field CODE="PAY_DATE">参缴日期</field>
+			<field CODE="START_PAY_MON">初缴月份</field>
+			<field CODE="STOP_PAY_MON">缴至月份</field>
+			<field CODE="PAY_STATUS">缴费状态</field>
+			<field CODE="PAY_MON_AMOUT">月缴存额</field>
+			<field CODE="PER_PAY_PERCENT">个人缴存比例</field>
+			<field CODE="COM_PAY_PERCENT">单位缴存比例</field>
+			<field CODE="PAY_COM_NAME">缴费单位</field>
+			<field CODE="UPDATE_TIME">信息更新日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_PENSIO_PAY" VALUE="养老保险金缴存记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="INSURED_PLACE">参保地</field>
+			<field CODE="INSURED_DATE">参保日期</field>
+			<field CODE="PAY_MON_SUM">累计缴费月数</field>
+			<field CODE="START_WORK_MON">参加工作月份</field>
+			<field CODE="PAY_STATUS">缴费状态</field>
+			<field CODE="PER_PAY_BASE">个人缴费基数</field>
+			<field CODE="PAY_AMOUT_MON">本月缴费金额</field>
+			<field CODE="UPDATE_TIME">信息更新日期</field>
+			<field CODE="PAY_COM_NAME">缴费单位</field>
+			<field CODE="SOPT_PAY_REASON">中断或终止缴费原因</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_PENSIO_RELEASE" VALUE="养老保险金发放记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="REL_PLACE">发放地</field>
+			<field CODE="RETIRED_TYPE">离退休类别</field>
+			<field CODE="RETIRED_MONTH">离退休月份</field>
+			<field CODE="START_WORK_MON">参加工作月份</field>
+			<field CODE="REL_SUM_CUR_MON">本月实发养老金</field>
+			<field CODE="STOP_REL_REASON">停发原因</field>
+			<field CODE="ORIGINAL_COMAPNY">原单位名称</field>
+			<field CODE="UPDATE_TIME">信息更新日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_LOW_SECURITY" VALUE="低保救助记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="PERSONNEL_TYPE">人员类别</field>
+			<field CODE="LOCATION">所在地</field>
+			<field CODE="COMPANY">工作单位</field>
+			<field CODE="HOUSE_MON_INCOME">家庭月收入</field>
+			<field CODE="APPLY_DATE">申请日期</field>
+			<field CODE="APPROVAL_DATE">批准日期</field>
+			<field CODE="UPDATE_TIME">信息更新日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_QUALIFICATION" VALUE="执业资格记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="QUAL_NAME">执业资格名称</field>
+			<field CODE="QUAL_LEVEL">等级</field>
+			<field CODE="QUAL_OBTAIN_DATE">获得日期</field>
+			<field CODE="MATURITY_DATE">到期日期</field>
+			<field CODE="REVOKE_DATE">吊销日期</field>
+			<field CODE="ISSUED_COMAPNY">颁发机构</field>
+			<field CODE="COMPANY_LOCATION">机构所在地</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_ADMINI_REWARD" VALUE="行政奖励记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="REWARD_COMPANY">奖励机构</field>
+			<field CODE="REWARD_CONTENTS">奖励内容</field>
+			<field CODE="REWARD_EFFECTIVE_DATE">生效日期</field>
+			<field CODE="STOP_DATE">截止日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_VEHICLE_TRANSACTION" VALUE="车辆交易和抵押记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="PLATE_NUM">车牌号码</field>
+			<field CODE="ENGINE_NUM">发动机号</field>
+			<field CODE="BRAND">品牌</field>
+			<field CODE="VEHICLE_TYPE">车辆类型</field>
+			<field CODE="USED_TYPE">使用性质</field>
+			<field CODE="VEHICLE_STATUS">车辆状态</field>
+			<field CODE="MORTGAGE_MARK">抵押标记</field>
+			<field CODE="UPDATE_TIME">信息更新日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_TEL_PAY" VALUE="电信缴费记录">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="TEL_OPERATORS">电信运营商</field>
+			<field CODE="BUSINESS_TYPE">业务类型</field>
+			<field CODE="BUSINESS_OPEN_DATE">业务开通日期</field>
+			<field CODE="CUR_PAY_STATUS">当前缴费状态</field>
+			<field CODE="CUR_ARREAR_STATUS">当前欠费金额</field>
+			<field CODE="CUR_ARREAR_MON_NUM">当前欠费月数</field>
+			<field CODE="ACCOUNT_DATE">记账年月</field>
+			<field CODE="PAY_RECORD">最近24个月缴费记录</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_STATEMENT" VALUE="本人声明">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="INSTRUCTION">声明内容</field>
+			<field CODE="ADD_DATE">添加日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_STATEMENT" VALUE="征信中心说明">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="INSTRUCTION">说明内容</field>
+			<field CODE="ADD_DATE">添加日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_STATEMENT" VALUE="异议标注">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="INSTRUCTION">标注内容</field>
+			<field CODE="ADD_DATE">添加日期</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_QUERY_SUMMARY" VALUE="查询记录概要">
+		<FIELDS>
+			<field CODE="LR_QUERY_TIME">上一次查询日期</field>
+			<field CODE="LR_QUERY_ORG_CODE">上一次查询机构代码</field>
+			<field CODE="LR_QUERY_ORG_REASON">上一次查询原因</field>			
+			<field CODE="MON_LOAN_QUERY_ORG_NUM">贷款审批0</field>
+			<field CODE="MON_CREDIT_QUERY_ORG_NUM">信用卡审批1</field>
+			<field CODE="MON_LOAN_QUERY_NUM">贷款审批2</field>
+			<field CODE="MON_CREDIT_QUERY_NUM">信用卡审批3</field>
+			<field CODE="MON_OWN_QUERY_NUM">本人查询4</field>
+			<field CODE="YEAR_AFTER_LOAN_QUERY_NUM">贷后管理5</field>
+			<field CODE="YEAR_ASSURE_QUERY_NUM">担保资格审查6</field>
+			<field CODE="YEAR_SPECIAL_QUERY_NUM">特约商户实名审查7</field>
+		</FIELDS>
+	</TABLE>
+	<TABLE NAME="PER_QUERY_DETAIL" VALUE="信贷审批查询记录明细">
+		<FIELDS>
+			<field CODE="SERIAL">编号</field>
+			<field CODE="CR_QUERY_TIME">查询日期</field>
+			<field CODE="CR_QUERY_OPERATOR">查询操作员</field>
+			<field CODE="CR_QUERY_REASON">查询原因</field>
+		</FIELDS>
+	</TABLE>
+</TABLELIST>

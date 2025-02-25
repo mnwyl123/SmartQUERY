@@ -1,0 +1,1357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ClawerPersonCrawlerMapper">
+     <!-- 新增报告信息-->
+	<insert id="saveReportInfo" parameterType="pd">
+		INSERT INTO PER_REPORT_INFO
+			(
+				REPORT_ID,
+				REPORT_TIME,
+				QUERY_OPERATOR,
+				QUERY_REASON
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{REPORT_TIME},
+				#{QUERY_OPERATOR},
+				#{QUERY_REASON}
+			)
+	</insert>
+    <!-- 新增个人信息-->
+	<insert id="savePersonIdentity" parameterType="pd">
+		INSERT INTO PER_BASIC
+			(
+				REPORT_ID,
+				CLIENT_NAME,
+				CREDENTIALS_TYPE,
+				CREDENTIALS_NO,
+				CLIENT_SEX,
+				CLIENT_BIRTHDAY,
+				MARITAL_STATUS,
+				WORK_STATUS,
+				NATIONALITY,
+				EMAIL,
+				PHONE_NUM,
+				EDUCATION,
+				DEGREE,
+				MAILING_ADDRESS,
+				RESIDENCE_ADDRESS
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{CLIENT_NAME},
+				#{CREDENTIALS_TYPE},
+				#{CREDENTIALS_NO},
+				#{CLIENT_SEX},
+				#{CLIENT_BIRTHDAY},
+				#{MARITAL_STATUS},
+				#{PHONE_NUM},
+				#{WORK_STATUS},
+				#{NATIONALITY},
+				#{EMAIL},
+				#{EDUCATION},
+				#{DEGREE},
+				#{MAILING_ADDRESS},
+				#{RESIDENCE_ADDRESS}
+			)
+	</insert>
+	<!-- 更新个人身份信息-->
+	<update id="updatePersonIdentity" parameterType="pd">
+		update 
+			PER_BASIC
+		set
+			CLIENT_SEX = #{CLIENT_SEX},
+			CLIENT_BIRTHDAY = #{CLIENT_BIRTHDAY},
+			MARITAL_STATUS = #{MARITAL_STATUS},
+			PHONE_NUM = #{PHONE_NUM},
+			COMPANY_TEL = #{COMPANY_TEL},
+			FAMILY_TEL = #{FAMILY_TEL},
+			EDUCATION = #{EDUCATION},
+			DEGREE = #{DEGREE},
+			MAILING_ADDRESS =#{MAILING_ADDRESS},
+			RESIDENCE_ADDRESS =#{RESIDENCE_ADDRESS}
+		where
+			REPORT_ID = #{REPORT_ID}
+		AND
+			CREDENTIALS_NO = #{CREDENTIALS_NO}
+	</update>
+	 <!-- 新增电话号码信息-->
+	<insert id="savePhoneInfo" parameterType="pd">
+		INSERT INTO PER_PHONE_INFO
+			(
+				REPORT_ID,
+				PHONE_NUM,
+				UPDATE_DATE
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{PHONE_NUM},
+				#{UPDATE_DATE}
+			)
+	</insert>
+	 <!-- 新增配偶信息-->
+	<insert id="saveSpouInfo" parameterType="pd">
+		INSERT INTO PER_SPOU
+			(
+				REPORT_ID,
+				SPOU_NAME,
+				SPOU_CREDENTIALS_TYPE,
+				SPOU_CREDENTIALS_NO,
+				SPOU_COMPANY,
+				SPOU_TEL
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SPOU_NAME},
+				#{SPOU_CREDENTIALS_TYPE},
+				#{SPOU_CREDENTIALS_NO},
+				#{SPOU_COMPANY},
+				#{SPOU_TEL}
+			)
+	</insert>
+	 <!-- 新增居住信息-->
+	<insert id="saveLiveInfo" parameterType="pd">
+		INSERT INTO PER_LIVE
+			(
+				REPORT_ID,
+				SERIAL,
+				RESIDENTIAL_ADDRESS,
+				RESIDENTIAL_CONDITION,
+				HOUSE_TEL,
+				UPDATE_TIME
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL},
+				#{RESIDENTIAL_ADDRESS},
+				#{RESIDENTIAL_CONDITION},
+				#{HOUSE_TEL},
+				#{UPDATE_TIME}
+			)
+	</insert>
+	 <!-- 新增职业信息-->
+	<insert id="saveCareerInfo" parameterType="pd">
+		INSERT INTO PER_CAREER
+			(
+				REPORT_ID,
+				SERIAL,
+				COMPANY_NAME,
+				COMPANY_NATURE,
+				COMPANY_ADDRESS,
+				COMPANY_TEL,
+				CAREER,
+				INDUSTRY,
+				DUTIES,
+				JOB_TITLE,
+				ENTER_YEAR,
+				UPDATE_TIME
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL},
+				#{COMPANY_NAME},
+				#{COMPANY_NATURE},
+				#{COMPANY_ADDRESS},
+				#{COMPANY_TEL},
+				#{CAREER},
+				#{INDUSTRY},
+				#{DUTIES},
+				#{JOB_TITLE},
+				#{ENTER_YEAR},
+				#{UPDATE_TIME}
+			)
+	</insert>
+	 <!-- 信贷概要信息-->
+	<insert id="saveCreditSumInfo" parameterType="pd">
+		INSERT INTO PER_LOAN_SUMMARY
+			(
+				REPORT_ID,
+				SERIAL,
+				COMPANY_NAME,
+				RECEIVE_DATE,
+				AGGREGATE_AMOUNT,
+				LAST_REPAY_DATE,
+				RECEIVE_BALANCE,
+				GUARANTEE_NUM,
+				GUARANTEE_SUM,
+				GUARANTEE_BALANCE,
+				N_NQ_CR_CARD_COMPANY_ORG_NUM,
+				N_NQ_CR_CARD_ORG_NUM,
+				N_NQ_CR_CARD_ACC_NUM,
+				N_NQ_CR_CARD_CRED_SUM,
+				N_NQ_CR_CARD_MAX_CRED_SUM,
+				N_NQ_CR_CARD_MIN_CRED_SUM,
+				N_NQ_CR_CARD_OVERDRAFT_BALANCE,
+				N_NQ_CR_CARD_AVG_USED_SUM,
+				BORROWER_CATEGORY,
+				REPAY_TYPE,
+				REPAY_ACC_SUM,
+				REPAY_SUM,
+				REPAY_BALANCE,
+				NQ_CR_CARD_ORG_NUM,
+				NQ_CR_CARD_ACC_NUM,
+				NQ_CR_CARD_CRED_SUM,
+				NQ_CR_CARD_MAX_CRED_SUM,
+				NQ_CR_CARD_MIN_CRED_SUM,
+				NQ_CR_CARD_OVERDRAFT_BALANCE,
+				NQ_CR_CARD_AVG_USED_SUM,
+				N_CR_CARD_ORG_NUM,
+				N_CR_CARD_ACC_NUM,
+				N_CR_CARD_CRED_SUM,
+				N_CR_CARD_MAX_CRED_SUM,
+				N_CR_CARD_MIN_CRED_SUM,
+				N_CR_CARD_USED_SUM,
+				N_CR_CARD_AVG_USED_SUM,
+				CIRC_ACC_MANA_ORG_CNT,
+				CIRC_ACC_ACC_SUM,
+				CIRC_ACC_CRED_SUM,
+				CIRC_ACC_BALANCE,
+				CIRC_ACC_REPAY_AVG6,
+				CIRC_QUO_MANA_ORG_CNT,
+				CIRC_QUO_ACC_SUM,
+				CIRC_QUO_CRED_SUM,
+				CIRC_QUO_BALANCE,
+				CIRC_QUO_REPAY_AVG6,
+				NON_REV_MANAGER_ORG_CNT,
+				NON_REV_ACC_SUM,
+				NON_REV_CRED_SUM,
+				NON_REV_BALANCE,
+				NON_REV_REPAY_AVG6,
+				LOAN_NUM,
+				LOAN_MON_NUM,
+				LOAN_MON_OVER_SUM,
+				LOAN_OVER_MON_NUM,
+				CR_CARD_OVER_ACC_NUM,
+				CR_CARD_OVER_MON_NUM,
+				CR_CARD_MON_OVER_SUM,
+				CR_CARD_OVER_LONG_MON_NUM,
+				Q_CR_CARD_OVER_ACC_NUM,
+				Q_CR_CARD_OVER_MON_NUM,
+				Q_CR_CARD_OVER_MON_BALANCE,
+				Q_CR_CARD_OVER_LONG_MON_NUM,
+				ACCOUNT_TYPE,
+				ACCOUNT_SUM,
+				MONTH_CNT,
+				SINGLE_MONTH_MAX_AMOUNT,
+				MAX_MONTH_CNT,
+				LOAN_BAD_DEBT_NUM,
+				LOAN_BAD_DEBT_BALANCE,
+				ASSET_NUM,
+				ASSET_BALANCE,
+				ASSURER_NUM,
+				ASSURER_BALANCE,
+				DIGITAL_INTERPRE,
+				RELATIVE_POSITIONT,
+				DIGITAL_INTERPRE_DES,
+				PER_HOUSE_LOAN_NUM,
+				PER_COMME_LOAN_NUM,
+				OTHER_LOAN_NUM,
+				FIRST_LOAN_REL_MON,
+				CR_CARD_ACC_NUM,
+				FIRST_CARD_REL_MON,
+				Q_CR_CARD_ACC_NUM,
+				Q_FIRST_CARD_REL_MON,
+				DECLART_NUM,
+				OBJECTION_NUM,
+				BAD_DEBT_NUM,
+				BAD_DEBT_BALANCE,
+				RECOVER_BUSS_TYPE,
+				RECOVER_ACC_SUM,
+				RECOVER_BALANCE,
+				BUSI_MAJOR_CLASS,
+				BUSI_TYPE,
+				ACC_SUM,
+				FIR_BUSS_MONTH
+					       
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+				#{SERIAL},
+				#{COMPANY_NAME},
+				#{RECEIVE_DATE},
+				#{AGGREGATE_AMOUNT},
+				#{LAST_REPAY_DATE},
+				#{RECEIVE_BALANCE},
+				#{GUARANTEE_NUM},
+				#{GUARANTEE_SUM},
+				#{GUARANTEE_BALANCE},
+				#{N_NQ_CR_CARD_COMPANY_ORG_NUM},
+				#{N_NQ_CR_CARD_ORG_NUM},
+				#{N_NQ_CR_CARD_ACC_NUM},
+				#{N_NQ_CR_CARD_CRED_SUM},
+				#{N_NQ_CR_CARD_MAX_CRED_SUM},
+				#{N_NQ_CR_CARD_MIN_CRED_SUM},
+				#{N_NQ_CR_CARD_OVERDRAFT_BALANCE},
+				#{N_NQ_CR_CARD_AVG_USED_SUM},
+				#{BORROWER_CATEGORY},
+				#{REPAY_TYPE},
+				#{REPAY_ACC_SUM},
+				#{REPAY_SUM},
+				#{REPAY_BALANCE},
+				#{NQ_CR_CARD_ORG_NUM},
+				#{NQ_CR_CARD_ACC_NUM},
+				#{NQ_CR_CARD_CRED_SUM},
+				#{NQ_CR_CARD_MAX_CRED_SUM},
+				#{NQ_CR_CARD_MIN_CRED_SUM},
+				#{NQ_CR_CARD_OVERDRAFT_BALANCE},
+				#{NQ_CR_CARD_AVG_USED_SUM},
+				#{N_CR_CARD_ORG_NUM},
+				#{N_CR_CARD_ACC_NUM},
+				#{N_CR_CARD_CRED_SUM},
+				#{N_CR_CARD_MAX_CRED_SUM},
+				#{N_CR_CARD_MIN_CRED_SUM},
+				#{N_CR_CARD_USED_SUM},
+				#{N_CR_CARD_AVG_USED_SUM},
+				#{CIRC_ACC_MANA_ORG_CNT},
+				#{CIRC_ACC_ACC_SUM},
+				#{CIRC_ACC_CRED_SUM},
+				#{CIRC_ACC_BALANCE},
+				#{CIRC_ACC_REPAY_AVG6},
+				#{CIRC_QUO_MANA_ORG_CNT},
+				#{CIRC_QUO_ACC_SUM},
+				#{CIRC_QUO_CRED_SUM},
+				#{CIRC_QUO_BALANCE},
+				#{CIRC_QUO_REPAY_AVG6},
+				#{NON_REV_MANAGER_ORG_CNT},
+				#{NON_REV_ACC_SUM},
+				#{NON_REV_CRED_SUM},
+				#{NON_REV_BALANCE},
+				#{NON_REV_REPAY_AVG6},
+				#{LOAN_NUM},
+				#{LOAN_MON_NUM},
+				#{LOAN_MON_OVER_SUM},
+				#{LOAN_OVER_MON_NUM},
+				#{CR_CARD_OVER_ACC_NUM},
+				#{CR_CARD_OVER_MON_NUM},
+				#{CR_CARD_MON_OVER_SUM},
+				#{CR_CARD_OVER_LONG_MON_NUM},
+				#{Q_CR_CARD_OVER_ACC_NUM},
+				#{Q_CR_CARD_OVER_MON_NUM},
+				#{Q_CR_CARD_OVER_MON_BALANCE},
+				#{Q_CR_CARD_OVER_LONG_MON_NUM},
+				#{ACCOUNT_TYPE},
+				#{ACCOUNT_SUM},
+				#{MONTH_CNT},
+				#{SINGLE_MONTH_MAX_AMOUNT},
+				#{MAX_MONTH_CNT},
+				#{LOAN_BAD_DEBT_NUM},
+				#{LOAN_BAD_DEBT_BALANCE},
+				#{ASSET_NUM},
+				#{ASSET_BALANCE},
+				#{ASSURER_NUM},
+				#{ASSURER_BALANCE},
+				#{DIGITAL_INTERPRE},
+				#{RELATIVE_POSITIONT},
+				#{DIGITAL_INTERPRE_DES},
+				#{PER_HOUSE_LOAN_NUM},
+				#{PER_COMME_LOAN_NUM},
+				#{OTHER_LOAN_NUM},
+				#{FIRST_LOAN_REL_MON},
+				#{CR_CARD_ACC_NUM},
+				#{FIRST_CARD_REL_MON},
+				#{Q_CR_CARD_ACC_NUM},
+				#{Q_FIRST_CARD_REL_MON},
+				#{DECLART_NUM},
+				#{OBJECTION_NUM},
+				#{BAD_DEBT_NUM},
+				#{BAD_DEBT_BALANCE},
+				#{RECOVER_BUSS_TYPE},
+				#{RECOVER_ACC_SUM},
+				#{RECOVER_BALANCE},
+				#{BUSI_MAJOR_CLASS},
+				#{BUSI_TYPE},
+				#{ACC_SUM},
+				#{FIR_BUSS_MONTH}
+
+			)
+	</insert>
+	<!-- 资产处置/保证人代偿信息-->
+	<insert id="saveAssertAsInfo" parameterType="pd">
+		INSERT INTO PER_ASSETS_DISPOSAL
+			(
+				 REPORT_ID,
+				 SERIAL,
+			  	 INFO_TYPE,
+			  	 COMPANY_NAME,
+			   	 RECEIVE_DATE,
+			  	 AGGREGATE_AMOUNT,
+				 LAST_REPAY_DATE,
+				 BALANCE
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{SERIAL},
+			  	#{INFO_TYPE},
+			  	#{COMPANY_NAME},
+			   	#{RECEIVE_DATE},
+			  	#{AGGREGATE_AMOUNT},
+				#{LAST_REPAY_DATE},
+				#{BALANCE}
+			)
+	</insert>
+	 <!-- 信贷交易信息提示-->
+	<insert id="saveCreditTipInfo" parameterType="pd">
+		INSERT INTO PER_LOAN_PROMPT_DETAIL
+			(
+				 REPORT_ID,
+				 BUSI_TYPE,
+			  	 FIR_BUSS_MONTH,
+			  	 BUSI_MAJOR_CLASS,
+			   	 ACC_SUM
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{BUSI_TYPE},
+			  	#{FIR_BUSS_MONTH},
+			  	#{BUSI_MAJOR_CLASS},
+			  	#{ACC_SUM}
+			)
+	</insert>
+	
+	<!-- 逾期信息汇总-->
+	<insert id="saveInfoOverdue" parameterType="pd">
+		INSERT INTO PER_OVERDUE_SUMMARY_INFO
+			(
+				 REPORT_ID,
+				 ACCOUNT_TYPE,
+				 ACC_SUM,
+				 MONTH_CNT,
+				 SINGLE_MONTH_MAX_AMOUNT,
+				 MAX_MONTH_CNT
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{ACCOUNT_TYPE},
+			  	#{ACC_SUM},
+			  	#{MONTH_CNT},
+			  	#{SINGLE_MONTH_MAX_AMOUNT},
+			  	#{MAX_MONTH_CNT}
+			)
+	</insert>
+	<!-- 被追偿信息汇总-->
+	<insert id="saveRecover" parameterType="pd">
+		INSERT INTO PER_RECOVER_INFO_DETAIL
+			(
+				 REPORT_ID,
+				 BALANCE,
+				 BUSS_TYPE,
+				 ACC_SUM
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{BALANCE},
+			  	#{BUSS_TYPE},
+			  	#{ACC_SUM}
+			)
+	</insert>
+	<!-- 相关还款责任信息汇总-->
+	<insert id="saveLoanRepayer" parameterType="pd">
+		INSERT INTO PER_LOAN_REPAYER
+			(
+				 REPORT_ID,
+				 REPAY_TYPE,
+				 ACC_SUM,
+				 BORROWER_CATEGORY,
+				 BALANCE,
+				 REPAY_SUM
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{REPAY_TYPE},
+			  	#{ACC_SUM},
+			  	#{BORROWER_CATEGORY},
+			  	#{BALANCE},
+			  	#{REPAY_SUM}
+			)
+	</insert>
+	<!-- 后付费汇总-->
+	<insert id="saveAfterPay" parameterType="pd">
+		INSERT INTO PER_AFTER_PAY_OWE_INFO
+			(
+				 REPORT_ID,
+				 ARRE_ACC_NUM,
+				 BUSS_TYPE,
+				 ARRE_SUM
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{ARRE_ACC_NUM},
+			  	#{BUSS_TYPE},
+			  	#{ARRE_SUM}
+			)
+	</insert>
+	
+	<!-- 公共信息概要-->
+	<insert id="savePublic" parameterType="pd">
+		INSERT INTO PER_PUBLIC_SUMMARY_INFO
+			(
+				 REPORT_ID,
+				 PUBLIC_INFO_TYPE,
+				 RECORD_NUM,
+				 INVOLVE_SUM
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{PUBLIC_INFO_TYPE},
+			  	#{RECORD_NUM},
+			  	#{INVOLVE_SUM}
+			)
+	</insert>
+	<!-- 查询记录概要-->
+	<insert id="saveInfoQuerySummary" parameterType="pd">
+		INSERT INTO PER_QUERY_SUMMARY
+			(
+				  REPORT_ID,
+				  MON_LOAN_QUERY_ORG_NUM,
+				  MON_CREDIT_QUERY_ORG_NUM,
+				  MON_LOAN_QUERY_NUM,
+				  MON_CREDIT_QUERY_NUM,
+				  MON_OWN_QUERY_NUM,
+				  YEAR_SPECIAL_QUERY_NUM,
+				  YEAR_AFTER_LOAN_QUERY_NUM,
+				  YEAR_ASSURE_QUERY_NUM
+				  <!--LR_QUERY_ORG_REASON,
+				  LR_QUERY_ORG_CODE,
+				  LR_QUERY_TIME-->
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{MON_LOAN_QUERY_ORG_NUM},
+			  	#{MON_CREDIT_QUERY_ORG_NUM},
+			  	#{MON_LOAN_QUERY_NUM},
+			  	#{MON_CREDIT_QUERY_NUM},
+			  	#{MON_OWN_QUERY_NUM},
+			  	#{YEAR_SPECIAL_QUERY_NUM},
+			  	#{YEAR_AFTER_LOAN_QUERY_NUM},
+			  	#{YEAR_ASSURE_QUERY_NUM}
+			  	<!--#{LR_QUERY_ORG_REASON},
+			  	#{LR_QUERY_ORG_CODE},
+			  	#{LR_QUERY_TIME}-->
+			)
+	</insert>
+	 <!-- 对外贷款担保信息-->
+	<insert id="saveGuaranteeInfo" parameterType="pd">
+		INSERT INTO PER_EXTERNAL_GUARANTEE_DETAIL
+			(
+				 REPORT_ID,
+				 SERIAL,
+				 LOAN_TYPE,
+			  	 LOAN_GRANT_ORG,
+				LOAN_CONTRACT_SUM,
+				LOAN_GRANT_DATE,
+				LOAN_STOP_DATE,
+				GUARANTEE_SUM,
+				GUARANTEE_BALANCE,
+				LOAN_FIVE_CALSS,
+				SETTLE_ACCOUNT_DATE
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{SERIAL},
+			  	'0',
+			  	#{LOAN_GRANT_ORG},
+				#{LOAN_CONTRACT_SUM},
+				#{LOAN_GRANT_DATE},
+				#{LOAN_STOP_DATE},
+				#{GUARANTEE_SUM},
+				#{GUARANTEE_BALANCE},
+				#{LOAN_FIVE_CALSS},
+				#{SETTLE_ACCOUNT_DATE}
+			)
+	</insert>
+	 <!-- 对外信用卡担保信息-->
+	<insert id="saveCreditGuaranteeInfo" parameterType="pd">
+		INSERT INTO PER_EXTERNAL_GUARANTEE_DETAIL
+			(
+				 REPORT_ID,
+				 SERIAL,
+				 LOAN_TYPE,
+			  	 LOAN_GRANT_ORG,
+				LOAN_CONTRACT_SUM,
+				LOAN_GRANT_DATE,
+				GUARANTEE_SUM,
+				GUARANTEE_BALANCE,
+				SETTLE_ACCOUNT_DATE
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{SERIAL},
+			  	'1',
+			  	#{LOAN_GRANT_ORG},
+				#{LOAN_CONTRACT_SUM},
+				#{LOAN_GRANT_DATE},
+				#{GUARANTEE_SUM},
+				#{GUARANTEE_BALANCE},
+				#{SETTLE_ACCOUNT_DATE}
+			)
+	</insert>
+	 <!-- 新增贷款交易明细-->
+	<insert id="saveLoanInfo" parameterType="pd">
+		INSERT INTO PER_LOAN_DETAIL
+			(
+				REPORT_ID,
+				SERIAL,
+				BUSS_ORG_CODE,
+				ACCOUNT_SIGN,
+				CREATE_DATE,
+				EXPIRY_DATE,
+				LOAN_SUM,
+				CURRENCY,
+				BUSS_CATEGORY,
+				VOUCHTYPE,
+				REPAY_NUM,
+				REPAY_FREQ,
+				REPAY_WAY,
+				COMMON_LOAN_SIGN,
+				ACC_STATUS,
+				FIVE_TYPE,
+				PRINCIPAL_BALANCE,
+				REST_REPAY_NUM,
+				CUR_REPAY_AMOUT,
+				PLAN_REPAY_DATE,
+				ACTUAL_REPAY_AMOUT,
+				LAST_REPAY_DATE,
+				CUR_OVER_NUM,
+				CUR_OVER_AMOUNT,
+				T_N_REPAY_PRINCIPAL,
+				S_N_REPAY_PRINCIPAL,
+				N_N_REPAY_PRINCIPAL,
+				L_N_REPAY_PRINCIPAL
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL},
+				#{BUSS_ORG_CODE},
+				#{ACCOUNT_SIGN},
+				#{CREATE_DATE},
+				#{EXPIRY_DATE},
+				#{LOAN_SUM},
+				#{CURRENCY},
+				#{BUSS_CATEGORY},
+				#{VOUCHTYPE},
+				#{REPAY_NUM},
+				#{REPAY_FREQ},
+				#{REPAY_WAY},
+				#{COMMON_LOAN_SIGN},
+				#{ACC_STATUS},
+				#{FIVE_TYPE},
+				#{PRINCIPAL_BALANCE},
+				#{REST_REPAY_NUM},
+				#{CUR_REPAY_AMOUT},
+				#{PLAN_REPAY_DATE},
+				#{ACTUAL_REPAY_AMOUT},
+				#{LAST_REPAY_DATE},
+				#{CUR_OVER_NUM},
+				#{CUR_OVER_AMOUNT},
+				#{T_N_REPAY_PRINCIPAL},
+				#{S_N_REPAY_PRINCIPAL},
+				#{N_N_REPAY_PRINCIPAL},
+				#{L_N_REPAY_PRINCIPAL}
+			)
+	</insert>
+	<!-- 新增5年历史表现信息-->
+	<insert id="save5YearInfo" parameterType="pd">
+		INSERT INTO PER_CUR_Y5_SHOW_INFO
+			(
+				 REPORT_ID,
+				 SERIAL,
+				 REPAY_STATUS,
+				 P_MONTH,
+				 OVERDRAFT_SUM
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{SERIAL},
+			  	#{REPAY_STATUS},
+			  	#{P_MONTH},
+			  	#{OVERDRAFT_SUM}
+			)
+	</insert>
+	
+	 <!-- 新增贷记卡交易明细-->
+	<insert id="saveCreditInfo" parameterType="pd">
+		INSERT INTO PER_CREDIT_DETAIL
+			(
+				REPORT_ID,
+				SERIAL,
+				CR_REL_CARD_ORG,
+				CR_REL_CARD_DATE,
+				CR_CREDIT_SUM,
+				CR_SHARE_CREDIT_SUM,
+				CURRENCYTYPE,
+				CARDTYPE,
+				VOUCHTYPE,
+				CR_ACC_STATUS,
+				BALANCE,
+				CR_USED_SUM,
+				CR_AVG_USED_SUM,
+				CR_USED_MAX_SUM,
+				CR_BILL_DATE,
+				CR_SHOULD_REPAY_AMOUT,
+				CR_ACTUAL_REPAY_AMOUT,
+				CR_LAST_REPAY_DATE,
+				CR_CUR_OVER_NUM,
+				CR_CUR_OVER_AMOUT
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL},
+				#{CR_REL_CARD_ORG},
+				#{CR_REL_CARD_DATE},
+				#{CR_CREDIT_SUM},
+				#{CR_SHARE_CREDIT_SUM},
+				#{CURRENCYTYPE},
+				#{CARDTYPE},
+				#{VOUCHTYPE},
+				#{CR_ACC_STATUS},
+				#{BALANCE},
+				#{CR_USED_SUM},
+				#{CR_AVG_USED_SUM},
+				#{CR_USED_MAX_SUM},
+				#{CR_BILL_DATE},
+				#{CR_SHOULD_REPAY_AMOUT},
+				#{CR_ACTUAL_REPAY_AMOUT},
+				#{CR_LAST_REPAY_DATE},
+				#{CR_CUR_OVER_NUM},
+				#{CR_CUR_OVER_AMOUT}
+			)
+	</insert>
+	<!-- 新增准贷记卡交易明细-->
+	<insert id="saveQCreditInfo" parameterType="pd">
+		INSERT INTO PER_Q_CREDIT_DETAIL
+			(
+				REPORT_ID,
+				SERIAL_NUMBER,
+				SERIAL,
+				Q_CR_REL_CARD_DATE,
+				Q_CR_REL_CARD_ORG,
+				CARDTYPE,
+				Q_CR_CREDIT_SUM,
+				Q_CR_SHARE_CREDIT_SUM,
+				Q_CR_STOP_DATE,
+				Q_CR_ACC_STATUS,
+				Q_CR_USED_SUM,
+				Q_CR_AVG_USED_SUM,
+				Q_CR_USED_MAX_SUM,
+				Q_CR_SHOULD_REPAY_AMOUT,
+				Q_CR_BILL_DATE,
+				Q_CR_ACTUAL_REPAY_AMOUT,
+				Q_CR_LAST_REPAY_DATE,
+				Q_CR_CUR_OVER_NUM,
+				Q_CR_CUR_OVER_AMOUT,
+				Q_CR_REPAY_RECORD,
+				UNREPAY_BALANCE,
+				BUSSID,
+				VOUCHTYPE,
+				CURRENCYTYPE,
+				STATEBTIME,
+				STATEETIME,
+				OVERDUE_BDATE,
+				OVERDUE_EDATE,
+				SPECIAL_TRADE_TYPE,
+				OCCUR_DATE,
+				CHANGE_MONTH,
+				OCCUR_SUM,
+				OVERDUE_DETAIL,
+				BALANCE,
+				BANK_TYPE
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL_NUMBER},
+				#{SERIAL},
+				#{Q_CR_REL_CARD_DATE},
+				#{Q_CR_REL_CARD_ORG},
+				#{CARDTYPE},
+				#{Q_CR_CREDIT_SUM},
+				#{Q_CR_SHARE_CREDIT_SUM},
+				#{Q_CR_STOP_DATE},
+				#{Q_CR_ACC_STATUS},
+				#{Q_CR_USED_SUM},
+				#{Q_CR_AVG_USED_SUM},
+				#{Q_CR_USED_MAX_SUM},
+				#{Q_CR_SHOULD_REPAY_AMOUT},
+				#{Q_CR_BILL_DATE},
+				#{Q_CR_ACTUAL_REPAY_AMOUT},
+				#{Q_CR_LAST_REPAY_DATE},
+				#{Q_CR_CUR_OVER_NUM},
+				#{Q_CR_CUR_OVER_AMOUT},
+				#{Q_CR_REPAY_RECORD},
+				#{UNREPAY_BALANCE},
+				#{BUSSID},
+				#{VOUCHTYPE},
+				#{CURRENCYTYPE},
+				#{STATEBTIME},
+				#{STATEETIME},
+				#{OVERDUE_BDATE},
+				#{OVERDUE_EDATE},
+				#{SPECIAL_TRADE_TYPE},
+				#{OCCUR_DATE},
+				#{CHANGE_MONTH},
+				#{OCCUR_SUM},
+				#{OVERDUE_DETAIL},
+				#{BALANCE},
+				#{BANK_TYPE}
+			)
+	</insert>
+	<!-- 被追偿信息明细 -->
+	<insert id="saveAssetsDisposal" parameterType="pd">
+		INSERT INTO PER_ASSETS_DISPOSAL
+			(
+				  COMPANY_NAME,
+				  RECEIVE_DATE,
+				  AGGREGATE_AMOUNT,
+				  REPORT_ID
+			)
+		VALUES
+			(
+			  	  #{COMPANY_NAME},
+				  #{RECEIVE_DATE},
+				  #{AGGREGATE_AMOUNT},
+				  #{REPORT_ID}
+			)
+	</insert>
+	<!-- 相关还款责任明细 -->
+	<insert id="savePerRepayer" parameterType="pd">
+		INSERT INTO PER_REPAYER
+			(
+				  REPAY_STATUS,
+				  EXPI_DATE,
+				  CURRENCY,
+				  REPAY_SUM,
+				  REPAYER_TYPE,
+				  FIVE_TYPE,
+				  BUSS_ORG_CODE,
+				  BALANCE,
+				  CREATE_DATE,
+				  BORROWER_CATEGORY,
+				  OVERDRAFT_MONTH_CNT,
+				  CONTRACT_NUM,
+				  BUSS_CATEGORY,
+				  REPORT_ID
+			)
+		VALUES
+			(
+			  	  #{REPAY_STATUS},
+				  #{EXPI_DATE},
+				  #{CURRENCY},
+				  #{REPAY_SUM},
+				  #{REPAYER_TYPE},
+				  #{FIVE_TYPE},
+				  #{BUSS_ORG_CODE},
+				  #{BALANCE},
+				  #{CREATE_DATE},
+				  #{BORROWER_CATEGORY},
+				  #{OVERDRAFT_MONTH_CNT},
+				  #{CONTRACT_NUM},
+				  #{BUSS_CATEGORY},
+				  #{REPORT_ID}
+			)
+	</insert>
+	<!-- 授信协议 -->
+	<insert id="saveCredBase" parameterType="pd">
+		INSERT INTO PER_CRED_BASE_INFO
+			(
+				  REPORT_ID,
+				  BUSS_ORG_CODE,
+				  CRED_QUOTA_USE,
+				  CRED_QUOTA,
+				  CRED_LIMIT,
+				  EXPI_DATE,
+				  CRED_LIMIT_NUM,
+				  CRED_SIGN,
+				  CURRENCY,
+				  EFFE_DATE,
+				  USED_QUOTA
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{BUSS_ORG_CODE},
+			  	#{CRED_QUOTA_USE},
+				#{CRED_QUOTA},
+				#{CRED_LIMIT},
+				#{EXPI_DATE},
+				#{CRED_LIMIT_NUM},
+				#{CRED_SIGN},
+				#{CURRENCY},
+				#{EFFE_DATE},
+				#{USED_QUOTA}
+			)
+	</insert>
+	 <!--贷款/贷记卡/准贷记卡逾期记录-->
+	<insert id="saveOverdueInfo" parameterType="pd">
+		INSERT INTO PER_OVERDUE_SUMMARY
+			(
+				 REPORT_ID,
+				 SERIAL,
+			  	 SERIAL_NUMBER,
+				CART_TYPE,
+				OVER_MONTH,
+				OVER_MONTH_NUM,
+				OVER_SUM
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{SERIAL},
+			  	 #{SERIAL_NUMBER},
+				#{CART_TYPE},
+				#{OVER_MONTH},
+				#{OVER_MONTH_NUM},
+				#{OVER_SUM}
+			)
+	</insert>
+	<!-- 特殊交易类型 -->
+	<insert id="saveSpecialTrade" parameterType="pd">
+		INSERT INTO PER_SPECIAL_TRADE
+			(
+				  REPORT_ID,
+				  SERIAL,
+				  SERIAL_NUMBER,
+				  CART_TYPE,
+				  SPECIAL_TRADE_TYPE,
+				  OCCUR_DATE,
+				  CHANGE_MONTH,
+				  OCCUR_SUM,
+				  OVERDUE_DETAIL
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{SERIAL},
+			  	#{SERIAL_NUMBER},
+				#{CART_TYPE},
+				#{SPECIAL_TRADE_TYPE},
+				#{OCCUR_DATE},
+				#{CHANGE_MONTH},
+				#{OCCUR_SUM},
+				#{OVERDUE_DETAIL}
+			)
+	</insert>
+	<!--说明/声明/标注信息表-->
+	<insert id="saveDeclareObjectInfo" parameterType="pd">
+		INSERT INTO PER_STATEMENT
+			(
+				 REPORT_ID,
+				 SERIAL,
+			  	<!-- SERIAL_NUMBER,
+				 CART_TYPE,-->
+				 INSTRUCTION_TYPE,
+ 				 INSTRUCTION,
+  				 ADD_DATE
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{SERIAL},
+			  <!--	#{SERIAL_NUMBER},
+				#{CART_TYPE},-->
+				#{INSTRUCTION_TYPE},
+				#{INSTRUCTION},
+				#{ADD_DATE}
+			)
+	</insert>
+	 <!--民事判决/强制执行记录信息表-->
+	<insert id="saveJudgmentExecuteInfo" parameterType="pd">
+		INSERT INTO PER_VERDICT
+			(
+				 REPORT_ID,
+				 SERIAL,
+				 TYPE,
+			  	 COURT_NAME,
+				 CAUSE,
+				 REGISTER_DATE,
+				 SETTLE_STYLE,
+				 RESULT,
+				 SETTLE_DATE,
+				 APPLY_SYM,
+				 APPLY_SYM_VALUE,
+				 GOAL_SYM,
+				 GOAL_SYM_SUM
+			)
+		VALUES
+			(
+			  	#{REPORT_ID},
+			  	#{SERIAL},
+			  	#{TYPE},
+			  	#{COURT_NAME},
+				#{CAUSE},
+				#{REGISTER_DATE},
+				#{SETTLE_STYLE},
+				#{RESULT},
+				#{SETTLE_DATE},
+				#{APPLY_SYM},
+				#{APPLY_SYM_VALUE},
+				#{GOAL_SYM},
+				#{GOAL_SYM_SUM}
+			)
+	</insert>
+	<!-- 新增住房公积金信息-->
+	<insert id="saveAccFundInfo" parameterType="pd">
+		INSERT INTO PER_PROVIDENT_FUND_PAY
+			(
+				REPORT_ID,
+				PAY_PLACE,
+				PAY_DATE,
+				START_PAY_MON,
+				STOP_PAY_MON,
+				PAY_STATUS,
+				PAY_MON_AMOUT,
+				PER_PAY_PERCENT,
+				COM_PAY_PERCENT,
+				PAY_COM_NAME,
+				UPDATE_TIME
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{PAY_PLACE},
+				#{PAY_DATE},
+				#{START_PAY_MON},
+				#{STOP_PAY_MON},
+				#{PAY_STATUS},
+				#{PAY_MON_AMOUT},
+				#{PER_PAY_PERCENT},
+				#{COM_PAY_PERCENT},
+				#{PAY_COM_NAME},
+				#{UPDATE_TIME}
+			)
+	</insert>
+	<!-- 新增后付费信息-->
+	<insert id="saveAfterPayInfo" parameterType="pd">
+		INSERT INTO PER_AFTER_PAY_INFO
+			(
+				OPEN_DATE,
+				CHG_ACC_YM,
+				ORG_NAME,
+				OWE_SUM,
+				ORG_TYPE,
+				PAY_COST_STATUS,
+				REPORT_ID
+			)
+		VALUES
+			(
+				#{OPEN_DATE},
+				#{CHG_ACC_YM},
+				#{ORG_NAME},
+				#{OWE_SUM},
+				#{ORG_TYPE},
+				#{PAY_COST_STATUS},
+				#{REPORT_ID}
+			)
+	</insert>
+	
+	<!-- 新增欠税记录信息-->
+	<insert id="savePerOweTaxes" parameterType="pd">
+		INSERT INTO PER_OWE_TAXES
+			(
+				REPORT_ID,
+				SERIAL,
+				TAX_AUTHORITY,
+				OWE_TAX_SUM,
+				OWE_TAX_DATE
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL},
+				#{TAX_AUTHORITY},
+				#{OWE_TAX_SUM},
+				#{OWE_TAX_DATE}
+			)
+	</insert>
+	<!-- 新增民事判决记录信息-->
+	<insert id="savePerVerdict" parameterType="pd">
+		INSERT INTO PER_VERDICT
+			(
+				GOAL_SYM_SUM,
+				GOAL_SYM,
+				SETTLE_DATE,
+				RESULT,
+				SETTLE_STYLE,
+				REGISTER_DATE,
+				CAUSE,
+				COURT_NAME,
+				SERIAL,
+				REPORT_ID
+			)
+		VALUES
+			(
+				#{GOAL_SYM_SUM},
+				#{GOAL_SYM},
+				#{SETTLE_DATE},
+				#{RESULT},
+				#{SETTLE_STYLE},
+				#{REGISTER_DATE},
+				#{CAUSE},
+				#{COURT_NAME},
+				#{SERIAL},
+				#{REPORT_ID}
+			)
+	</insert>	
+	<!-- 新增强制执行记录信息-->
+	<insert id="savePerInforce" parameterType="pd">
+		INSERT INTO PER_INFORCE
+			(
+				EXEC_COURT,
+				SERIAL,
+				SETTLE_DATE,
+				GOAL_SYM_SUM,
+				RESULT,
+				GOAL_SYM,
+				APPLY_SYM,
+				CAUSE,
+				REGISTER_DATE,
+				APPLY_SYM_VALUE,
+				SETTLE_STYLE,
+				REPORT_ID
+			)
+		VALUES
+			(
+				#{EXEC_COURT},
+				#{SERIAL},
+				#{SETTLE_DATE},
+				#{GOAL_SYM_SUM},
+				#{RESULT},
+				#{GOAL_SYM},
+				#{APPLY_SYM},
+				#{CAUSE},
+				#{REGISTER_DATE},
+				#{APPLY_SYM_VALUE},
+				#{SETTLE_STYLE},
+				#{REPORT_ID}
+			)
+	</insert>	
+	<!-- 新增行政处罚记录信息-->
+	<insert id="savePerPenalties" parameterType="pd">
+		INSERT INTO PER_PENALTIES
+			(
+				RECONSIDERATION_RESULT,
+				STOP_DATE,
+				START_DATE,
+				PENALTIES_SUM,
+				PENALTIES_CONTENTS,
+				PENALTIES_COMAPNY,
+				SERIAL,
+				REPORT_ID
+			)
+		VALUES
+			(
+				#{RECONSIDERATION_RESULT},
+				#{STOP_DATE},
+				#{START_DATE},
+				#{PENALTIES_SUM},
+				#{PENALTIES_CONTENTS},
+				#{PENALTIES_COMAPNY},
+				#{SERIAL},
+				#{REPORT_ID}
+			)
+	</insert>	
+	<!-- 新增低保救助记录信息-->
+	<insert id="saveLowSecurity" parameterType="pd">
+		INSERT INTO PER_LOW_SECURITY
+			(
+				UPDATE_TIME,
+				APPROVAL_DATE,
+				APPLY_DATE,
+				HOUSE_MON_INCOME,
+				COMPANY,
+				LOCATION,
+				PERSONNEL_TYPE,
+				SERIAL,
+				REPORT_ID
+			)
+		VALUES
+			(
+				#{UPDATE_TIME},
+				#{APPROVAL_DATE},
+				#{APPLY_DATE},
+				#{HOUSE_MON_INCOME},
+				#{COMPANY},
+				#{LOCATION},
+				#{PERSONNEL_TYPE},
+				#{SERIAL},
+				#{REPORT_ID}
+			)
+	</insert>	
+	<!-- 新增执业资格记录信息-->
+	<insert id="saveQualification" parameterType="pd">
+		INSERT INTO PER_QUALIFICATION
+			(
+				COMPANY_LOCATION,
+				ISSUED_COMAPNY,
+				REVOKE_DATE,
+				MATURITY_DATE,
+				QUAL_OBTAIN_DATE,
+				QUAL_LEVEL,
+				QUAL_NAME,
+				SERIAL,
+				REPORT_ID
+			)
+		VALUES
+			(
+				#{COMPANY_LOCATION},
+				#{ISSUED_COMAPNY},
+				#{REVOKE_DATE},
+				#{MATURITY_DATE},
+				#{QUAL_OBTAIN_DATE},
+				#{QUAL_LEVEL},
+				#{QUAL_NAME},
+				#{SERIAL},
+				#{REPORT_ID}
+			)
+	</insert>	
+	<!-- 新增行政奖励记录信息-->
+	<insert id="saveAdminiReward" parameterType="pd">
+		INSERT INTO PER_ADMINI_REWARD
+			(
+				STOP_DATE,
+				REWARD_EFFECTIVE_DATE,
+				REWARD_CONTENTS,
+				REWARD_COMPANY,
+				SERIAL,
+				REPORT_ID
+			)
+		VALUES
+			(
+				#{STOP_DATE},
+				#{REWARD_EFFECTIVE_DATE},
+				#{REWARD_CONTENTS},
+				#{REWARD_COMPANY},
+				#{SERIAL},
+				#{REPORT_ID}
+			)
+	</insert>
+	<!-- 新增养老保险信息-->
+	<insert id="savePensionInfo" parameterType="pd">
+		INSERT INTO PER_PENSIO_PAY
+			(
+				REPORT_ID,
+				SERIAL,
+				INSURED_PLACE,
+				INSURED_DATE,
+				PAY_MON_SUM,
+				START_WORK_MON,
+				PAY_STATUS,
+				PER_PAY_BASE,
+				PAY_AMOUT_MON,
+				UPDATE_TIME,
+				PAY_COM_NAME,
+				SOPT_PAY_REASON
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL},
+				#{INSURED_PLACE},
+				#{INSURED_DATE},
+				#{PAY_MON_SUM},
+				#{START_WORK_MON},
+				#{PAY_STATUS},
+				#{PER_PAY_BASE},
+				#{PAY_AMOUT_MON},
+				#{UPDATE_TIME},
+				#{PAY_COM_NAME},
+				#{SOPT_PAY_REASON}
+			)
+	</insert>
+	<!-- 新增查询信息-->
+	<insert id="saveQueryInfo" parameterType="pd">
+		INSERT INTO PER_QUERY_SUMMARY
+			(
+				REPORT_ID,
+				MON_LOAN_QUERY_ORG_NUM,
+				MON_CREDIT_QUERY_ORG_NUM,
+				MON_LOAN_QUERY_NUM,
+				MON_CREDIT_QUERY_NUM,
+				MON_OWN_QUERY_NUM,
+				YEAR_LOAN_QUERY_NUM,
+				YEAR_OWN_QUERY_NUM,
+				YEAR_SPECIAL_QUERY_NUM
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{MON_LOAN_QUERY_ORG_NUM},
+				#{MON_CREDIT_QUERY_ORG_NUM},
+				#{MON_LOAN_QUERY_NUM},
+				#{MON_CREDIT_QUERY_NUM},
+				#{MON_OWN_QUERY_NUM},
+				#{YEAR_LOAN_QUERY_NUM},
+				#{YEAR_OWN_QUERY_NUM},
+				#{YEAR_SPECIAL_QUERY_NUM}
+			)
+	</insert>
+	<!-- 新增查询明细信息-->
+	<insert id="saveQueryDetailInfo" parameterType="pd">
+		INSERT INTO PER_QUERY_DETAIL
+			(
+				REPORT_ID,
+				SERIAL,
+				CR_QUERY_TIME,
+				CR_QUERY_OPERATOR,
+				CR_QUERY_REASON
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL},
+				#{CR_QUERY_TIME},
+				#{CR_QUERY_OPERATOR},
+				#{CR_QUERY_REASON}
+			)
+	</insert>
+	<!-- 新增欠税、行政处罚等信息-->
+	<insert id="saveOtherDetailInfo" parameterType="map">
+		${creatSql}
+	</insert>
+	<!-- 异议版报告信息入库-->
+	<insert id="saveUnCommonInfo" parameterType="pd">
+		INSERT INTO PER_LOAN_DETAIL_UNCOMMON
+			(
+				REPORT_ID,
+				SERIAL,
+				LOAN_ORG_CODE,
+				REPORT_FILE_NAME,
+				UPDATE_TIME
+			)
+		VALUES
+			(
+				#{REPORT_ID},
+				#{SERIAL},
+				#{LOAN_ORG_CODE},
+				#{REPORT_FILE_NAME},
+				#{UPDATE_TIME}
+			)
+	</insert>
+	<!-- 新增信息-->
+	<insert id="saveInfo" parameterType="map" useGeneratedKeys="false">
+		${creatSql}
+	</insert>
+	<!-- 更新信息-->
+	<update id="updateInfo" parameterType="map" useGeneratedKeys="false">
+		${updateSql}
+	</update>
+</mapper>

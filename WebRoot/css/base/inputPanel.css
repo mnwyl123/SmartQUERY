@@ -1,0 +1,57 @@
+@CHARSET "UTF-8";
+
+table.inputPanel {
+	margin: 1em 0 0 0;
+	table-layout:auto;
+	width:100%;
+	border:none;
+}
+
+table.inputPanel td {
+	line-height:1.5em;
+	border:none;
+}
+
+img.ui-datepicker-trigger
+{
+	vertical-align:middle;
+	cursor:pointer;
+}
+
+table.inputPanel {
+	font-size:14px;
+}
+
+#ui-datepicker-div,  select, input, button {
+	font-size: 12px;
+}
+
+table.inputPanel td.caption {
+	text-align: right;
+}
+
+table.inputPanel td.intput {
+	text-align: left;
+}
+
+table.inputPanel td.input select, td.input input {
+	width: auto;
+}
+
+table.inputPanel span.DateSelect select {
+	width:auto;
+}
+
+#commentsCtrl {
+	width:20px;
+	height:20px;
+	cursor:pointer;
+	display:inline-block;
+	background-image: url(images/hint.gif);
+	background-repeat:no-repeat;
+	background-position:center center;
+}
+
+input[type=button] {
+	background-color:;
+}

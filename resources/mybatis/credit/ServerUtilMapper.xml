@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ServerUtilMapper">
+    
+<!-- 查询用户系统ID和机构编码 -->
+<select id="getUserID" parameterType="pd" resultType="pd" >
+    SELECT
+        A.USER_ID USER_SYS_ID,
+        A.IP,
+        A.MAC,
+        C.ORG_ID,
+        C.ORG_CODE
+    FROM
+        SYS_USER A,SYS_USER_ORG B,SYS_ORG C
+    WHERE
+        A.USER_ID=B.USER_ID AND B.ORG_ID=C.ORG_ID AND A.USERNAME=#{USERNAME}
+</select>
+
+<!-- 根据查询编码查询报告ID和是否获取报告 -->
+<select id="getReportId" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID,
+    	STATUS 
+	FROM
+    	CIFM_FLOW_STATUS
+	WHERE
+    	ID=#{ID}
+</select>
+
+<!-- 根据报告编码查询人行信用报告－主信息表数据 -->
+<select id="getApPbcMain" parameterType="pd" resultType="pd" >
+	SELECT 
+    	A.REPORT_ID reportid,
+    	A.QUERY_TIME querytime,
+    	A.REPORT_TIME reporttime,
+    	DECRYPT_DEC(B.CLIENT_NAME) queryName,
+    	B.CREDENTIALS_TYPE queryCertiType,
+    	DECRYPT_DEC(B.CREDENTIALS_NO) queryCertiNo,
+    	A.QUERY_OPERATOR queryOrg,
+    	A.QUERY_REASON queryReason,
+    	DECRYPT_DEC(B.CLIENT_NAME) name,
+    	B.CLIENT_SEX sex,
+    	B.CREDENTIALS_TYPE certiType,
+    	DECRYPT_DEC(B.CREDENTIALS_NO) certiNo,
+    	DECRYPT_DEC(B.CLIENT_BIRTHDAY) birthday,
+    	B.EDUCATION education,
+    	B.DEGREE degree,
+    	DECRYPT_DEC(B.RESIDENCE_ADDRESS) regaddress,
+    	DECRYPT_DEC(B.MAILING_ADDRESS) address,
+    	DECRYPT_DEC(B.FAMILY_TEL) homephone,
+    	DECRYPT_DEC(B.COMPANY_TEL) compphone,
+    	DECRYPT_DEC(B.PHONE_NUM) mobile,
+    	B.MARITAL_STATUS wedst,
+    	DECRYPT_DEC(C.SPOU_NAME) mateName,
+    	C.SPOU_CREDENTIALS_TYPE mateCertp,
+    	DECRYPT_DEC(C.SPOU_CREDENTIALS_NO) mateCerno,
+    	DECRYPT_DEC(C.SPOU_COMPANY) mateCorp,
+    	DECRYPT_DEC(C.SPOU_TEL) matePhone,
+    	'0' totalAccount,
+    	'1' havaPBCMark
+	FROM
+    	PER_REPORT_INFO A,PER_BASIC B,PER_SPOU C
+	WHERE
+    	A.REPORT_ID=#{REPORT_ID} AND B.REPORT_ID=A.REPORT_ID AND C.REPORT_ID=A.REPORT_ID
+</select>
+<!-- 根据报告编码查询人个人居住信息表-->
+<select id="getApPbcPerriside" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serial,
+    	DECRYPT_DEC(RESIDENTIAL_ADDRESS) resideAddr,
+    	RESIDENTIAL_CONDITION houseStatus,
+    	UPDATE_TIME getTime
+	FROM
+    	PER_LIVE
+	WHERE
+    	REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询人个人职业信息-->
+<select id="getApPbcPeroccup" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serial,
+    	DECRYPT_DEC(COMPANY_NAME) compNm,
+    	DECRYPT_DEC(COMPANY_ADDRESS) compAddr,
+    	INDUSTRY industry,
+    	CAREER occup,
+    	DUTIES duty,
+    	DECRYPT_DEC(JOB_TITLE) title,
+    	ENTER_YEAR startMonth,
+    	UPDATE_TIME getTime
+	FROM
+    	PER_CAREER
+	WHERE
+    	REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询信用提示信息-->
+<select id="getApPbcCreditSummar" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	PER_HOUSE_LOAN_NUM personalHouseLoanNum,
+    	PER_COMME_LOAN_NUM businessHouseLoanNum,
+    	OTHER_LOAN_NUM otherLoanNum,
+    	FIRST_LOAN_REL_MON firstLoanMonth,
+    	CR_CARD_ACC_NUM creditAccountNum,
+    	FIRST_CARD_REL_MON firstCreditMonth,
+    	Q_CR_CARD_ACC_NUM semiCreditAccount,
+    	Q_FIRST_CARD_REL_MON firstSemiCreditMonth,
+    	DECLART_NUM deaclareNum,
+    	OBJECTION_NUM dissentNum,
+    	DIGITAL_INTERPRE bankGrade,
+    	(SELECT to_char(sysdate,'yyyy.mm')from dual) gradeMonth
+	FROM
+    	PER_LOAN_SUMMARY
+	WHERE
+    	REPORT_ID=#{REPORT_ID} AND PER_HOUSE_LOAN_NUM is not null
+</select>
+<!-- 根据报告编码查询逾期及违约信息概要信息-->
+<select id="getApPbcMaligantInfo" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	BAD_DEBT_NUM badDebtNum,
+    	BAD_DEBT_BALANCE badDebtBalance,
+    	ASSET_NUM assetManageNum,
+    	ASSET_BALANCE assetManageBalanc,
+    	ASSURER_NUM warrantLoanNum,
+    	ASSURER_BALANCE warrantLoanBalanc,
+    	LOAN_NUM loanOverdueNum,
+    	LOAN_MON_NUM loanOverdueMonth,
+    	LOAN_MON_OVER_SUM loanOverdueHighNumber,
+    	LOAN_OVER_MON_NUM loanOverdueLongMonth,
+    	CR_CARD_OVER_ACC_NUM creditOverdueAccount,
+    	CR_CARD_OVER_MON_NUM creditOverdueMonthNum,
+    	CR_CARD_MON_OVER_SUM creditOverdueHighNumber,
+    	CR_CARD_OVER_LONG_MON_NUM creditOverdueLongMonth,
+    	Q_CR_CARD_OVER_ACC_NUM semiCreditOverdraftAccount,
+    	Q_CR_CARD_OVER_MON_NUM semiCreditOverdraftNum,
+    	Q_CR_CARD_OVER_MON_BALANCE semiCreditOverdraftSum,
+    	Q_CR_CARD_OVER_LONG_MON_NUM creditOverdraftLongMonth
+	FROM
+    	PER_LOAN_SUMMARY
+	WHERE
+    	REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询授信及负债信息概要表信息-->
+<select id="getApPbcCreditLoanInfoBean" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	LOAN_COMPANY_ORG_NUM loanorgapnum,
+    	LOAN_ORG_NUM loanorgnum,
+    	UNCLEAR_LOAN_NUM loannum,
+    	LOAN_CONTRACT_TOTAL loansum,
+    	LOAN_BANLANCE loanRemain,
+    	AVG_SHOULD_REPAY loanPay,
+    	N_CR_CARD_COMPANY_ORG_NUM creditorgapnum,
+    	N_CR_CARD_ORG_NUM creditorgnum,
+    	N_CR_CARD_ACC_NUM creditaccount,
+    	N_CR_CARD_CRED_SUM creditsum,
+    	N_CR_CARD_MAX_CRED_SUM credithighsum,
+    	N_CR_CARD_MIN_CRED_SUM creditlowsum,
+    	N_CR_CARD_USED_SUM creditusesum,
+    	N_CR_CARD_AVG_USED_SUM creditavgsum,
+    	NQ_CR_CARD_COMPANY_ORG_NUM semiCreditorgapnum,
+    	NQ_CR_CARD_ORG_NUM semiCreditorgnum,
+    	NQ_CR_CARD_ACC_NUM semiCreditaccount,
+    	NQ_CR_CARD_CRED_SUM semiCreditsum,
+    	NQ_CR_CARD_MAX_CRED_SUM semiCredithighsum,
+    	NQ_CR_CARD_MIN_CRED_SUM semiCreditlowsum,
+    	NQ_CR_CARD_OVERDRAFT_BALANCE semiCreditusesum,
+    	NQ_CR_CARD_AVG_USED_SUM semiCreditavgsum,
+    	GUARANTEE_NUM assureNum,
+    	GUARANTEE_SUM assureSum,
+    	GUARANTEE_BALANCE assureRemain
+	FROM
+    	PER_LOAN_SUMMARY
+	WHERE
+    	REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询贷款明细信息信息-->
+<select id="getApPbcLoanListBean" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serial,
+    	LOANS_USE loanType,
+    	BUSSID bussId,
+    	LOANS_ORG loanOrgname,
+    	VOUCHTYPE vouchType,
+    	CURRENCYTYPE currencyType,
+    	ACC_STATUS accountState,
+    	REPAY_TYPE retFrequency,
+    	REPAY_NUM retMonth,
+    	LOANS_DATE loandateS,
+    	EXPIRY_DATE loandateE,
+    	LOANS_AMOUNT loanAmount,
+    	PRINCIPAL_BALANCE loanBalance,
+    	STOP_DATE deadline,
+    	FIVE_TYPE judgelevel,
+    	REST_REPAY_NUM restMonth,
+    	PLAN_REPAY_DATE planRetDate,
+    	LAST_REPAY_DATE recentRetDate,
+    	CUR_REPAY_AMOUT curMonthNeed,
+    	ACTUAL_REPAY_AMOUT curMonthReturn,
+    	CUR_OVER_NUM overdueCount,
+    	CUR_OVER_AMOUNT overdueSum,
+    	T_N_REPAY_PRINCIPAL overdue1,
+    	S_N_REPAY_PRINCIPAL overdue2,
+    	N_N_REPAY_PRINCIPAL overdue3,
+    	L_N_REPAY_PRINCIPAL overdue4,
+    	REPAY_RECORD LISTRECORD,
+    	STATEBTIME statebtime,
+    	STATEETIME stateetime,
+    	OVERDUE_BDATE overbtime,
+    	OVERDUE_EDATE overetime
+	FROM
+    	PER_LOAN_DETAIL
+	WHERE
+    	REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询贷记卡明细信息-->
+<select id="getApPbcCreditListBean" parameterType="pd" resultType="pd" >
+	SELECT
+	    REPORT_ID reportid,
+	    SERIAL serial,
+	    CARDTYPE cardtype,
+	    CR_ACC_STATUS accountState,
+	    BUSSID bussid,
+	    CR_REL_CARD_DATE cardOpenDate,
+	    CR_REL_CARD_ORG organ,
+	    VOUCHTYPE vouchType,
+	    CURRENCYTYPE currencyType,
+	    CR_CREDIT_SUM creditAmount,
+	    CR_CUR_OVER_AMOUT creditBalance,
+	    CR_STOP_DATE deadline,
+	    CR_SHARE_CREDIT_SUM shareCredit,
+	    CR_USED_SUM overdraftBalance,
+	    CR_AVG_USED_SUM lastAvg6Sem,
+	    CR_USED_MAX_SUM maxUseSum,
+	    CR_SHOULD_REPAY_AMOUT monNeedRet,
+	    CR_ACTUAL_REPAY_AMOUT monFactRe,
+	    CR_BILL_DATE checkDate,
+	    CR_LAST_REPAY_DATE firstretDate,
+	    CR_CUR_OVER_NUM overdueCount,
+	    CR_CUR_OVER_AMOUT overdueSum,
+	    '' overdraftUnpay,
+	    CR_REPAY_RECORD LISTRECORD,
+	    STATEBTIME statebtime,
+	    STATEETIME stateetime,
+	    OVERDUE_BDATE overbtime,
+    	OVERDUE_EDATE overetime
+	FROM 
+	    PER_CREDIT_DETAIL
+	 WHERE 
+		REPORT_ID=#{REPORT_ID}
+	union all
+	 (
+	    SELECT
+	        REPORT_ID reportid,
+	        SERIAL serial,
+	        CARDTYPE cardtype,
+	        Q_CR_ACC_STATUS accountState,
+	        BUSSID bussid,
+	        Q_CR_REL_CARD_DATE cardOpenDate,
+	        Q_CR_REL_CARD_ORG organ,
+	        VOUCHTYPE vouchType,
+	        CURRENCYTYPE currencyType,
+	        Q_CR_CREDIT_SUM creditAmount,
+	        Q_CR_CUR_OVER_AMOUT creditBalance,
+	        Q_CR_STOP_DATE deadline,
+	        Q_CR_SHARE_CREDIT_SUM shareCredit,
+	        Q_CR_USED_SUM overdraftBalance,
+	        Q_CR_AVG_USED_SUM lastAvg6Sem,
+	        Q_CR_USED_MAX_SUM maxUseSum,
+	        Q_CR_SHOULD_REPAY_AMOUT monNeedRet,
+	        Q_CR_ACTUAL_REPAY_AMOUT monFactRe,
+	        Q_CR_BILL_DATE checkDate,
+	        Q_CR_LAST_REPAY_DATE firstretDate,
+	        Q_CR_CUR_OVER_NUM overdueCount,
+	        Q_CR_CUR_OVER_AMOUT overdueSum,
+	        UNREPAY_BALANCE overdraftUnpay,
+	        Q_CR_REPAY_RECORD LISTRECORD,
+	        STATEBTIME statebtime,
+	        STATEETIME stateetime,
+	        OVERDUE_BDATE overbtime,
+    		OVERDUE_EDATE overetime
+	    FROM 
+	        PER_Q_CREDIT_DETAIL
+	    WHERE 
+	    	REPORT_ID=#{REPORT_ID}
+	 )
+	 ORDER BY cardtype,serial
+</select>
+<!-- 根据报告编码查询特殊交易信息明细信息-->
+<select id="getApPbcEspecialDetailBean" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serial,
+    	'' cardserial,
+    	'贷款' accountType,
+    	SPECIAL_TRADE_TYPE especialType,
+    	OCCUR_DATE especialDate,
+    	CHANGE_MONTH especialMonths,
+    	OCCUR_SUM especialsum,
+    	OVERDUE_DETAIL detail
+	FROM
+    	PER_LOAN_DETAIL
+     WHERE 
+		REPORT_ID=#{REPORT_ID} AND SPECIAL_TRADE_TYPE is not null
+    union all
+	 (
+	 	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serial,
+    	'' cardserial,
+    	'贷记卡' accountType,
+    	SPECIAL_TRADE_TYPE especialType,
+    	OCCUR_DATE especialDate,
+    	CHANGE_MONTH especialMonths,
+    	OCCUR_SUM especialsum,
+    	OVERDUE_DETAIL detail
+	FROM
+    	PER_CREDIT_DETAIL
+     WHERE 
+		REPORT_ID=#{REPORT_ID} AND SPECIAL_TRADE_TYPE is not null
+	 )
+	union all
+	 (
+	 	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serial,
+    	'' cardserial,
+    	'准贷记卡' accountType,
+    	SPECIAL_TRADE_TYPE especialType,
+    	OCCUR_DATE especialDate,
+    	CHANGE_MONTH especialMonths,
+    	OCCUR_SUM especialsum,
+    	OVERDUE_DETAIL detail
+	FROM
+    	PER_Q_CREDIT_DETAIL
+     WHERE 
+		REPORT_ID=#{REPORT_ID} AND SPECIAL_TRADE_TYPE is not null
+	 )
+	 ORDER BY accountType
+</select>
+<!-- 根据报告编码查询逾期明细表信息-->
+<select id="getApPbcMaligantDetailBean" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serila,
+    	'' cardserial,
+    	decode(CART_TYPE,'0','贷款','1','贷记卡','2','准贷记卡') as accountType,
+    	OVER_MONTH maligantmonth,
+    	OVER_MONTH_NUM maligantmonths,
+    	OVER_SUM maligantsum
+	FROM
+    	PER_OVERDUE_SUMMARY
+     WHERE 
+		REPORT_ID=#{REPORT_ID} 
+</select>
+<!-- 根据报告编码查询住房公积金缴存记录信息-->
+<select id="getApPbcHouseFundBean" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serial,
+    	PAY_PLACE fundarea,
+    	PAY_DATE paydate,
+    	PAY_STATUS paystate,
+    	START_PAY_MON firstpaymonth,
+    	STOP_PAY_MON lastpaymonth,
+    	COM_PAY_PERCENT copercent,
+    	PER_PAY_PERCENT personalpercent,
+    	PAY_MON_AMOUT monthpay,
+    	DECRYPT_DEC(PAY_COM_NAME) coname,
+    	UPDATE_TIME updatedate
+	FROM
+    	PER_PROVIDENT_FUND_PAY
+    WHERE 
+	    REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询人行报告查询汇总信息-->
+<select id="getApPbcqueriedgeneralBean" parameterType="pd" resultType="pd" >
+	SELECT
+	      REPORT_ID reportid,
+	      MON_LOAN_QUERY_ORG_NUM loanorgnum,
+	      MON_CREDIT_QUERY_ORG_NUM creditorgnum,
+	      MON_LOAN_QUERY_NUM loannum,
+	      MON_CREDIT_QUERY_NUM creditnum,
+	      MON_OWN_QUERY_NUM selfnum,
+	      YEAR_LOAN_QUERY_NUM loanmanagenum,
+	      YEAR_OWN_QUERY_NUM warrantnum,
+	      YEAR_SPECIAL_QUERY_NUM shopcheckupnum
+	FROM
+    	PER_QUERY_SUMMARY
+    WHERE 
+	    REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询人行报告查询明细表信息-->
+<select id="getApPbcQueriedRecordBean" parameterType="pd" resultType="pd" >
+	SELECT
+	      REPORT_ID reportid,
+	      SERIAL serial,
+	      CR_QUERY_TIME querydate,
+	      CR_QUERY_OPERATOR queryorg,
+	      CR_QUERY_REASON queryreason
+	FROM
+    	PER_QUERY_DETAIL
+    WHERE 
+	    REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询担保信息明细表信息-->
+<select id="getApPbcWarrantDetailBean" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serila,
+    	LOAN_GRANT_ORG warrantorg,
+    	LOAN_CONTRACT_SUM warrantsum,
+    	LOAN_GRANT_DATE warrantStartDate,
+    	LOAN_STOP_DATE warrantDeadline,
+    	GUARANTEE_SUM warrantedsum,
+    	GUARANTEE_BALANCE warrantBalance,
+    	LOAN_FIVE_CALSS warrantLevel,
+    	SETTLE_ACCOUNT_DATE currentdate
+	FROM
+    	PER_EXTERNAL_GUARANTEE_DETAIL
+     WHERE 
+	    REPORT_ID=#{REPORT_ID} AND LOAN_TYPE='0'
+</select>
+<!-- 根据报告编码查询养老保险记录信息-->
+<select id="getApPbcPensioninsuranceBean" parameterType="pd" resultType="pd" >
+	SELECT
+	      REPORT_ID reportid,
+	      SERIAL serial,
+	      INSURED_PLACE insurearea,
+	      INSURED_DATE insuredate,
+	      PAY_STATUS paystate,
+	      SOPT_PAY_REASON endreason,
+	      START_WORK_MON workmonths,
+	      PER_PAY_BASE baseinsure,
+	      PAY_AMOUT_MON insurenum,
+	      PAY_MON_SUM insuremonths,
+	      DECRYPT_DEC(PAY_COM_NAME) coname,
+	      UPDATE_TIME updatedate
+	FROM
+    	PER_PENSIO_PAY
+    WHERE 
+	    REPORT_ID=#{REPORT_ID}
+</select>
+<!-- 根据报告编码查询人行信用报告－担保信息明细表对信用卡信息-->
+<select id="getApPbcWarrantDetailCredit" parameterType="pd" resultType="pd" >
+	SELECT 
+    	REPORT_ID reportid,
+    	SERIAL serila,
+    	LOAN_GRANT_ORG warrantCreditorg,
+    	LOAN_CONTRACT_SUM warrantCreditsum,
+    	LOAN_GRANT_DATE warrantOpenDate,
+    	GUARANTEE_SUM warrantedsum,
+    	GUARANTEE_BALANCE warrantUseLimit,
+    	SETTLE_ACCOUNT_DATE billDate
+	FROM
+    	PER_EXTERNAL_GUARANTEE_DETAIL
+     WHERE 
+	    REPORT_ID=#{REPORT_ID} AND LOAN_TYPE='1'
+</select>
+
+</mapper>

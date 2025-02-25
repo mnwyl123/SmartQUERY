@@ -1,0 +1,15 @@
+----- BEGIN LICENSE -----
+protect file header
+user=未授权的用户
+fid=1,1,1
+expireDate=2017-12-16
+signDate=2016-12-15
+action=disable
+
+----- END LICENSE -----
+----- BEGIN SIGNATURE -----
+MCwCFB1CVrpKomkhHeXL
+ZPlt+VCW3VHSAhR2e25o
+0G0OSJDQqEKiFFjx8bs6
+8w==
+----- END SIGNATURE -----

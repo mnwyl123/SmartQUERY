@@ -1,0 +1,157 @@
+@CHARSET "UTF-8";
+table {
+	font-size: 12px;
+	table-layout: auto;
+	border: none;
+	margin: 0;	
+}
+table td {
+	border: none;
+	line-height: 1em;
+}
+#commentsPan.close {
+	position: absolute;
+	top: -15px;
+	right: -15px;
+	width: 30px;
+	height: 30px;
+	border: solid 1px red;
+	z-index: 10002;
+	background-color: black;
+}
+
+table.regularTable,table.sectionHeader, table.gridHeader, table.gridFooter, table.sectionFooter { width:80%; margin:auto; }
+table.inputPanel {
+	border-collapse:collapse;
+}
+
+div#firstTimeComments {
+	margin: 15em auto 0 auto;
+	padding: 2.5em 1em 0 50%;
+	background: url(../../css/base/images/blankreport/background.jpg) no-repeat scroll 8% center;
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	overflow-y:auto;
+}
+
+div#firstTimeComments{
+	font-size: 11pt;
+	color: #999999;
+	line-height: 24px;
+	position: absolute;
+	top:70px;
+	left:380px;
+	padding: 1em 2px 0 -2px; 
+	margin: 0; 
+	text-align: center; 
+	width: 85%; 
+	height: 100%; 
+	overflow: auto;	
+}
+div#firstTimeTitle {
+	background: url(../../css/base/images/blankreport/title.png) no-repeat;
+	text-indent: 30px;
+	font-weight: 600;
+	margin-bottom: 24px;
+	position: absolute;
+	top:35%;
+	left:480px;
+}
+
+div#firstTimeCommentsContent {
+	background-image: url(../../css/base/images/blankreport/info.png);
+	background-repeat: no-repeat;
+	text-indent: 30px;
+	padding-top: 2px;
+	position: absolute;
+	top:40%;
+	left:480px;
+
+}
+div#guider{
+	position:absolute;
+	top:70px;
+	left:280px;
+	height:48px;
+	line-height:48px;
+	text-valign:bottom;
+	color:#999999;
+	background:no-repeat url(../../images/finger-up.png);
+	padding:0 0 0 32px;
+	float:right;
+}
+div#indicateInfo{
+	width: 100%;
+	height: 100%; 
+	background-color: white; 
+	color: gray; 
+	padding: 1em; 
+	line-height: 1.5em
+}
+
+div#centerPan
+{
+	position: absolute;
+	top:80px;
+	left:200px;
+	bottom:60px;
+	padding: 1em 2px 0 -2px; 
+	margin: 0; 
+	text-align: center; 
+	width: 85%; 
+	height: 100%; 
+	overflow-y: auto;
+	overflow-x:hidden;
+}
+
+div#errorDisplay {
+	position: absolute; 
+	z-index: 10000; 
+	top: 280px; 
+	left: 460px; 
+	margin: 0; 
+	font-size: 10pt; 
+	font-weight: bold; 
+	background-color: lightblue;
+	color:red;
+}
+div #mask{
+	position: absolute; 
+	z-index: 10000; 
+	width: 100%; 
+	height: 100%; 
+	top: -9999px; 
+	left: -9999px; 
+	margin: 0; 
+	font-size: 10pt; 
+	font-weight: bold; 
+	background-color: lightblue; 
+	filter: Alpha(opacity =40); 
+	opacity: 0.3; -moz-opacity: 0.3; 
+	text-align: center; 
+	padding-top: 0; 
+	overflow: hidden;
+}
+
+ul.toolbar,div#commentsTab,div#inputTab{
+	top:28.5px; 
+	width:85%;
+	float:right;
+	left:226px;
+	margin:0;
+	padding:0;
+}
+div#inputPanel,div#commentsPanel{
+	top:59px; 
+	width:85%;
+	float:right;
+	left:226px;
+	margin:0;
+	padding:0;
+}
+div#southPan{
+	width:85%;
+	float:right;
+	left:226px;
+}

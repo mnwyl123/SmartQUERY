@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductMapper">
+
+<select id="ProductlistPage" parameterType="page" resultType="pd" >
+		SELECT
+           PRODUCT_ID,
+           PRODUCT_NAME,
+           PRODUCT_STATUS,
+           PRODUCT_DESCRIBE,
+           b.name COMPANY,
+           YWLB
+        FROM
+            CIFM_PRODUCT a left join sys_org b on a.COMPANY = b.ORG_ID
+        WHERE
+        	1=1
+			<if test="pd.PRODUCT_ID!=null and pd.PRODUCT_ID!=''">
+			    AND 
+			    	PRODUCT_ID = #{pd.PRODUCT_ID}
+			</if>
+			<if test="pd.PRODUCT_NAME!=null and pd.PRODUCT_NAME!=''">
+			    AND 
+			    	PRODUCT_NAME = #{pd.PRODUCT_NAME}
+			</if>
+			<if test="pd.PRODUCT_STATUS!=null and pd.PRODUCT_STATUS!=''">
+			    AND 
+			    	PRODUCT_STATUS = #{pd.PRODUCT_STATUS}
+			</if>
+		ORDER BY PRODUCT_STATUS,PRODUCT_ID
+</select>
+<select id="Productlist" parameterType="pd" resultType="pd" >
+		SELECT
+           PRODUCT_ID,
+           PRODUCT_NAME,
+           PRODUCT_STATUS,
+           PRODUCT_DESCRIBE,
+           COMPANY,
+           YWLB
+        FROM
+            CIFM_PRODUCT 
+            where product_status = '0'
+</select>
+<select id="productChannelById" parameterType="pd" resultType="pd" >
+		SELECT
+           PRODUCT_ID,
+           PRODUCT_NAME,
+           PRODUCT_STATUS,
+           PRODUCT_DESCRIBE,
+           COMPANY,
+           YWLB
+        FROM
+            CIFM_PRODUCT 
+        WHERE
+			PRODUCT_ID = #{PRODUCT_ID}
+</select>
+<insert id="SaveChannel" parameterType="pd">
+		INSERT INTO CIFM_PRODUCT
+			(
+			   PRODUCT_ID,
+	           PRODUCT_NAME,
+	           PRODUCT_STATUS,
+	           PRODUCT_DESCRIBE,
+	           COMPANY,
+	           YWLB
+			)
+		VALUES
+			(
+			   #{PRODUCT_ID},
+	           #{PRODUCT_NAME},
+	           #{PRODUCT_STATUS},
+	           #{PRODUCT_DESCRIBE},
+	           #{COMPANY},
+	           #{YWLB}
+			)
+</insert>
+<update id="UpdateChannelById" parameterType="pd" >
+		UPDATE
+				CIFM_PRODUCT
+			set 
+				PRODUCT_NAME 		= #{PRODUCT_NAME},
+				PRODUCT_STATUS		= #{PRODUCT_STATUS},
+				PRODUCT_DESCRIBE		= #{PRODUCT_DESCRIBE},
+				COMPANY = #{COMPANY},
+				YWLB = #{YWLB}
+			where 
+				PRODUCT_ID = #{PRODUCT_ID}
+</update>
+<delete id="deleteChannelById" parameterType="pd">
+		delete from CIFM_PRODUCT
+		where 
+			PRODUCT_ID = #{PRODUCT_ID}
+</delete>
+<delete id="deleteAllChannelById" parameterType="map" >
+		delete from CIFM_PRODUCT
+		where 
+			PRODUCT_ID in
+		 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+               #{item}
+         </foreach>
+</delete>
+</mapper>

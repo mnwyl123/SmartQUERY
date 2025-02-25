@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EntCreditInterfaceMapper">
+	 <!-- 查询系统状态-->
+	<select id="findSysStatus" parameterType="pd" resultType="pd" >
+		SELECT 
+			SYS_STATUS 
+		FROM 
+			SYS_INFO  
+		WHERE 
+			SYS_NO=#{sysNo}
+	</select>
+		<!-- 查询是否含有渠道号 -->
+	<select id="findByCHANNELNO" parameterType="pd" resultType="pd">
+		select 
+		   CHANNEL_ID,CHANNEL_DES,CHANNEL_STATUS,CHANNEL_CONTACT,COMPANY
+		from 
+				CIFM_CHANNEL
+		where 
+			CHANNEL_ID = #{CHANNEL_ID}
+	</select>
+		<!-- 查询用户所在机构 -->
+	<select id="findOrg" parameterType="pd" resultType="pd">
+		SELECT A.ORG_CODE,A.ORG_ID,C.USER_ID,C.IP,C.MAC,C.LOCK_STATUS,C.USERNAME_PERBANK,C.USERNAME_PERBANK_ORG
+		  FROM SYS_ORG A
+		       INNER JOIN SYS_USER_ORG B ON A.ORG_ID = B.ORG_ID
+		       INNER JOIN SYS_USER C ON B.USER_ID = C.USER_ID
+		 WHERE C.USERNAME = #{USERNAME}
+	</select>
+		<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into CIFM_COMPANY_INFO
+		(
+		   	  ID,
+			  COMPANY_NAME,
+			  CREDENTIALS_NO_TYPE,
+			  CHINA_CREDIT_CODE,
+			  QUERY_REASON,
+			  QUERY_VERSION,
+			  WARRANT_MATURITY_DATE,
+			  CUST_MANAGER,
+			  QUERY_TYPE,
+			  SERVICECODE
+		) values (
+			#{ID},	
+			ENCRYPT_DEC(#{COMPANY_NAME}),
+			#{CREDENTIALS_NO_TYPE},
+			ENCRYPT_DEC(#{CHINA_CREDIT_CODE}),	
+			#{QUERY_REASON},	
+			#{QUERY_VERSION},		
+			#{WARRANT_MATURITY_DATE},
+			#{CUST_MANAGER},	
+			#{QUERY_TYPE},
+			#{SERVICECODE}
+		)
+	</insert>
+		<!--存入流程状态表-->
+	<insert id="saveToFs" parameterType="pd">
+		insert into CIFM_FLOW_STATUS
+		(ID,
+	         USER_SYS_ID,
+	         ORG_ID,
+	  		 APPLICATION_TIME,
+			CHECK_SYS_ID,
+	  		STATUS,
+	  		IP,
+	  		MAC,
+	  		ANNEX,
+	  		INTERNAL,
+	  		CLIENT_TYPE,
+	  		IS_WX_CHECK,
+	  		CHANNEL_ID,
+	  		CHANNEL_QUERY_NO) 
+  		values (
+	  		#{ID},
+	        #{USER_SYS_ID},
+	        #{ORG_ID},
+	        TO_DATE(#{APPLICATION_TIME},'YYYY-MM-DD HH24:MI:SS'),
+			#{CHECK_SYS_ID},
+	  		#{STATUS},
+	  		#{IP},
+	  		#{MAC},
+	  		#{ANNEX},
+	  		#{INTERNAL},
+	  		#{CLIENT_TYPE},
+	  		#{IS_WX_CHECK},
+	  		#{CHANNEL_ID},
+	  		#{CHANNEL_QUERY_NO}
+		)
+	</insert>
+	<!-- 查询征信账户信息 -->
+	<select id="queryAccByUserName" parameterType="pd" resultType="pd">
+		SELECT 
+				A.CREDIT_CODE USERCODE,
+				A.CURRENT_PASSWORD PASSWORD 
+		FROM  
+				CIFM_CREDIT_ACCT_MANAGE A 
+		WHERE 
+				A.CREDIT_CODE = (SELECT T.USERNAME_PERBANK_ORG FROM SYS_USER T WHERE T.USERNAME = #{USERNAME})
+	</select>
+		<!-- 修改流程表 -->
+	<update id="updateFs" parameterType="pd" >
+		UPDATE
+			CIFM_FLOW_STATUS
+			set 
+				QUERY_TIME=TO_DATE(#{QUERY_TIME},'YYYY-MM-DD HH24:MI:SS'),
+				RESULTCODE=#{RESULTCODE},
+				RESULTDESC=#{RESULTDESC},
+				STATUS=#{STATUS},
+				REPORT_ID=#{REPORT_ID},
+				INTERNAL=#{INTERNAL}
+			where 
+				ID=#{ID}
+	</update>
+	<!-- 查询同一渠道编号渠道流水号是否重复 -->
+	<select id="findByQueryNo" parameterType="pd" resultType="pd">
+		select 
+		   *
+		from 
+				CIFM_FLOW_STATUS
+		where 
+			CHANNEL_ID = #{CHANNEL_ID} and CHANNEL_QUERY_NO=#{CHANNEL_QUERY_NO}
+			AND ROWNUM = 1
+			
+	</select>
+</mapper>

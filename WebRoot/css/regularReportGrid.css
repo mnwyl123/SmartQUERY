@@ -1,0 +1,163 @@
+body {
+	background-color:#E6EAE9;
+}
+
+#commentsPan {
+	padding:1em;
+	line-height:1.5em;
+	background-color:PaleGreen;
+	background-color:LemonChiffon;
+	border:solid 1px red;
+}
+
+.title {
+	font-weight:600;
+	font-size:larger;
+}
+
+table.sectionHeader,
+table.gridHeader,
+table.gridFooter,
+table.sectionFooter {
+	width:100%;
+}
+
+
+
+table.regularTable, 
+table.regularTable th, 
+table.regularTable td,
+table.regularTable table {
+	border: solid 1px black;
+	border-collapse: collapse; //
+	font-weight: normal;
+	font:normal normal normal auto Arial; 
+	cursor: arrow;
+}
+
+table.regularTable {
+	border-radius:5px;
+}
+
+table.regularTable th,
+table.regularTable .topleft {
+	font-size:larger;
+}
+
+table.regularTable th.col,
+table.regularTable .topleft {
+	background-color:blue;
+	background-image:none;
+}
+
+table.regularTable{
+	border:2px solid #4A6994;	
+	border:2px solid black;
+	width:100%;
+	background-color:white;
+}
+
+table.regularTable .n {
+	white-space:nowrap;
+}
+
+table.regularTable th {
+	border:1px solid #4A6994; 
+	border:1px solid black; 
+	color:#000000;
+	padding: 2px;
+	text-align: left;
+	word-break:keep-all;
+}
+
+table.regularTable td {
+	border:1px solid #4A6994; 
+	border:1px solid black; 
+	color:#000000;
+	padding: 5px;
+	text-align: right;
+}
+
+
+table.regularTable .topleft{
+	border:1px solid #4A6994; 
+	border:1px solid black; 
+	word-break:keep-all;
+}
+
+table.regularTable .rowLeaf{
+
+}
+
+table.regularTable .colLeaf {
+
+}
+
+table.regularTable th.col {
+	
+}
+
+table.regularTable th.row {
+	
+}
+
+table.regularTable a {
+	text-decoration : none; 
+	color:darkblue;
+}
+
+table.regularTable a:hover {
+	text-decoration : underline;
+}
+
+table.regularTable img {
+	cursor: pointer;	
+}
+
+table.regularTable tr.o {
+	background-color: #aae0e0;
+}
+
+table.regularTable tr.e {
+	background-color: #e0aae0;
+}
+
+.pageContainer table.regularTable tr.o {
+	background-color:transparent;
+}
+
+.pageContainer table.regularTable tr.e{
+	background-color:transparent;
+}
+
+table.regularTable .mr {
+	background-color:#c0c0c0;
+}
+
+
+table.moneyGrid {
+	width:100%;
+	height:3em;
+	border:none;
+	text-align:center;
+	background-color:transparent;
+}
+
+table.moneyGrid td {
+	border: solid 1px black;
+	text-align:center;
+	background-color:transparent;
+}
+
+table.regularPage {
+	border: solid 1px black;
+	border-collapse: collapse; //
+	font-weight: normal;
+	font:normal normal normal 9pt Arial; 
+	cursor: arrow;
+}
+
+table.reqularPage td {
+	border: solid 1px black;
+}
+

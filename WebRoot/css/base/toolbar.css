@@ -1,0 +1,104 @@
+@CHARSET "UTF-8";
+
+.toolbar, #toolbar {
+	float: left;
+	width: 100%;
+	height: 25px;
+	line-height: 25px;
+	vertical-align: middle;
+	padding: 0px 0px 0px 0px;
+	margin:0 0 0 0px;
+	background-image:url(images/mainframe/Bg_Nav.jpg);
+	background-position:0 0;
+	border:0;
+	overflow:hidden;
+}
+
+.toolbar li, #toolbar li {
+	float: left;
+	width: auto;
+	line-height: 20px;
+	list-style: none;
+	font-family: tahoma;
+	font-size: 9pt;
+	padding: 1px;
+	margin:2px 0px 2px 5px ;
+	cursor: pointer;
+	border:0;
+
+}
+
+.toolbar li span, #toolbar li span,
+.toolbar li div, #toolbar li div	 {
+	float:left;
+	height: 20px ;
+	line-height: 20px;
+	padding: 0px 14px 0px 14px;
+	margin:0;
+	background-color:transparent;
+
+
+}
+
+.toolbar li span.onlyImg, #toolbar li span.onlyImg,
+.toolbar li div.onlyImg, #toolbar li div.onlyImg {
+	width:20px;
+	padding: 0;
+	margin:0;
+	background-color:transparent;
+}
+
+.toolbr .splitter, #toolbar .splitter {
+	width:1px; 
+	height:20px; 
+	background-color:darkgray;
+	cursor:default;
+}
+
+
+.toolbar li span.withImg, #toolbar li span.withImg,
+.toolbar li div.withImg, #toolbar li div.withImg{
+	background-repeat:no-repeat;
+	background-position:center left; 
+	padding-left:25px;
+	
+}
+
+.toolbar li span.onlyImg, #toolbar li span.onlyImg,
+.toolbar li div.onlyImg, #toolbar li div.onlyImg {
+	background-repeat:no-repeat;
+	background-position:center left; 
+}
+
+
+.toolbarSubmenu{
+	vertical-align: middle;
+	padding: 1px;
+	margin: 0px;
+	line-height: 15px;
+	
+}
+
+.toolbarSubmenu li{
+	width:100%;
+	list-style: none;
+	border: 0;
+	font-family: tahoma;
+	font-size: 9pt;
+	padding:2px;
+	cursor: hand;
+}
+
+.withImg {
+	background-repeat:no-repeat;
+	background-position:center left; 
+	padding-left:25px;
+	
+}
+
+.toolbar li.hilight, #toolbar li.hilight,
+ul.toolbarSubmenu li.hilight {
+	background-color: #dae9f4;
+	border:solid 1px #7da1ba;
+	margin:0px;
+}

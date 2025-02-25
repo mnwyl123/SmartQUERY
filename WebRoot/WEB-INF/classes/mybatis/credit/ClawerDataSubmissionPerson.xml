@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ClawerDataSubmissionPerson">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		"CIFM_PERSON_DETAIL"
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+	   A.ID,
+	   A.ORG_CODE,
+	   E.ORG_ID_PERBANK,
+	   E.NAME ORG_NAME,
+	   A.BRANCH_CODE,
+	   A.BRANCH_NAME,
+	   A.USER_SYS_NAME,
+	   A.USER_REAL_NAME,
+	   DATE_FORMAT(A.QUERY_TIME,'%Y-%m-%d %H:%i:%s') QUERY_TIME,
+	   DECRYPT_DEC(A.CLIENT_NAME) CLIENT_NAME,
+	   A.CREDENTIALS_TYPE,
+	   CASE WHEN A.CREDENTIALS_TYPE = '0' THEN 
+	       (CASE LENGTH(DECRYPT_DEC(A.CREDENTIALS_NO))
+	       WHEN 18 THEN
+	         CONCAT(CONCAT(SUBSTR(DECRYPT_DEC(A.CREDENTIALS_NO),1,6),'********'),SUBSTR(DECRYPT_DEC(A.CREDENTIALS_NO),-4))
+	       WHEN 15 THEN
+	         CONCAT(CONCAT(SUBSTR(DECRYPT_DEC(A.CREDENTIALS_NO),1,6),'******'),SUBSTR(DECRYPT_DEC(A.CREDENTIALS_NO),-3))
+	       END)
+		ELSE
+	       CONCAT(SUBSTR(DECRYPT_DEC(A.CREDENTIALS_NO),1,LENGTH(DECRYPT_DEC(A.CREDENTIALS_NO))-6),'******')
+		END AS CREDENTIALS_NO,
+	   A.QUERY_REASON,
+	   A.QUERY_VERSION,
+	   A.IS_GET,
+	   DATE_FORMAT(A.CHECK_TIME,'%Y-%m-%d %H:%i:%s') CHECK_TIME,
+	   A.IP,
+	   B.SEND_STATUS
+	</sql>
+		
+	<!-- 根据条件获取列表 -->
+	<select id="listPage" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		  FROM CIFM_PERSON_DETAIL A,
+		       CIFM_FLOW_STATUS   B,
+		       SYS_USER_ORG       D,
+		       SYS_ORG            E
+		 WHERE A.ID = B.ID
+		   AND B.USER_SYS_ID = D.USER_ID
+		   AND D.ORG_ID = E.ORG_ID
+		   <if test="pd.CLIENT_NAME != null and pd.CLIENT_NAME != ''">
+		   		AND DECRYPT_DEC(A.CLIENT_NAME) = #{pd.CLIENT_NAME}
+		   </if>
+		   <if test="pd.CREDENTIALS_TYPE != null and pd.CREDENTIALS_TYPE != ''">
+		   		AND A.CREDENTIALS_TYPE = #{pd.CREDENTIALS_TYPE}
+		   </if>
+		   <if test="pd.CREDENTIALS_NO != null and pd.CREDENTIALS_NO != ''">
+		   		AND DECRYPT_DEC(A.CREDENTIALS_NO) = #{pd.CREDENTIALS_NO}
+		   </if>	
+	</select>
+	
+	<!-- 根据查询变号（id）获取 -->
+	<select id="listObjectById" parameterType="String" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		  FROM CIFM_PERSON_DETAIL A,
+		       CIFM_FLOW_STATUS   B,
+		       SYS_USER_ORG       D,
+		       SYS_ORG            E
+		 WHERE A.ID = B.ID
+		   AND B.USER_SYS_ID = D.USER_ID
+		   AND D.ORG_ID = E.ORG_ID
+		   AND A.ID = #{ID}
+		   AND ROWNUM=1
+	</select>
+	
+</mapper>

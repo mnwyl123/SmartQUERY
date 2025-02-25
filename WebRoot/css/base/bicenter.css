@@ -1,0 +1,73 @@
+@CHARSET "UTF-8";
+
+body {
+	padding: 0px;
+	margin: 0px;
+	font-size: 12px;
+	
+	color: #000000;
+}
+
+div {
+	color: #000000;
+}
+
+a: {
+	color: #000000;
+}
+
+a:link {
+	color: #000000;
+}
+
+a:visited {
+	color: #00000;
+}
+
+a:active {
+	color: #00000;
+}
+
+a:hover {
+	color: #FF3333;
+}
+
+input[type='text'],input[type='password'] {
+	border: solid 1px red;
+}
+
+textarea {
+	border: 1px solid #727272;
+}
+
+button {
+	height: 20px;
+	border: 1px solid #abafb2;
+	background-color: #abafb2;
+	color: #FFFFFF;
+	margin: 5px;
+	margin-bottom: 0px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #494949;
+}
+
+.blank-logo {
+	background-image: url(images/common/mainphoto.jpg);
+	background-repeat: no-repeat;
+}
+
+.blank-bg {
+	background-image: url(images/common/Bg_Mainphoto.jpg);
+	background-repeat: repeat-x;
+}
+
+.input-check {
+	width: 16px;
+	height: 16px;
+	background-image: url(images/common/uncheck.gif);
+	background-repeat: no-repeat;
+}
+

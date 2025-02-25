@@ -1,0 +1,1192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrawlerInterfaceMapper">
+
+	<!-- 通过证件号码获取报告编号 -->
+	<select id="getReportIdByCertno" parameterType="pd" resultType="pd">		
+		SELECT 
+			DISTINCT A.REPORT_ID,
+			STATUS,
+			date_format(QUERY_TIME,'%Y-%m-%d %H:%i:%S') QUERY_TIME
+		FROM
+			CIFM_FLOW_STATUS A
+		WHERE 
+			A.CHANNEL_ID = #{CHANNEL_ID}
+			AND A.CHANNEL_QUERY_NO = #{QUERY_NO}
+	</select>
+	<!-- 通过证件号码获取报告编号 -->
+	<select id="getReportIdType" parameterType="pd" resultType="pd">		
+		SELECT 
+            DISTINCT A.REPORT_ID,
+            A.ID,
+            A.STATUS,
+            B.QUERY_TYPE,
+            (SELECT
+                count(1)
+                FROM                     
+                    SYS_USER_ORG C 
+                WHERE 
+                    C.USER_ID = A.USER_SYS_ID
+                    AND C.ORG_ID = (
+                        SELECT ORG_ID 
+                        FROM SYS_USER_ORG M,SYS_USER N 
+                        WHERE 
+                            M.USER_ID = N.USER_ID 
+                            AND N.USERNAME=#{USERNAME}
+                    )
+            ) CNT
+        FROM
+            CIFM_FLOW_STATUS A
+        INNER JOIN
+            CIFM_PERSON_INFO B
+        ON 
+            A.ID = B.ID
+        WHERE 
+           A.CHANNEL_ID = #{CHANNEL_ID}
+			AND A.CHANNEL_QUERY_NO = #{QUERY_NO}
+	</select>
+	<!-- 报告信息 -->
+	<select id="reportInfo"  parameterType="String" resultType="Map">
+		select 
+			replace(REPORT_ID,'null','') REPORT_ID,
+            replace(QUERY_TIME,'null','') QUERY_TIME,
+            replace(REPORT_TIME,'null','') REPORT_TIME,
+            replace(QUERY_OPERATOR,'null','') QUERY_OPERATOR,
+            replace(QUERY_REASON,'null','') QUERY_REASON
+        from
+        	PER_REPORT_INFO
+        WHERE
+			REPORT_ID = #{_parameter}
+				
+	</select>
+	<!-- 个人基本信息 -->
+	<select id="basic" parameterType="String" resultType="Map">
+		SELECT
+		    replace(CLIENT_NAME,'null','') CLIENT_NAME,
+            replace(CREDENTIALS_TYPE,'null','') CREDENTIALS_TYPE,
+            replace(CREDENTIALS_NO,'null','') CREDENTIALS_NO,
+            replace(CLIENT_SEX,'null','') CLIENT_SEX,
+            replace(CLIENT_BIRTHDAY,'null','') CLIENT_BIRTHDAY,
+            replace(MARITAL_STATUS,'null','') MARITAL_STATUS,
+            replace(PHONE_NUM,'null','') PHONE_NUM,
+            replace(COMPANY_TEL,'null','') COMPANY_TEL,
+            replace(FAMILY_TEL,'null','') FAMILY_TEL,
+            replace(EDUCATION,'null','') EDUCATION,
+            replace(DEGREE,'null','') DEGREE,
+            replace(MAILING_ADDRESS,'null','') MAILING_ADDRESS,
+            replace(RESIDENCE_ADDRESS,'null','') RESIDENCE_ADDRESS
+		FROM
+			PER_BASIC A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 配偶信息 -->
+	<select id="spou" parameterType="String" resultType="Map">
+		SELECT
+			replace(SPOU_NAME,'null','') SPOU_NAME,
+            replace(SPOU_CREDENTIALS_TYPE,'null','') SPOU_CREDENTIALS_TYPE,
+            replace(SPOU_CREDENTIALS_NO,'null','') SPOU_CREDENTIALS_NO,
+            replace(SPOU_COMPANY,'null','') SPOU_COMPANY,
+            replace(SPOU_TEL,'null','') SPOU_TEL
+		FROM
+			PER_SPOU A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 居住信息 -->
+	<select id="live" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(RESIDENTIAL_ADDRESS,'null','') RESIDENTIAL_ADDRESS,
+            replace(RESIDENTIAL_CONDITION,'null','') RESIDENTIAL_CONDITION,
+            replace(UPDATE_TIME,'null','') UPDATE_TIME
+		FROM
+			PER_LIVE A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 职业信息 -->
+	<select id="career" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+			replace(COMPANY_NAME,'null','')  COMPANY_NAME,
+			replace(COMPANY_ADDRESS,'null','') COMPANY_ADDRESS,
+			replace(CAREER,'null','') CAREER,
+			replace(INDUSTRY,'null','') INDUSTRY,
+			replace(DUTIES,'null','') DUTIES,
+			replace(JOB_TITLE,'null','') JOB_TITLE,
+			replace(ENTER_YEAR,'null','') ENTER_YEAR,
+			replace(UPDATE_TIME,'null','') UPDATE_TIME
+		FROM
+			PER_CAREER A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 信息概要 -->
+	<select id="loanSummary" parameterType="String" resultType="Map">
+		SELECT
+			replace(PER_HOUSE_LOAN_NUM,'null','') PER_HOUSE_LOAN_NUM,
+            replace(PER_COMME_LOAN_NUM,'null','') PER_COMME_LOAN_NUM,
+            replace(OTHER_LOAN_NUM,'null','') OTHER_LOAN_NUM,
+            replace(FIRST_LOAN_REL_MON,'null','') FIRST_LOAN_REL_MON,
+            replace(CR_CARD_ACC_NUM,'null','') CR_CARD_ACC_NUM,
+            replace(FIRST_CARD_REL_MON,'null','') FIRST_CARD_REL_MON,
+            replace(Q_CR_CARD_ACC_NUM,'null','') Q_CR_CARD_ACC_NUM,
+            replace(Q_FIRST_CARD_REL_MON,'null','') Q_FIRST_CARD_REL_MON,
+            replace(DECLART_NUM,'null','') DECLART_NUM,
+            replace(OBJECTION_NUM,'null','') OBJECTION_NUM,
+            replace(LOAN_NUM,'null','') LOAN_NUM,
+            replace(LOAN_MON_NUM,'null','') LOAN_MON_NUM,
+            replace(LOAN_MON_OVER_SUM,'null','') LOAN_MON_OVER_SUM,
+            replace(LOAN_OVER_MON_NUM,'null','') LOAN_OVER_MON_NUM,
+            replace(CR_CARD_OVER_ACC_NUM,'null','') CR_CARD_OVER_ACC_NUM,
+            replace(CR_CARD_OVER_MON_NUM,'null','') CR_CARD_OVER_MON_NUM,
+            replace(CR_CARD_MON_OVER_SUM,'null','') CR_CARD_MON_OVER_SUM,
+            replace(CR_CARD_OVER_LONG_MON_NUM,'null','') CR_CARD_OVER_LONG_MON_NUM,
+            replace(Q_CR_CARD_OVER_ACC_NUM,'null','') Q_CR_CARD_OVER_ACC_NUM,
+            replace(Q_CR_CARD_OVER_MON_NUM,'null','') Q_CR_CARD_OVER_MON_NUM,
+            replace(Q_CR_CARD_OVER_MON_BALANCE,'null','') Q_CR_CARD_OVER_MON_BALANCE,
+            replace(Q_CR_CARD_OVER_LONG_MON_NUM,'null','') Q_CR_CARD_OVER_LONG_MON_NUM,
+            replace(LOAN_COMPANY_ORG_NUM,'null','') LOAN_COMPANY_ORG_NUM,
+            replace(LOAN_ORG_NUM,'null','') LOAN_ORG_NUM,
+            replace(UNCLEAR_LOAN_NUM,'null','') UNCLEAR_LOAN_NUM,
+            replace(LOAN_CONTRACT_TOTAL,'null','') LOAN_CONTRACT_TOTAL,
+            replace(LOAN_BANLANCE,'null','') LOAN_BANLANCE,
+            replace(AVG_SHOULD_REPAY,'null','') AVG_SHOULD_REPAY,
+            replace(N_CR_CARD_COMPANY_ORG_NUM,'null','') N_CR_CARD_COMPANY_ORG_NUM,
+            replace(N_CR_CARD_ORG_NUM,'null','') N_CR_CARD_ORG_NUM,
+            replace(N_CR_CARD_ACC_NUM,'null','') N_CR_CARD_ACC_NUM,
+            replace(N_CR_CARD_CRED_SUM,'null','') N_CR_CARD_CRED_SUM,
+            replace(N_CR_CARD_MAX_CRED_SUM,'null','') N_CR_CARD_MAX_CRED_SUM,
+            replace(N_CR_CARD_MIN_CRED_SUM,'null','') N_CR_CARD_MIN_CRED_SUM,
+            replace(N_CR_CARD_USED_SUM,'null','') N_CR_CARD_USED_SUM,
+            replace(N_CR_CARD_AVG_USED_SUM,'null','') N_CR_CARD_AVG_USED_SUM,
+            replace(NQ_CR_CARD_COMPANY_ORG_NUM,'null','') NQ_CR_CARD_COMPANY_ORG_NUM,
+            replace(NQ_CR_CARD_ORG_NUM,'null','') NQ_CR_CARD_ORG_NUM,
+            replace(NQ_CR_CARD_ACC_NUM,'null','') NQ_CR_CARD_ACC_NUM,
+            replace(NQ_CR_CARD_CRED_SUM,'null','') NQ_CR_CARD_CRED_SUM,
+            replace(NQ_CR_CARD_MAX_CRED_SUM,'null','') NQ_CR_CARD_MAX_CRED_SUM,
+            replace(NQ_CR_CARD_MIN_CRED_SUM,'null','') NQ_CR_CARD_MIN_CRED_SUM,
+            replace(NQ_CR_CARD_OVERDRAFT_BALANCE,'null','') NQ_CR_CARD_OVERDRAFT_BALANCE,
+            replace(NQ_CR_CARD_AVG_USED_SUM,'null','') NQ_CR_CARD_AVG_USED_SUM,
+            replace(BAD_DEBT_NUM,'null','') BAD_DEBT_NUM,
+            replace(BAD_DEBT_BALANCE,'null','') BAD_DEBT_BALANCE,
+            replace(ASSET_NUM,'null','') ASSET_NUM,
+            replace(ASSET_BALANCE,'null','') ASSET_BALANCE,
+            replace(ASSURER_NUM,'null','') ASSURER_NUM,
+            replace(ASSURER_BALANCE,'null','') ASSURER_BALANCE,
+            replace(GUARANTEE_NUM,'null','') GUARANTEE_NUM,
+            replace(GUARANTEE_SUM,'null','') GUARANTEE_SUM,
+            replace(GUARANTEE_BALANCE,'null','') GUARANTEE_BALANCE
+		FROM
+			PER_LOAN_SUMMARY A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 带数字解读信息概要 -->
+	<select id="loanSummaryType" parameterType="String" resultType="Map">
+		SELECT
+			replace(PER_HOUSE_LOAN_NUM,'null','') PER_HOUSE_LOAN_NUM,
+            replace(PER_COMME_LOAN_NUM,'null','') PER_COMME_LOAN_NUM,
+            replace(OTHER_LOAN_NUM,'null','') OTHER_LOAN_NUM,
+            replace(FIRST_LOAN_REL_MON,'null','') FIRST_LOAN_REL_MON,
+            replace(CR_CARD_ACC_NUM,'null','') CR_CARD_ACC_NUM,
+            replace(FIRST_CARD_REL_MON,'null','') FIRST_CARD_REL_MON,
+            replace(Q_CR_CARD_ACC_NUM,'null','') Q_CR_CARD_ACC_NUM,
+            replace(Q_FIRST_CARD_REL_MON,'null','') Q_FIRST_CARD_REL_MON,
+            replace(DECLART_NUM,'null','') DECLART_NUM,
+            replace(OBJECTION_NUM,'null','') OBJECTION_NUM,
+            replace(LOAN_NUM,'null','') LOAN_NUM,
+            replace(LOAN_MON_NUM,'null','') LOAN_MON_NUM,
+            replace(LOAN_MON_OVER_SUM,'null','') LOAN_MON_OVER_SUM,
+            replace(LOAN_OVER_MON_NUM,'null','') LOAN_OVER_MON_NUM,
+            replace(CR_CARD_OVER_ACC_NUM,'null','') CR_CARD_OVER_ACC_NUM,
+            replace(CR_CARD_OVER_MON_NUM,'null','') CR_CARD_OVER_MON_NUM,
+            replace(CR_CARD_MON_OVER_SUM,'null','') CR_CARD_MON_OVER_SUM,
+            replace(CR_CARD_OVER_LONG_MON_NUM,'null','') CR_CARD_OVER_LONG_MON_NUM,
+            replace(Q_CR_CARD_OVER_ACC_NUM,'null','') Q_CR_CARD_OVER_ACC_NUM,
+            replace(Q_CR_CARD_OVER_MON_NUM,'null','') Q_CR_CARD_OVER_MON_NUM,
+            replace(Q_CR_CARD_OVER_MON_BALANCE,'null','') Q_CR_CARD_OVER_MON_BALANCE,
+            replace(Q_CR_CARD_OVER_LONG_MON_NUM,'null','') Q_CR_CARD_OVER_LONG_MON_NUM,
+            replace(LOAN_COMPANY_ORG_NUM,'null','') LOAN_COMPANY_ORG_NUM,
+            replace(LOAN_ORG_NUM,'null','') LOAN_ORG_NUM,
+            replace(UNCLEAR_LOAN_NUM,'null','') UNCLEAR_LOAN_NUM,
+            replace(LOAN_CONTRACT_TOTAL,'null','') LOAN_CONTRACT_TOTAL,
+            replace(LOAN_BANLANCE,'null','') LOAN_BANLANCE,
+            replace(AVG_SHOULD_REPAY,'null','') AVG_SHOULD_REPAY,
+            replace(N_CR_CARD_COMPANY_ORG_NUM,'null','') N_CR_CARD_COMPANY_ORG_NUM,
+            replace(N_CR_CARD_ORG_NUM,'null','') N_CR_CARD_ORG_NUM,
+            replace(N_CR_CARD_ACC_NUM,'null','') N_CR_CARD_ACC_NUM,
+            replace(N_CR_CARD_CRED_SUM,'null','') N_CR_CARD_CRED_SUM,
+            replace(N_CR_CARD_MAX_CRED_SUM,'null','') N_CR_CARD_MAX_CRED_SUM,
+            replace(N_CR_CARD_MIN_CRED_SUM,'null','') N_CR_CARD_MIN_CRED_SUM,
+            replace(N_CR_CARD_USED_SUM,'null','') N_CR_CARD_USED_SUM,
+            replace(N_CR_CARD_AVG_USED_SUM,'null','') N_CR_CARD_AVG_USED_SUM,
+            replace(NQ_CR_CARD_COMPANY_ORG_NUM,'null','') NQ_CR_CARD_COMPANY_ORG_NUM,
+            replace(NQ_CR_CARD_ORG_NUM,'null','') NQ_CR_CARD_ORG_NUM,
+            replace(NQ_CR_CARD_ACC_NUM,'null','') NQ_CR_CARD_ACC_NUM,
+            replace(NQ_CR_CARD_CRED_SUM,'null','') NQ_CR_CARD_CRED_SUM,
+            replace(NQ_CR_CARD_MAX_CRED_SUM,'null','') NQ_CR_CARD_MAX_CRED_SUM,
+            replace(NQ_CR_CARD_MIN_CRED_SUM,'null','') NQ_CR_CARD_MIN_CRED_SUM,
+            replace(NQ_CR_CARD_OVERDRAFT_BALANCE,'null','') NQ_CR_CARD_OVERDRAFT_BALANCE,
+            replace(NQ_CR_CARD_AVG_USED_SUM,'null','') NQ_CR_CARD_AVG_USED_SUM,
+            replace(BAD_DEBT_NUM,'null','') BAD_DEBT_NUM,
+            replace(BAD_DEBT_BALANCE,'null','') BAD_DEBT_BALANCE,
+            replace(ASSET_NUM,'null','') ASSET_NUM,
+            replace(ASSET_BALANCE,'null','') ASSET_BALANCE,
+            replace(ASSURER_NUM,'null','') ASSURER_NUM,
+            replace(ASSURER_BALANCE,'null','') ASSURER_BALANCE,
+            replace(GUARANTEE_NUM,'null','') GUARANTEE_NUM,
+            replace(GUARANTEE_SUM,'null','') GUARANTEE_SUM,
+            replace(GUARANTEE_BALANCE,'null','') GUARANTEE_BALANCE,
+            replace(DIGITAL_INTERPRE,'null','') DIGITAL_INTERPRE,
+            replace(RELATIVE_POSITIONT,'null','') RELATIVE_POSITIONT,
+            replace(DIGITAL_INTERPRE_DES,'null','') DIGITAL_INTERPRE_DES
+		FROM
+			PER_LOAN_SUMMARY A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 贷款  -->
+	<select id="loanDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+            replace(SERIAL,'null','') SERIAL,
+            replace(LOANS_DATE,'null','') LOANS_DATE,
+            replace(LOANS_ORG,'null','') LOANS_ORG,
+            replace(LOANS_AMOUNT,'null','') LOANS_AMOUNT,
+            replace(LOANS_USE,'null','') LOANS_USE,
+            replace(REPAY_NUM,'null','') REPAY_NUM,
+            replace(REPAY_TYPE,'null','') REPAY_TYPE,
+            replace(EXPIRY_DATE,'null','') EXPIRY_DATE,
+            replace(STOP_DATE,'null','') STOP_DATE,
+            replace(ACC_STATUS,'null','') ACC_STATUS,
+            replace(FIVE_TYPE,'null','') FIVE_TYPE,
+            replace(PRINCIPAL_BALANCE,'null','') PRINCIPAL_BALANCE,
+            replace(REST_REPAY_NUM,'null','') REST_REPAY_NUM,
+            replace(CUR_REPAY_AMOUT,'null','') CUR_REPAY_AMOUT,
+            replace(PLAN_REPAY_DATE,'null','') PLAN_REPAY_DATE,
+            replace(ACTUAL_REPAY_AMOUT,'null','') ACTUAL_REPAY_AMOUT,
+            replace(LAST_REPAY_DATE,'null','') LAST_REPAY_DATE,
+            replace(CUR_OVER_NUM,'null','') CUR_OVER_NUM,
+            replace(CUR_OVER_AMOUNT,'null','') CUR_OVER_AMOUNT,
+            replace(T_N_REPAY_PRINCIPAL,'null','') T_N_REPAY_PRINCIPAL,
+            replace(S_N_REPAY_PRINCIPAL,'null','') S_N_REPAY_PRINCIPAL,
+            replace(N_N_REPAY_PRINCIPAL,'null','') N_N_REPAY_PRINCIPAL,
+            replace(L_N_REPAY_PRINCIPAL,'null','') L_N_REPAY_PRINCIPAL,
+            replace(REPAY_RECORD,'null','') REPAY_RECORD,
+            replace(BUSSID,'null','') BUSSID,
+            replace(VOUCHTYPE,'null','') VOUCHTYPE,
+            replace(CURRENCYTYPE,'null','') CURRENCYTYPE,
+            replace(STATEBTIME,'null','') STATEBTIME,
+            replace(STATEETIME,'null','') STATEETIME,
+            replace(OVERDUE_BDATE,'null','') OVERDUE_BDATE,
+            replace(OVERDUE_EDATE,'null','') OVERDUE_EDATE,
+           <!--  SPECIAL_TRADE_TYPE,
+            OCCUR_DATE,
+            CHANGE_MONTH,
+            OCCUR_SUM,
+            OVERDUE_DETAIL, -->
+            replace(BALANCE,'null','') BALANCE
+		FROM
+			PER_LOAN_DETAIL A
+		WHERE
+			REPORT_ID = #{_parameter}
+		order by SERIAL 
+			
+	</select>
+	<!-- 贷记卡 -->
+	<select id="creditDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(CARDTYPE,'null','') CARDTYPE,
+            replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+            replace(SERIAL,'null','') SERIAL,
+            replace(CR_REL_CARD_DATE,'null','') CR_REL_CARD_DATE,
+            replace(CR_REL_CARD_ORG,'null','') CR_REL_CARD_ORG,
+            replace(CR_CREDIT_SUM,'null','') CR_CREDIT_SUM,
+            replace(CR_SHARE_CREDIT_SUM,'null','') CR_SHARE_CREDIT_SUM,
+            replace(CR_STOP_DATE,'null','') CR_STOP_DATE,
+            replace(CR_ACC_STATUS,'null','') CR_ACC_STATUS,
+            replace(CR_USED_SUM,'null','') CR_USED_SUM,
+            replace(CR_AVG_USED_SUM,'null','') CR_AVG_USED_SUM,
+            replace(CR_USED_MAX_SUM,'null','') CR_USED_MAX_SUM,
+            replace(CR_SHOULD_REPAY_AMOUT,'null','') CR_SHOULD_REPAY_AMOUT,
+            replace(CR_BILL_DATE,'null','') CR_BILL_DATE,
+            replace(CR_ACTUAL_REPAY_AMOUT,'null','') CR_ACTUAL_REPAY_AMOUT,
+            replace(CR_LAST_REPAY_DATE,'null','') CR_LAST_REPAY_DATE,
+            replace(CR_CUR_OVER_NUM,'null','') CR_CUR_OVER_NUM,
+            replace(CR_CUR_OVER_AMOUT,'null','') CR_CUR_OVER_AMOUT,
+            replace(CR_REPAY_RECORD,'null','') CR_REPAY_RECORD,
+            replace(BUSSID,'null','') BUSSID,
+            replace(VOUCHTYPE,'null','') VOUCHTYPE,
+            replace(CURRENCYTYPE,'null','') CURRENCYTYPE,
+            replace(STATEBTIME,'null','') STATEBTIME,
+            replace(STATEETIME,'null','') STATEETIME,
+            replace(OVERDUE_BDATE,'null','') OVERDUE_BDATE,
+            replace(OVERDUE_EDATE,'null','') OVERDUE_EDATE,
+            <!-- SPECIAL_TRADE_TYPE,
+            OCCUR_DATE,
+            CHANGE_MONTH,
+            OCCUR_SUM,
+            OVERDUE_DETAIL, -->
+            replace(BALANCE,'null','') BALANCE
+		FROM
+			PER_CREDIT_DETAIL A
+		WHERE
+			REPORT_ID = #{_parameter}
+		order by SERIAL
+			
+	</select>
+	<!-- 准贷记卡 -->
+	<select id="qCredit" parameterType="String" resultType="Map">
+		SELECT
+			replace(CARDTYPE,'null','') CARDTYPE,
+            replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+            replace(SERIAL,'null','') SERIAL,
+            replace(Q_CR_REL_CARD_DATE,'null','') Q_CR_REL_CARD_DATE,
+            replace(Q_CR_REL_CARD_ORG,'null','') Q_CR_REL_CARD_ORG,
+            replace(Q_CR_CREDIT_SUM,'null','') Q_CR_CREDIT_SUM,
+            replace(Q_CR_SHARE_CREDIT_SUM,'null','') Q_CR_SHARE_CREDIT_SUM,
+            replace(Q_CR_STOP_DATE,'null','') Q_CR_STOP_DATE,
+            replace(Q_CR_ACC_STATUS,'null','') Q_CR_ACC_STATUS,
+            replace(Q_CR_USED_SUM,'null','') Q_CR_USED_SUM,
+            replace(Q_CR_AVG_USED_SUM,'null','') Q_CR_AVG_USED_SUM,
+            replace(Q_CR_USED_MAX_SUM,'null','') Q_CR_USED_MAX_SUM,
+            replace(Q_CR_SHOULD_REPAY_AMOUT,'null','') Q_CR_SHOULD_REPAY_AMOUT,
+            replace(Q_CR_BILL_DATE,'null','') Q_CR_BILL_DATE,
+            replace(Q_CR_ACTUAL_REPAY_AMOUT,'null','') Q_CR_ACTUAL_REPAY_AMOUT,
+            replace(Q_CR_LAST_REPAY_DATE,'null','') Q_CR_LAST_REPAY_DATE,
+            replace(Q_CR_CUR_OVER_NUM,'null','') Q_CR_CUR_OVER_NUM,
+            replace(Q_CR_CUR_OVER_AMOUT,'null','') Q_CR_CUR_OVER_AMOUT,
+            replace(Q_CR_REPAY_RECORD,'null','') Q_CR_REPAY_RECORD,
+            replace(BUSSID,'null','') BUSSID,
+            replace(VOUCHTYPE,'null','') VOUCHTYPE,
+            replace(CURRENCYTYPE,'null','') CURRENCYTYPE,
+            replace(STATEBTIME,'null','') STATEBTIME,
+            replace(STATEETIME,'null','') STATEETIME,
+            replace(UNREPAY_BALANCE,'null','') UNREPAY_BALANCE,
+            replace(OVERDUE_BDATE,'null','') OVERDUE_BDATE,
+            replace(OVERDUE_EDATE,'null','') OVERDUE_EDATE,
+            <!-- SPECIAL_TRADE_TYPE,
+            OCCUR_DATE,
+            CHANGE_MONTH,
+            OCCUR_SUM,
+            OVERDUE_DETAIL, -->
+            replace(BALANCE,'null','') BALANCE
+		FROM
+			PER_Q_CREDIT_DETAIL A
+		WHERE
+			REPORT_ID = #{_parameter}
+		order by SERIAL
+			
+	</select>
+	<!-- 住房公积金参缴记录 -->
+	<select id="providentFund" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(PAY_PLACE,'null','') PAY_PLACE,
+            replace(PAY_DATE,'null','') PAY_DATE,
+            replace(START_PAY_MON,'null','') START_PAY_MON,
+            replace(STOP_PAY_MON,'null','') STOP_PAY_MON,
+            replace(PAY_STATUS,'null','') PAY_STATUS,
+            replace(PAY_MON_AMOUT,'null','') PAY_MON_AMOUT,
+            replace(PER_PAY_PERCENT,'null','') PER_PAY_PERCENT,
+            replace(COM_PAY_PERCENT,'null','') COM_PAY_PERCENT,
+            replace(PAY_COM_NAME,'null','') PAY_COM_NAME,
+            replace(UPDATE_TIME,'null','') UPDATE_TIME
+		FROM
+			PER_PROVIDENT_FUND_PAY A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 养老保险金缴存记录 -->
+	<select id="pensioPay" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(INSURED_PLACE,'null','') INSURED_PLACE,
+            replace(INSURED_DATE,'null','') INSURED_DATE,
+            replace(PAY_MON_SUM,'null','') PAY_MON_SUM,
+            replace(START_WORK_MON,'null','') START_WORK_MON,
+            replace(PAY_STATUS,'null','') PAY_STATUS,
+            replace(PER_PAY_BASE,'null','') PER_PAY_BASE,
+            replace(PAY_AMOUT_MON,'null','') PAY_AMOUT_MON,
+            replace(UPDATE_TIME,'null','') UPDATE_TIME,
+            replace(PAY_COM_NAME,'null','') PAY_COM_NAME,
+            replace(SOPT_PAY_REASON,'null','') SOPT_PAY_REASON
+		FROM
+			PER_PENSIO_PAY A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 查询记录汇总 -->
+	<select id="querySummary" parameterType="String" resultType="Map">
+		SELECT
+		    replace(MON_LOAN_QUERY_ORG_NUM,'null','') MON_LOAN_QUERY_ORG_NUM,
+            replace(MON_CREDIT_QUERY_ORG_NUM,'null','') MON_CREDIT_QUERY_ORG_NUM,
+            replace(MON_LOAN_QUERY_NUM,'null','') MON_LOAN_QUERY_NUM,
+            replace(MON_CREDIT_QUERY_NUM,'null','') MON_CREDIT_QUERY_NUM,
+            replace(MON_OWN_QUERY_NUM,'null','') MON_OWN_QUERY_NUM,
+            replace(YEAR_LOAN_QUERY_NUM,'null','') YEAR_LOAN_QUERY_NUM,
+            replace(YEAR_OWN_QUERY_NUM,'null','') YEAR_OWN_QUERY_NUM,
+            replace(YEAR_SPECIAL_QUERY_NUM,'null','') YEAR_SPECIAL_QUERY_NUM
+		FROM
+			PER_QUERY_SUMMARY A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 信贷审批查询记录明细 -->
+	<select id="queryDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(CR_QUERY_TIME,'null','') CR_QUERY_TIME,
+            replace(CR_QUERY_OPERATOR,'null','') CR_QUERY_OPERATOR,
+            replace(CR_QUERY_REASON,'null','') CR_QUERY_REASON
+		FROM
+			PER_QUERY_DETAIL A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 资产处置/保证人代偿信息 -->
+	<select id="assetsDisposal" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(INFO_TYPE,'null','') INFO_TYPE,
+            replace(COMPANY_NAME,'null','') COMPANY_NAME,
+            replace(RECEIVE_DATE,'null','') RECEIVE_DATE,
+            replace(AGGREGATE_AMOUNT,'null','') AGGREGATE_AMOUNT,
+            replace(LAST_REPAY_DATE,'null','') LAST_REPAY_DATE,
+            replace(BALANCE,'null','') BALANCE
+		FROM
+			PER_ASSETS_DISPOSAL A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 对外担保信息明细 -->
+	<select id="externalGuarantee" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+		    replace(LOAN_TYPE,'null','') LOAN_TYPE,
+            replace(LOAN_GRANT_ORG,'null','') LOAN_GRANT_ORG,
+            replace(LOAN_CONTRACT_SUM,'null','') LOAN_CONTRACT_SUM,
+            replace(LOAN_GRANT_DATE,'null','') LOAN_GRANT_DATE,
+            replace(LOAN_STOP_DATE,'null','') LOAN_STOP_DATE,
+            replace(GUARANTEE_SUM,'null','') GUARANTEE_SUM,
+            replace(GUARANTEE_BALANCE,'null','') GUARANTEE_BALANCE,
+            replace(LOAN_FIVE_CALSS,'null','') LOAN_FIVE_CALSS,
+            replace(SETTLE_ACCOUNT_DATE,'null','') SETTLE_ACCOUNT_DATE
+		FROM
+			PER_EXTERNAL_GUARANTEE_DETAIL A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 贷款/贷记卡/准贷记卡逾期记录 -->
+	<select id="overdueSummary" parameterType="String" resultType="Map">
+		SELECT
+		    replace(SERIAL,'null','') SERIAL,
+            replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+            replace(CART_TYPE,'null','') CART_TYPE,
+            replace(OVER_MONTH,'null','') OVER_MONTH,
+            replace(OVER_MONTH_NUM,'null','') OVER_MONTH_NUM,
+            replace(OVER_SUM,'null','') OVER_SUM
+		FROM
+			PER_OVERDUE_SUMMARY A
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 特殊交易类型 -->
+	<select id="SpecialTrade" parameterType="String" resultType="Map">
+		SELECT
+			  replace(SERIAL,'null','') SERIAL,
+			  replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+			  replace(CART_TYPE,'null','') CART_TYPE,
+			  replace(SPECIAL_TRADE_TYPE,'null','') SPECIAL_TRADE_TYPE,
+			  replace(OCCUR_DATE,'null','') OCCUR_DATE,
+			  replace(CHANGE_MONTH,'null','') CHANGE_MONTH,
+			  replace(OCCUR_SUM,'null','') OCCUR_SUM,
+			  replace(OVERDUE_DETAIL,'null','') OVERDUE_DETAIL
+		FROM
+			PER_SPECIAL_TRADE
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 说明/声明/标注信息表 -->
+	<select id="statement" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+            replace(CART_TYPE,'null','') CART_TYPE,
+           <!--  ORG_DES,
+            ORG_DES_DATE,
+            OWNER_DECLARE,
+            OWNER_DECLARE_DATE,
+            OBJECTIONS,
+            OBJECTIONS_DATE -->
+            replace(INSTRUCTION_TYPE,'null','') INSTRUCTION_TYPE,
+			replace(INSTRUCTION,'null','') INSTRUCTION,
+			replace(ADD_DATE,'null','') ADD_DATE
+		FROM
+			PER_STATEMENT
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 欠税记录明细 -->
+	<select id="oweTaxes" parameterType="String" resultType="Map">
+		SELECT
+		    replace(SERIAL,'null','') SERIAL,
+            replace(TAX_AUTHORITY,'null','') TAX_AUTHORITY,
+            replace(OWE_TAX_SUM,'null','') OWE_TAX_SUM,
+            replace(OWE_TAX_DATE,'null','') OWE_TAX_DATE
+		FROM
+			PER_OWE_TAXES
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 民事判决/强制执行记录 -->
+	<select id="verdict" parameterType="String" resultType="Map">
+		SELECT
+			replace(TYPE,'null','') TYPE,
+            replace(SERIAL,'null','') SERIAL,
+            replace(COURT_NAME,'null','') COURT_NAME,
+            replace(CAUSE,'null','') CAUSE,
+            replace(REGISTER_DATE,'null','') REGISTER_DATE,
+            replace(SETTLE_STYLE,'null','') SETTLE_STYLE,
+            replace(RESULT,'null','') RESULT,
+            replace(SETTLE_DATE,'null','') SETTLE_DATE,
+            replace(APPLY_SYM,'null','') APPLY_SYM,
+            replace(APPLY_SYM_VALUE,'null','') APPLY_SYM_VALUE,
+            replace(GOAL_SYM,'null','') GOAL_SYM,
+            replace(GOAL_SYM_SUM,'null','') GOAL_SYM_SUM
+		FROM
+			PER_VERDICT
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 行政处罚记录 -->
+	<select id="penalties" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(PENALTIES_COMAPNY,'null','') PENALTIES_COMAPNY,
+            replace(PENALTIES_CONTENTS,'null','') PENALTIES_CONTENTS,
+            replace(PENALTIES_SUM,'null','') PENALTIES_SUM,
+            replace(START_DATE,'null','') START_DATE,
+            replace(STOP_DATE,'null','') STOP_DATE,
+            replace(RECONSIDERATION_RESULT,'null','') RECONSIDERATION_RESULT
+		FROM
+			PER_PENALTIES
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 养老保险金发放记录 -->
+	<select id="pensioRelease" parameterType="String" resultType="Map">
+		SELECT
+		    replace(SERIAL,'null','') SERIAL,
+            replace(REL_PLACE,'null','') REL_PLACE,
+            replace(RETIRED_TYPE,'null','') RETIRED_TYPE,
+            replace(RETIRED_MONTH,'null','') RETIRED_MONTH,
+            replace(START_WORK_MON,'null','') START_WORK_MON,
+            replace(REL_SUM_CUR_MON,'null','') REL_SUM_CUR_MON,
+            replace(STOP_REL_REASON,'null','') STOP_REL_REASON,
+            replace(ORIGINAL_COMAPNY,'null','') ORIGINAL_COMAPNY,
+            replace(UPDATE_TIME,'null','') UPDATE_TIME
+		FROM
+			PER_PENSIO_RELEASE
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 低保救助记录 -->
+	<select id="lowSecurity" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(PERSONNEL_TYPE,'null','') PERSONNEL_TYPE,
+            replace(LOCATION,'null','') LOCATION,
+            replace(COMPANY,'null','') COMPANY,
+            replace(HOUSE_MON_INCOME,'null','') HOUSE_MON_INCOME,
+            replace(APPLY_DATE,'null','') APPLY_DATE,
+            replace(APPROVAL_DATE,'null','') APPROVAL_DATE,
+            replace(UPDATE_TIME,'null','') UPDATE_TIME
+		FROM
+			PER_LOW_SECURITY
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 执业资格记录 -->
+	<select id="qualification" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(QUAL_NAME,'null','') QUAL_NAME,
+            replace(QUAL_LEVEL,'null','') QUAL_LEVEL,
+            replace(QUAL_OBTAIN_DATE,'null','') QUAL_OBTAIN_DATE,
+            replace(MATURITY_DATE,'null','') MATURITY_DATE,
+            replace(REVOKE_DATE,'null','') REVOKE_DATE,
+            replace(ISSUED_COMAPNY,'null','') ISSUED_COMAPNY,
+            replace(COMPANY_LOCATION,'null','') COMPANY_LOCATION
+		FROM
+			PER_QUALIFICATION
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 行政奖励记录 -->
+	<select id="adminiReward" parameterType="String" resultType="Map">
+		SELECT
+		    replace(SERIAL,'null','') SERIAL,
+            replace(REWARD_COMPANY,'null','') REWARD_COMPANY,
+            replace(REWARD_CONTENTS,'null','') REWARD_CONTENTS,
+            replace(REWARD_EFFECTIVE_DATE,'null','') REWARD_EFFECTIVE_DATE,
+            replace(STOP_DATE,'null','') STOP_DATE
+		FROM
+			PER_ADMINI_REWARD
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 车辆交易和抵押记录 -->
+	<select id="vehicleTransaction" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(PLATE_NUM,'null','') PLATE_NUM,
+            replace(ENGINE_NUM,'null','') ENGINE_NUM,
+            replace(BRAND,'null','') BRAND,
+            replace(VEHICLE_TYPE,'null','') VEHICLE_TYPE,
+            replace(USED_TYPE,'null','') USED_TYPE,
+            replace(VEHICLE_STATUS,'null','') VEHICLE_STATUS,
+            replace(MORTGAGE_MARK,'null','') MORTGAGE_MARK,
+            replace(UPDATE_TIME,'null','') UPDATE_TIME
+		FROM
+			PER_VEHICLE_TRANSACTION
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 电信缴费记录 -->
+	<select id="telPay" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL,'null','') SERIAL,
+            replace(TEL_OPERATORS,'null','') TEL_OPERATORS,
+            replace(BUSINESS_TYPE,'null','') BUSINESS_TYPE,
+            replace(BUSINESS_OPEN_DATE,'null','') BUSINESS_OPEN_DATE,
+            replace(CUR_PAY_STATUS,'null','') CUR_PAY_STATUS,
+            replace(CUR_ARREAR_STATUS,'null','') CUR_ARREAR_STATUS,
+            replace(CUR_ARREAR_MON_NUM,'null','') CUR_ARREAR_MON_NUM,
+            replace(ACCOUNT_DATE,'null','') ACCOUNT_DATE,
+            replace(PAY_RECORD,'null','') PAY_RECORD
+		FROM
+			PER_TEL_PAY
+		WHERE
+			REPORT_ID = #{_parameter}
+			
+	</select>
+	<!-- 报告信息 -->
+	<select id="reportDate"  parameterType="String" resultType="pd">
+		select 
+		    replace(REPORT_ID,'null','') REPORT_ID,
+            replace((TO_CHAR(QUERY_TIME,'yyyy-mm-dd HH24:mi:ss')),'null','') QUERY_TIME
+        from
+        	CIFM_FLOW_STATUS
+        WHERE
+			REPORT_ID = #{_parameter}
+				
+	</select>
+	<!--1.贷款贷记卡24个月还款状态存在N -->
+	<select id="repayStatus1" parameterType="String" resultType="pd">
+		<!--SELECT a.REPAY_RECORD,
+      		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE  INSTR (A.REPAY_RECORD, 'N')<![CDATA[>]]>0 
+		       AND a.report_id =#{_parameter}
+		UNION ALL 
+		SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE   INSTR (B.CR_REPAY_RECORD, 'N')<![CDATA[>]]>0 
+		       AND b.report_id =#{_parameter}-->
+		 SELECT 
+			B.REPAY_STATUS REPAY_RECORD,
+			(case A.CUR_ACC_STATUS
+			when '1' then '正常'
+			when '2' then '冻结'
+			when '3' then '止付'
+			when '4' then '销户'
+			when '5' then '呆账'
+			when '6' then '未激活'
+			when '8' then '司法追偿'
+			when '31' then '银行止付'
+			else '其他' end
+			) ACC_STATUS
+		FROM 
+			PER_LOAN_DETAIL A
+		LEFT JOIN 
+			(
+			SELECT SERIAL,REPORT_ID,LISTAGG(REPAY_STATUS) WITHIN GROUP(ORDER BY P_MONTH) REPAY_STATUS
+			FROM PER_CUR_M24_SHOW_INFO GROUP BY SERIAL,REPORT_ID
+			) B
+		ON 
+			A.REPORT_ID = B.REPORT_ID
+			AND A.SERIAL = B.SERIAL
+		WHERE 
+			INSTR (B.REPAY_STATUS, 'N')&gt;0 
+			and regexp_like(a.ACCOUNT_TYPE,'R2|R3') 
+			AND A.REPORT_ID =#{_parameter}
+	</select>
+	<!--贷款贷记卡24个月还款状态存在数字(有逾期) -->
+	<select id="repayStatus" parameterType="String" resultType="pd">
+		<!-- SELECT a.REPAY_RECORD,
+      		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE regexp_instr(A.REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       AND a.report_id =#{_parameter}
+		UNION ALL 
+		SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE regexp_instr(B.CR_REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       AND b.report_id =#{_parameter} -->
+		SELECT 
+			B.REPAY_STATUS REPAY_RECORD,
+			(case A.CUR_ACC_STATUS
+			when '1' then '正常'
+			when '2' then '冻结'
+			when '3' then '止付'
+			when '4' then '销户'
+			when '5' then '呆账'
+			when '6' then '未激活'
+			when '8' then '司法追偿'
+			when '31' then '银行止付'
+			else '其他' end
+			) ACC_STATUS
+		FROM 
+			PER_LOAN_DETAIL A
+		LEFT JOIN 
+			(
+			SELECT SERIAL,REPORT_ID,LISTAGG(REPAY_STATUS) WITHIN GROUP(ORDER BY P_MONTH) REPAY_STATUS
+			FROM PER_CUR_M24_SHOW_INFO GROUP BY SERIAL,REPORT_ID
+			) B
+		ON 
+			A.REPORT_ID = B.REPORT_ID
+			AND A.SERIAL = B.SERIAL
+		WHERE 
+			REGEXP_INSTR(B.REPAY_STATUS,'[0-9]+')&gt;0
+			and regexp_like(a.ACCOUNT_TYPE,'R2|R3') 
+			AND A.REPORT_ID =#{_parameter}
+	</select>
+	<!--5.贷款贷记卡账户状态有呆账 -->
+	<select id="repayStatus5" parameterType="String" resultType="pd">
+		<!-- SELECT a.REPAY_RECORD,
+		       a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE     A.ACC_STATUS != '呆账'
+		       AND a.report_id =#{_parameter}
+		union ALL 
+		SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     B.CR_ACC_STATUS != '呆账'
+		       AND B.report_id = #{_parameter} -->
+		SELECT 
+			B.REPAY_STATUS REPAY_RECORD,
+			(case A.CUR_ACC_STATUS
+			when '1' then '正常'
+			when '2' then '冻结'
+			when '3' then '止付'
+			when '4' then '销户'
+			when '5' then '呆账'
+			when '6' then '未激活'
+			when '8' then '司法追偿'
+			when '31' then '银行止付'
+			else '其他' end
+			) ACC_STATUS
+		FROM 
+			PER_LOAN_DETAIL A
+		LEFT JOIN 
+			(
+			SELECT SERIAL,REPORT_ID,LISTAGG(REPAY_STATUS) WITHIN GROUP(ORDER BY P_MONTH) REPAY_STATUS
+			FROM PER_CUR_M24_SHOW_INFO GROUP BY SERIAL,REPORT_ID
+			) B
+		ON 
+			A.REPORT_ID = B.REPORT_ID
+			AND A.SERIAL = B.SERIAL
+		WHERE 
+			B.REPAY_STATUS = 'B'
+			and regexp_like(a.ACCOUNT_TYPE,'R2|R3') 
+			AND A.REPORT_ID =#{_parameter}
+	</select>
+	<!--2.贷款贷记卡24个月还款状态最大为1&&账户状态没有呆账-->
+	<select id="repayStatus2" parameterType="String" resultType="pd">
+		<!-- SELECT a.REPAY_RECORD,
+      		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE     A.ACC_STATUS != '呆账'
+		       and regexp_instr(A.REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       and regexp_instr(A.REPAY_RECORD,'[2-9]+')<![CDATA[<=]]>0
+		       AND a.report_id =#{_parameter}
+		       union all 
+		       (SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     B.CR_ACC_STATUS != '呆账'
+		       and regexp_instr(B.CR_REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       and regexp_instr(B.CR_REPAY_RECORD,'[2-9]+')<![CDATA[<=]]>0
+		       AND B.report_id =#{_parameter})-->
+		 SELECT 
+			B.REPAY_STATUS REPAY_RECORD,
+			(case A.CUR_ACC_STATUS
+			when '1' then '正常'
+			when '2' then '冻结'
+			when '3' then '止付'
+			when '4' then '销户'
+			when '5' then '呆账'
+			when '6' then '未激活'
+			when '8' then '司法追偿'
+			when '31' then '银行止付'
+			else '其他' end
+			) ACC_STATUS
+		FROM 
+			PER_LOAN_DETAIL A
+		LEFT JOIN 
+			(
+			SELECT SERIAL,REPORT_ID,LISTAGG(REPAY_STATUS) WITHIN GROUP(ORDER BY P_MONTH) REPAY_STATUS
+			FROM PER_CUR_M24_SHOW_INFO GROUP BY SERIAL,REPORT_ID
+			) B
+		ON 
+			A.REPORT_ID = B.REPORT_ID
+			AND A.SERIAL = B.SERIAL
+		WHERE 
+			B.REPAY_STATUS &lt;&gt; 'B'
+			and regexp_instr(B.REPAY_STATUS,'[2-9]+') &lt;= 0
+			and regexp_like(a.ACCOUNT_TYPE,'R2|R3') 
+			AND A.REPORT_ID =#{_parameter}
+	</select>
+	<!--3.贷款贷记卡24个月还款状态最大为2的&&账户状态没有呆账 -->
+	<select id="repayStatus3" parameterType="String" resultType="pd">
+		<!--SELECT a.REPAY_RECORD,
+       		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE     A.ACC_STATUS != '呆账'
+		       and regexp_instr(A.REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       and regexp_instr(A.REPAY_RECORD,'[2-9]+')<![CDATA[<=]]>0
+		       AND a.report_id = #{_parameter}
+		       union all 
+		       (SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     B.CR_ACC_STATUS != '呆账'
+		       and regexp_instr(B.CR_REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       and regexp_instr(B.CR_REPAY_RECORD,'[3-9]+')<![CDATA[<=]]>0
+		       AND B.report_id = #{_parameter})-->
+		 SELECT 
+			B.REPAY_STATUS REPAY_RECORD,
+			(case A.CUR_ACC_STATUS
+			when '1' then '正常'
+			when '2' then '冻结'
+			when '3' then '止付'
+			when '4' then '销户'
+			when '5' then '呆账'
+			when '6' then '未激活'
+			when '8' then '司法追偿'
+			when '31' then '银行止付'
+			else '其他' end
+			) ACC_STATUS
+		FROM 
+			PER_LOAN_DETAIL A
+		LEFT JOIN 
+			(
+			SELECT SERIAL,REPORT_ID,LISTAGG(REPAY_STATUS) WITHIN GROUP(ORDER BY P_MONTH) REPAY_STATUS
+			FROM PER_CUR_M24_SHOW_INFO GROUP BY SERIAL,REPORT_ID
+			) B
+		ON 
+			A.REPORT_ID = B.REPORT_ID
+			AND A.SERIAL = B.SERIAL
+		WHERE 
+			not (B.REPAY_STATUS = 'B' 
+			or regexp_instr(B.REPAY_STATUS,'[3-9]+')&gt;0)
+			and regexp_like(a.ACCOUNT_TYPE,'R2|R3') 
+			AND A.REPORT_ID =#{_parameter}
+	</select>
+	<!--4.有呆账||24个月还款状态有大于2的-->
+	<select id="repayStatus4" parameterType="String" resultType="pd">
+		<!-- SELECT a.REPAY_RECORD,
+       		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE    ( A.ACC_STATUS = '呆账'
+		       or regexp_instr(A.REPAY_RECORD,'[3-9]+')<![CDATA[>]]>0)
+		       AND a.report_id =#{_parameter}
+		union ALL 
+		SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     (B.CR_ACC_STATUS= '呆账'
+		       or regexp_instr(B.CR_REPAY_RECORD,'[3-9]+')<![CDATA[>]]>0)
+		      AND B.report_id =#{_parameter}-->
+		 SELECT 
+			B.REPAY_STATUS REPAY_RECORD,
+			(case A.CUR_ACC_STATUS
+			when '1' then '正常'
+			when '2' then '冻结'
+			when '3' then '止付'
+			when '4' then '销户'
+			when '5' then '呆账'
+			when '6' then '未激活'
+			when '8' then '司法追偿'
+			when '31' then '银行止付'
+			else '其他' end
+			) ACC_STATUS
+		FROM 
+			PER_LOAN_DETAIL A
+		LEFT JOIN 
+			(
+			SELECT SERIAL,REPORT_ID,LISTAGG(REPAY_STATUS) WITHIN GROUP(ORDER BY P_MONTH) REPAY_STATUS
+			FROM PER_CUR_M24_SHOW_INFO GROUP BY SERIAL,REPORT_ID
+			) B
+		ON 
+			A.REPORT_ID = B.REPORT_ID
+			AND A.SERIAL = B.SERIAL
+		WHERE 
+			(B.REPAY_STATUS = 'B' 
+			or regexp_instr(B.REPAY_STATUS,'[3-9]+')&gt;0)
+			and regexp_like(a.ACCOUNT_TYPE,'R2|R3') 
+			AND A.REPORT_ID =#{_parameter}
+	</select>
+	<!--1.贷款贷记卡24个月还款状态存在N且没有数字&&账户状态没有呆账 -->
+	<!-- <select id="repayStatus1" parameterType="String" resultType="pd">
+		SELECT COUNT (1) repay_count from(
+		SELECT a.REPAY_RECORD,
+      		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE     A.ACC_STATUS != '呆账'
+		       AND INSTR (A.REPAY_RECORD, 'N')<![CDATA[>]]>0 
+		       and regexp_instr(A.REPAY_RECORD,'[0-9]+')<![CDATA[<=]]>0
+		       AND a.report_id =#{_parameter}
+		UNION ALL 
+		SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     B.CR_ACC_STATUS != '呆账'
+		       AND INSTR (B.CR_REPAY_RECORD, 'N')<![CDATA[>]]>0 
+		       and regexp_instr(B.CR_REPAY_RECORD,'[0-9]+')<![CDATA[<=]]>0
+		       AND b.report_id =#{_parameter})
+	</select> -->
+	<!--贷款和贷记卡总条数 -->
+	<!-- <select id="repayStatus" parameterType="String" resultType="pd">
+		select count(1) total from (SELECT a.REPAY_RECORD, a.ACC_STATUS
+          FROM PER_LOAN_DETAIL A
+         WHERE A.report_id =#{_parameter}
+        UNION ALL
+        SELECT B.CR_REPAY_RECORD, B.CR_ACC_STATUS
+          FROM PER_CREDIT_DETAIL B
+         WHERE b.report_id =#{_parameter})
+	</select> -->
+	<!--5.贷款贷记卡24个月还款状态不存在N和数字且账户账户状态没有呆账 -->
+	<!-- <select id="repayStatus5" parameterType="String" resultType="pd">
+		SELECT COUNT (1) repay_count from (
+		SELECT a.REPAY_RECORD,
+		       a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE     A.ACC_STATUS != '呆账'
+		       AND INSTR (A.REPAY_RECORD, 'N')<![CDATA[<=]]>0 
+		       and regexp_instr(A.REPAY_RECORD,'[0-9]+')<![CDATA[<=]]>0
+		       AND a.report_id =#{_parameter}
+		union ALL 
+		SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     B.CR_ACC_STATUS != '呆账'
+		       AND INSTR (B.CR_REPAY_RECORD, 'N')<![CDATA[<=]]>0 
+		       and regexp_instr(B.CR_REPAY_RECORD,'[0-9]+')<![CDATA[<=]]>0
+		       AND B.report_id = #{_parameter})
+	</select> -->
+	<!--2.贷款贷记卡24个月还款状态最大为1&&账户状态没有呆账-->
+	<!-- <select id="repayStatus2" parameterType="String" resultType="pd">
+		SELECT COUNT (1) repay_count from (
+		SELECT a.REPAY_RECORD,
+      		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE     A.ACC_STATUS != '呆账'
+		       and regexp_instr(A.REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       and regexp_instr(A.REPAY_RECORD,'[2-9]+')<![CDATA[<=]]>0
+		       AND a.report_id =#{_parameter}
+		       union all 
+		       (SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     B.CR_ACC_STATUS != '呆账'
+		       and regexp_instr(B.CR_REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       and regexp_instr(B.CR_REPAY_RECORD,'[2-9]+')<![CDATA[<=]]>0
+		       AND B.report_id =#{_parameter}))
+	</select> -->
+	<!--3.贷款贷记卡24个月还款状态最大为2的&&账户状态没有呆账 -->
+	<!-- <select id="repayStatus3" parameterType="String" resultType="pd">
+		SELECT COUNT (1) repay_count from (
+		SELECT a.REPAY_RECORD,
+       		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE     A.ACC_STATUS != '呆账'
+		       and regexp_instr(A.REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       and regexp_instr(A.REPAY_RECORD,'[2-9]+')<![CDATA[<=]]>0
+		       AND a.report_id = #{_parameter}
+		       union all 
+		       (SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     B.CR_ACC_STATUS != '呆账'
+		       and regexp_instr(B.CR_REPAY_RECORD,'[0-9]+')<![CDATA[>]]>0
+		       and regexp_instr(B.CR_REPAY_RECORD,'[3-9]+')<![CDATA[<=]]>0
+		       AND B.report_id = #{_parameter}))
+	</select> -->
+	<!--4.有呆账||24个月还款状态有大于2的-->
+	<!-- <select id="repayStatus4" parameterType="String" resultType="pd">
+		SELECT COUNT (1) repay_count from (
+		SELECT a.REPAY_RECORD,
+       		   a.ACC_STATUS
+		  FROM PER_LOAN_DETAIL a
+		 WHERE    ( A.ACC_STATUS = '呆账'
+		       or regexp_instr(A.REPAY_RECORD,'[3-9]+')<![CDATA[>]]>0)
+		       AND a.report_id =#{_parameter}
+		union ALL 
+		SELECT B.CR_REPAY_RECORD,
+		       B.CR_ACC_STATUS
+		  FROM PER_CREDIT_DETAIL B
+		 WHERE     (B.CR_ACC_STATUS= '呆账'
+		       or regexp_instr(B.CR_REPAY_RECORD,'[3-9]+')<![CDATA[>]]>0)
+		      AND B.report_id =#{_parameter})
+	</select> -->
+	<!--过去两年中累计逾期次数（统计24个月还款状态为数字的个数）-->
+	<select id="twoYearOverdueNum" parameterType="String" resultType="pd">
+		<!-- SELECT SUM (cont) YA2_OVERDUE_NUM
+		  FROM (SELECT a.REPAY_RECORD,
+		               a.ACC_STATUS,
+		                nvl(LENGTH (a.REPAY_RECORD)
+		               - LENGTH (TRANSLATE (a.REPAY_RECORD, '0123456789', ' ')),0)
+		                  cont
+		          FROM PER_LOAN_DETAIL a
+		         WHERE a.report_id =#{_parameter}
+		        UNION ALL
+		        SELECT B.CR_REPAY_RECORD,
+		               B.CR_ACC_STATUS,
+		                nvl( LENGTH (B.CR_REPAY_RECORD)
+		               - LENGTH (TRANSLATE (B.CR_REPAY_RECORD, '0123456789', ' ')),0)
+		                  cont
+		          FROM PER_CREDIT_DETAIL B
+		         WHERE B.report_id =#{_parameter}) -->
+		  SELECT 
+		  	COUNT(1) YA2_OVERDUE_NUM
+		  FROM 
+		  	PER_CUR_M24_SHOW_INFO 
+		  WHERE 
+		  	REGEXP_LIKE(REPAY_STATUS,'[0-9]')
+		  	AND REPORT_ID =#{_parameter}
+	</select>
+	<!--首次与银行（含他行）建立信贷关系年份所有业务的最早开立日期-->
+	<select id="firstCredit" parameterType="String" resultType="pd">
+		<!--select LOANS_DATE FIRST_CREDIT from 
+			(select LOANS_DATE 
+			  from PER_LOAN_DETAIL where report_id = #{_parameter}
+			 union all  
+			  select CR_REL_CARD_DATE 
+			  from PER_CREDIT_DETAIL where report_id = #{_parameter}
+			  union all  
+			  select Q_CR_REL_CARD_DATE 
+			  from PER_Q_CREDIT_DETAIL where report_id =#{_parameter})
+			  order by LOANS_DATE Asc-->
+		SELECT 
+			MIN(CREATE_DATE) FIRST_CREDIT 
+		FROM 
+			PER_LOAN_DETAIL
+		WHERE REPORT_ID =#{_parameter}
+	</select>
+	<!--为他人贷款合同担保金额汇总-->
+	<select id="otherLoanGuaranteeAmount" parameterType="String" resultType="pd">
+		<!--select GUARANTEE_SUM OTHER_LOAN_GUARANTEE_AMOUNT FROM PER_LOAN_SUMMARY WHERE report_id =#{_parameter}-->
+		select sum(replace(REPAY_SUM,',','')) OTHER_LOAN_GUARANTEE_AMOUNT from PER_REPAYER WHERE report_id =#{_parameter}
+	</select>
+	<!--最近两年内征信报告查询次数-->
+	<select id="yearQueryNum" parameterType="String" resultType="pd">
+		<!--select YEAR_LOAN_QUERY_NUM+YEAR_OWN_QUERY_NUM+YEAR_SPECIAL_QUERY_NUM YA2_QUERY_NUM from PER_QUERY_SUMMARY
+           where report_id =#{_parameter}-->
+         SELECT YEAR_SPECIAL_QUERY_NUM+YEAR_AFTER_LOAN_QUERY_NUM+YEAR_ASSURE_QUERY_NUM YA2_QUERY_NUM FROM PER_QUERY_SUMMARY
+         WHERE REPORT_ID =#{_parameter}
+	</select>
+	<!--未销户贷记卡账户数汇总,未销户贷记卡发卡机构数汇总(一代和二代字段一样)-->
+	<select id="nsCreditCard" parameterType="String" resultType="pd">
+		select N_CR_CARD_ORG_NUM  NS_CREDIT_CARD_ORG_NUM,N_CR_CARD_ACC_NUM  NS_CREDIT_CARD_NUM FROM PER_LOAN_SUMMARY
+		WHERE report_id =#{_parameter}
+	</select>
+	<!--准贷记卡透支180天以上未付余额汇总-->
+	<select id="noPayAmount" parameterType="String" resultType="pd">
+		<!--SELECT SUM (cunt) NO_PAY_AMOUNT_180
+		  FROM (SELECT NVL (REPLACE (UNREPAY_BALANCE, ',', ''), 0) cunt
+		          FROM PER_Q_CREDIT_DETAIL
+		         WHERE report_id = #{_parameter})-->
+		SELECT 
+			NVL(SUM(CUR_L_OVERDRAFT_PRINCIPAL),0) NO_PAY_AMOUNT_180
+		FROM 
+			PER_LOAN_DETAIL 
+		WHERE 
+			ACCOUNT_TYPE='R3'
+			AND REPORT_ID = #{_parameter}  
+	</select>
+	<!--未结清贷款汇总 -->
+	<select id="nsLoanNum" parameterType="String" resultType="pd">
+		<!-- SELECT 
+		         PER_HOUSE_LOAN_NUM
+		       + PER_COMME_LOAN_NUM
+		       + OTHER_LOAN_NUM
+		       + CR_CARD_ACC_NUM
+		       + Q_CR_CARD_ACC_NUM LOAN_ACCOUNT_NUM,
+		       UNCLEAR_LOAN_NUM NS_LOAN_NUM,
+		       LOAN_COMPANY_ORG_NUM NS_LOAN_ORG_NUM,
+		       LOAN_CONTRACT_TOTAL NS_LOAN_AMOUNT,
+		       LOAN_BANLANCE NS_LOAN_BALANCE     
+		  FROM PER_LOAN_SUMMARY
+		 WHERE report_id = #{_parameter} -->
+		 SELECT 
+		       PRO_ACC_TOTAL LOAN_ACCOUNT_NUM,
+		       UNCLEAR_LOAN_NUM NS_LOAN_NUM,
+		       LOAN_COMPANY_ORG_NUM NS_LOAN_ORG_NUM,
+		       LOAN_CONTRACT_TOTAL NS_LOAN_AMOUNT,
+		       LOAN_BANLANCE NS_LOAN_BALANCE     
+		  FROM PER_LOAN_SUMMARY
+		 WHERE report_id = #{_parameter}
+		 
+	</select>
+	<!--未结清贷款当前逾期总额汇总-->
+	<select id="nsLoanOverdue" parameterType="String" resultType="pd">
+		<!--SELECT SUM (COUNT) NS_LOAN_OVERDUE_AMOUNT
+		  FROM (SELECT NVL (REPLACE (CUR_OVER_AMOUNT, ',', ''), 0) COUNT
+		          FROM PER_LOAN_DETAIL
+		         WHERE report_id = #{_parameter})-->
+		 SELECT 
+		 	  NVL(SUM(CUR_CUR_OVER_AMOUNT),0) NS_LOAN_OVERDUE_AMOUNT
+		 FROM 
+		 	  PER_LOAN_DETAIL 
+	     WHERE 
+	          REPORT_ID = #{_parameter}
+	</select>
+	<!--未销户贷记卡授信总额(一代和二代字段一样) -->
+	<select id="NcardSum" parameterType="String" resultType="pd">
+		SELECT 
+		         N_CR_CARD_CRED_SUM CREDITCARDTOTALSUM     
+		  FROM PER_LOAN_SUMMARY
+		 WHERE report_id = #{_parameter}
+	</select>
+</mapper>

@@ -1,0 +1,48 @@
+@CHARSET "UTF-8";
+
+div.zTreeDemoBackground {
+	width: 250px;
+	height: 362px;
+	text-align: left;
+}
+
+ul.ztree {
+	margin-top: 10px;
+	border: 1px solid #617775;
+	background: white;
+	width: 220px;
+	height: 360px;
+	overflow-y: scroll;
+	overflow-x: auto;
+}
+
+a.treeOp {
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	float: right;
+}
+
+ul.ztree.onelevel li {
+	list-style-type: none;
+	padding-left: 3px;
+}
+
+ul.ztree.onelevel li span.button.switch {
+	display: none;
+}
+
+span.dropdown {
+	display: inline-block;
+	border: solid 1px gray;
+	padding: 0 12px 0 0;
+	background-image: url('http://localhost:8080/bicenterNew/css/base/images/arrow_d.gif');
+	/*background-image: url('<%=basePath%>css/base/images/arrow_d.gif');*/
+	background-repeat: no-repeat;
+	background-position: right center;
+	cursor: pointer;
+}
+
+span.dropdown input {
+	margin: 0;
+	border: none;
+}

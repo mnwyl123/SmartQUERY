@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QuerySetMapper">
+    
+   <!-- 用户查询次数设置列表 -->
+	<select id="QuerySetlistPage" parameterType="page" resultType="pd" >
+		SELECT
+            USER_ID,
+            USERNAME,
+            QUERY_MIN_COUNT,
+            QUERY_MULTIPLE,
+            QUERY_MONTH,
+            QUERY_COUNT,
+            AVG_QUERY_COUNT,
+            USER_TYPE
+        FROM
+            CIFM_QUERY_FREQUENCY 
+        WHERE
+        	COMPANY = #{pd.COMPANY}
+        	AND QUERY_MONTH='new'
+			<if test="pd.USERNAME!=null and pd.USERNAME!=''">
+			    AND 
+			    	USERNAME = #{pd.USERNAME}
+			</if>
+			<if test="pd.USER_TYPE!=null and pd.USER_TYPE!=''">
+			    AND 
+			    	USER_TYPE = #{pd.USER_TYPE}
+			</if>
+		ORDER BY USER_TYPE
+	</select>
+	
+   <!-- 新增 -->
+	<insert id="SaveUserInfo" parameterType="pd">
+		INSERT INTO CIFM_QUERY_FREQUENCY
+			(
+	            USER_ID,
+	            USERNAME,
+	            QUERY_MIN_COUNT,
+	            QUERY_MULTIPLE,
+	            QUERY_MONTH,
+	            COMPANY,
+	            USER_TYPE
+	         )
+        VALUES
+        	(
+        		#{USER_ID},
+	            #{USERNAME},
+	            #{QUERY_MIN_COUNT},
+	            #{QUERY_MULTIPLE},
+	            'new',
+	            #{COMPANY},
+	            #{USER_TYPE}
+        	)
+	</insert>
+ 	<!-- 修改 -->
+	<update id="UpdateUserInfo" parameterType="pd">
+		UPDATE
+			CIFM_QUERY_FREQUENCY
+		SET
+				QUERY_MIN_COUNT=#{QUERY_MIN_COUNT},
+	            QUERY_MULTIPLE=#{QUERY_MULTIPLE},
+	            AVG_QUERY_COUNT=#{AVG_QUERY_COUNT}
+	    WHERE
+	    	USER_ID = #{USER_ID} AND COMPANY = #{COMPANY} AND USER_TYPE=#{USER_TYPE} AND QUERY_MONTH='new'
+	</update>
+	
+	<!-- 判断用户 名是否存在 -->
+	<select id="queryUserName" parameterType="pd" resultType="pd">
+		SELECT 
+			USER_ID,
+			USERNAME,
+			COMPANY
+		FROM 
+			SYS_USER
+	    WHERE
+	    	USERNAME = #{USERNAME} AND COMPANY = #{COMPANY}
+	</select>
+	
+	<!-- 判断用户 名是否存在当前表中 -->
+	<select id="queryUser" parameterType="pd" resultType="pd">
+		SELECT 
+			USER_ID,
+			USERNAME
+		FROM 
+			CIFM_QUERY_FREQUENCY
+	    WHERE
+	    	USERNAME = #{USERNAME} AND COMPANY = #{COMPANY} AND USER_TYPE=#{USER_TYPE}
+	</select>
+	
+	<!-- 提取当前用户信息 -->
+	<select id="queryUserInfo" parameterType="pd" resultType="pd">
+		SELECT 
+			USER_ID,
+            USERNAME,
+            QUERY_MIN_COUNT,
+            QUERY_MULTIPLE,
+            QUERY_MONTH,
+            QUERY_COUNT,
+            AVG_QUERY_COUNT,
+            COMPANY,
+            USER_TYPE
+		FROM 
+			CIFM_QUERY_FREQUENCY
+	    WHERE
+	    	USER_ID = #{USER_ID} AND USER_TYPE=#{USER_TYPE} AND COMPANY = #{COMPANY} AND QUERY_MONTH=#{QUERY_MONTH}
+	</select>
+	<!-- 删除 -->
+	<delete id="deleteUserInfo" parameterType="pd">
+		DELETE FROM
+			CIFM_QUERY_FREQUENCY
+	    WHERE
+	    	USER_ID = #{USER_ID} AND USER_TYPE=#{USER_TYPE} AND QUERY_MONTH=#{QUERY_MONTH} AND COMPANY = #{COMPANY}
+	</delete>
+</mapper>

@@ -1,0 +1,9 @@
+B2.0.0BH000000000001HBF0000000001120160301123118G1102016030100000001000000000000
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+	<Msg>
+		<ResultCode>AAA000</ResultCode>
+		<ResultDesc>处理成功</ResultDesc>
+		<ServiceReturnCode>0123456789</ServiceReturnCode>
+	</Msg>
+</Document>

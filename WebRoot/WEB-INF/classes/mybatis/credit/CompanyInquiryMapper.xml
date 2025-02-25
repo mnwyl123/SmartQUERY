@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CompanyInquiryMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		CIFM_COMPANY_INFO
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		  ID,
+		  COMPANY_NAME,
+		  CREDENTIALS_NO_TYPE,
+		  CHINA_CREDIT_CODE,
+		  QUERY_REASON,
+		  QUERY_VERSION,
+		  WARRANT_MATURITY_DATE,
+		  CUST_MANAGER,
+		  QUERY_TYPE 
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},	
+		#{COMPANY_NAME},
+		#{CREDENTIALS_NO_TYPE},
+		#{CHINA_CREDIT_CODE},	
+		#{QUERY_REASON},	
+		#{QUERY_VERSION},		
+		#{WARRANT_MATURITY_DATE},
+		#{CUST_MANAGER},	
+		#{QUERY_TYPE}
+		
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	<!--存入流程状态表-->
+	<insert id="saveToFs" parameterType="pd">
+		insert into CIFM_FLOW_STATUS
+		(ID,
+	         USER_SYS_ID,
+	         ORG_ID,
+	  		 APPLICATION_TIME,
+			CHECK_SYS_ID,
+	  		STATUS,
+	  		IP,
+	  		MAC,
+	  		ANNEX,
+	  		INTERNAL,
+	  		CLIENT_TYPE,
+	  		IS_WX_CHECK,
+	  		CHANNEL_ID,
+	  		CHANNEL_QUERY_NO,
+	  		WARRANT,
+	  		LOAN_APPLICATION,
+	  		IDENTITY_DOCUMENT,
+	  		PRO_ID) 
+  		values (
+	  		#{ID},
+	        #{USER_SYS_ID},
+	        #{ORG_ID},
+	        STR_TO_DATE(#{APPLICATION_TIME},'%Y%m%d %H:%i:%s'),
+			#{CHECK_SYS_ID},
+	  		#{STATUS},
+	  		#{IP},
+	  		#{MAC},
+	  		#{ANNEX},
+	  		#{INTERNAL},
+	  		#{CLIENT_TYPE},
+	  		#{IS_WX_CHECK},
+	  		#{CHANNEL_ID},
+	  		#{CHANNEL_QUERY_NO},
+	  		#{WARRANT},
+	  		#{LOAN_APPLICATION},
+	  		#{IDENTITY_DOCUMENT},
+	  		#{PRO_ID}
+		)
+	</insert>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			  A.ID,
+			  A.COMPANY_NAME,
+			  A.CREDENTIALS_NO_TYPE,
+			  A.CHINA_CREDIT_CODE,
+			  A.QUERY_REASON,
+			  A.QUERY_VERSION,
+			  A.WARRANT_MATURITY_DATE,
+			  A.CUST_MANAGER,
+			  A.QUERY_TYPE,
+			  B.CHECK_SYS_ID,
+			  B.USER_SYS_ID,
+			  B.IS_WX_CHECK,
+			  B.INTERNAL,
+			  B.REPORT_ID,
+			  B.WARRANT,
+        	  B.LOAN_APPLICATION,
+        	  B.IDENTITY_DOCUMENT,
+        	  B.PRO_ID,
+        	  B.QUERY_NO,
+        	  right(B.WARRANT,3) as WARRANTTYPE,
+        	  right(B.LOAN_APPLICATION,3) as LOAN_APPLICATIONTYPE,
+        	  right(B.IDENTITY_DOCUMENT,3) as IDENTITY_DOCUMENTTYPE    
+		from CIFM_COMPANY_INFO A
+		INNER JOIN CIFM_FLOW_STATUS B
+		ON A.ID = B.ID
+		where 
+			A.ID = #{ID}
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findByIdHis" parameterType="pd" resultType="pd">
+		select 
+			  A.ID,
+			  A.COMPANY_NAME COMPANY_NAME,
+			  A.CREDENTIALS_NO_TYPE,
+			  A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+			  A.QUERY_REASON,
+			  A.QUERY_VERSION,
+			  A.WARRANT_MATURITY_DATE,
+			  A.CUST_MANAGER,
+			  A.QUERY_TYPE,
+			  B.CHECK_SYS_ID,
+			  B.USER_SYS_ID,
+			  B.IS_WX_CHECK,
+			  B.INTERNAL,
+			  B.REPORT_ID   
+		from CIFM_COMPANY_INFO_HIS A
+		INNER JOIN CIFM_FLOW_STATUS_HIS B
+		ON A.ID = B.ID
+		where 
+			A.ID = #{ID}
+	</select>
+	<!-- 获取查询编码 -->
+	<select id="findId" parameterType="pd" resultType="pd">
+		select to_char(max(FIND_ID)+1) FIND_ID FROM (select to_number(substr(ID,-8)) FIND_ID from CIFM_FLOW_STATUS
+        where 
+            subStr(ID,0,8)=#{DATA_DATE})
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT A.ID,
+		  A.COMPANY_NAME COMPANY_NAME,
+		  A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+		  A.QUERY_REASON,
+		  A.QUERY_VERSION,
+		  A.WARRANT_MATURITY_DATE,
+		  A.CUST_MANAGER,
+		  A.QUERY_TYPE,
+		  A.CREDENTIALS_NO_TYPE,
+		  B.STATUS,
+		  B.QUERY_TIME,
+		  B.CHECK_REJECT_RESON,
+		  B.PRO_ID,
+		  p.PRODUCT_NAME 
+		  FROM CIFM_COMPANY_INFO A
+		  INNER JOIN CIFM_FLOW_STATUS B
+		ON A.ID = B.ID
+		INNER JOIN SYS_USER_ORG C ON B.USER_SYS_ID= C.USER_ID INNER JOIN SYS_ORG D ON C.ORG_ID=D.ORG_ID
+		left join cifm_product p on B.PRO_ID = p.product_id
+        where 1=1 and C.ORG_ID=#{pd.ORG_ID} and B.USER_SYS_ID=#{pd.USERID} AND D.COMPANY=#{pd.company}
+        and B.STATUS in('00','01','03','04','07')
+        <!-- and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03' or B.STATUS='04' or B.STATUS='07')
+        <if test="pd.isHistory!=1">
+			 and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03')
+		</if>
+		<if test="pd.isHistory=1">
+			 and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03')
+		</if> -->
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''">
+			and
+				COMPANY_NAME=#{pd.COMPANY_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_NO_TYPE!= null and pd.CREDENTIALS_NO_TYPE != ''">
+			and
+				CREDENTIALS_NO_TYPE=#{pd.CREDENTIALS_NO_TYPE}
+		</if>
+		<if test="pd.CHINA_CREDIT_CODE!= null and pd.CHINA_CREDIT_CODE != ''">
+			and
+				CHINA_CREDIT_CODE=#{pd.CHINA_CREDIT_CODE}
+		</if>
+		order by B.STATUS DESC
+	</select>
+	<!-- 列表 -->
+	<select id="hisdatalistPage" parameterType="page" resultType="pd">
+		SELECT A.ID,
+		  A.COMPANY_NAME COMPANY_NAME,
+		  A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+		  A.QUERY_REASON,
+		  A.QUERY_VERSION,
+		  A.WARRANT_MATURITY_DATE,
+		  A.CUST_MANAGER,
+		  A.QUERY_TYPE,
+		  A.CREDENTIALS_NO_TYPE,
+		  B.STATUS,
+		  B.QUERY_TIME,
+		  B.CHECK_REJECT_RESON,
+		  B.PRO_ID,
+		  p.PRODUCT_NAME 
+		  FROM CIFM_COMPANY_INFO A
+		  INNER JOIN CIFM_FLOW_STATUS B
+		ON A.ID = B.ID
+		INNER JOIN SYS_USER_ORG C ON B.USER_SYS_ID= C.USER_ID INNER JOIN SYS_ORG D ON C.ORG_ID=D.ORG_ID
+		left join cifm_product p on B.PRO_ID = p.product_id
+        where 1=1 and C.ORG_ID=#{pd.ORG_ID} and B.USER_SYS_ID=#{pd.USERID} AND D.COMPANY=#{pd.company}
+        and B.STATUS in('01','03','04','07')
+        <!-- and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03' or B.STATUS='04' or B.STATUS='07')
+        <if test="pd.isHistory!=1">
+			 and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03')
+		</if>
+		<if test="pd.isHistory=1">
+			 and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03')
+		</if> -->
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''">
+			and
+				COMPANY_NAME=#{pd.COMPANY_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_NO_TYPE!= null and pd.CREDENTIALS_NO_TYPE != ''">
+			and
+				CREDENTIALS_NO_TYPE=#{pd.CREDENTIALS_NO_TYPE}
+		</if>
+		<if test="pd.CHINA_CREDIT_CODE!= null and pd.CHINA_CREDIT_CODE != ''">
+			and
+				CHINA_CREDIT_CODE=#{pd.CHINA_CREDIT_CODE}
+		</if>
+		order by B.STATUS DESC
+	</select>
+	<!-- 列表 -->
+	<select id="historyDatalistPage" parameterType="page" resultType="pd">
+		SELECT A.ID,
+		  A.COMPANY_NAME COMPANY_NAME,
+		  A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+		  A.QUERY_REASON,
+		  A.QUERY_VERSION,
+		  A.WARRANT_MATURITY_DATE,
+		  A.CUST_MANAGER,
+		  A.QUERY_TYPE,
+		  A.CREDENTIALS_NO_TYPE,
+		  B.STATUS,
+		  B.QUERY_TIME,
+		  B.CHECK_REJECT_RESON,
+		  B.PRO_ID,
+		  p.PRODUCT_NAME 
+		  FROM CIFM_COMPANY_INFO A
+		  INNER JOIN CIFM_FLOW_STATUS B
+		ON A.ID = B.ID
+		INNER JOIN SYS_USER_ORG C ON B.USER_SYS_ID= C.USER_ID INNER JOIN SYS_ORG D ON C.ORG_ID=D.ORG_ID
+		left join cifm_product p on B.PRO_ID = p.product_id
+        where 1=1 and C.ORG_ID=#{pd.ORG_ID} and B.USER_SYS_ID=#{pd.USERID} AND D.COMPANY=#{pd.company}
+        and B.STATUS not in('00','01','03','04','07')
+        <!--and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03' and B.STATUS!='04' and B.STATUS!='07')
+        <if test="pd.isHistory!=1">
+			 and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03')
+		</if>
+		<if test="pd.isHistory=1">
+			 and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03')
+		</if> -->
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''">
+			and
+				COMPANY_NAME=#{pd.COMPANY_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_NO_TYPE!= null and pd.CREDENTIALS_NO_TYPE != ''">
+			and
+				CREDENTIALS_NO_TYPE=#{pd.CREDENTIALS_NO_TYPE}
+		</if>
+		<if test="pd.CHINA_CREDIT_CODE!= null and pd.CHINA_CREDIT_CODE != ''">
+			and
+				CHINA_CREDIT_CODE=#{pd.CHINA_CREDIT_CODE}
+		</if>
+		order by B.STATUS DESC
+	</select>
+	<select id="queryhistoryDatalistPage" parameterType="page" resultType="pd">
+		SELECT A.ID,
+		  A.COMPANY_NAME COMPANY_NAME,
+		  A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,
+		  A.QUERY_REASON,
+		  A.QUERY_VERSION,
+		  A.WARRANT_MATURITY_DATE,
+		  A.CUST_MANAGER,
+		  A.QUERY_TYPE,
+		  A.CREDENTIALS_NO_TYPE,
+		  B.STATUS,
+		  B.QUERY_TIME,
+		  B.CHECK_REJECT_RESON 
+		  FROM CIFM_COMPANY_INFO_HIS A
+		  INNER JOIN CIFM_FLOW_STATUS_HIS B
+		ON A.ID = B.ID
+		INNER JOIN SYS_USER_ORG C ON B.USER_SYS_ID= C.USER_ID INNER JOIN SYS_ORG D ON C.ORG_ID=D.ORG_ID
+        where 1=1 and C.ORG_ID=#{pd.ORG_ID} and B.USER_SYS_ID=#{pd.USERID} AND D.COMPANY=#{pd.company}
+        and B.STATUS not in('00','01','03','04','07')
+        <!-- and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03' and B.STATUS!='04' and B.STATUS!='07')
+        <if test="pd.isHistory!=1">
+			 and (B.STATUS='00' or B.STATUS='01' or B.STATUS='03')
+		</if>
+		<if test="pd.isHistory=1">
+			 and (B.STATUS!='00' and B.STATUS!='01' and B.STATUS!='03')
+		</if> -->
+		<if test="pd.COMPANY_NAME!= null and pd.COMPANY_NAME != ''">
+			and
+				COMPANY_NAME=#{pd.COMPANY_NAME}
+		</if>
+		<if test="pd.CREDENTIALS_NO_TYPE!= null and pd.CREDENTIALS_NO_TYPE != ''">
+			and
+				CREDENTIALS_NO_TYPE=#{pd.CREDENTIALS_NO_TYPE}
+		</if>
+		<if test="pd.CHINA_CREDIT_CODE!= null and pd.CHINA_CREDIT_CODE != ''">
+			and
+				CHINA_CREDIT_CODE=#{pd.CHINA_CREDIT_CODE}
+		</if>
+		order by B.STATUS DESC
+	</select>
+	<!-- 修改 -->
+	<update id="update" parameterType="pd" >
+		UPDATE
+			CIFM_COMPANY_INFO
+			set 	
+		        COMPANY_NAME=#{COMPANY_NAME},		
+				CREDENTIALS_NO_TYPE=#{CREDENTIALS_NO_TYPE},
+				CHINA_CREDIT_CODE=#{CHINA_CREDIT_CODE},	
+				QUERY_REASON=#{QUERY_REASON},	
+				QUERY_VERSION=#{QUERY_VERSION},		
+				WARRANT_MATURITY_DATE=#{WARRANT_MATURITY_DATE},
+				CUST_MANAGER=#{CUST_MANAGER},	
+				QUERY_TYPE=#{QUERY_TYPE}
+			where 
+				ID=#{ID}
+	</update>
+	<!-- 修改 -->
+	<update id="updateFs" parameterType="pd" >
+		UPDATE
+			CIFM_FLOW_STATUS
+			set 
+				CHANNEL_ID=#{CHANNEL_ID},
+				CHECK_SYS_ID=#{CHECK_SYS_ID}
+			<if test="WARRANT!= null and WARRANT != ''">
+				,
+				WARRANT=#{WARRANT}
+			</if>
+			<if test="LOAN_APPLICATION!= null and LOAN_APPLICATION != ''">
+				,
+				LOAN_APPLICATION=#{LOAN_APPLICATION}
+			</if>
+			<if test="IDENTITY_DOCUMENT!= null and IDENTITY_DOCUMENT != ''">
+				,
+				IDENTITY_DOCUMENT=#{IDENTITY_DOCUMENT}
+			</if>	
+			<if test="IS_WX_CHECK!= null and IS_WX_CHECK != ''">
+				,
+				IS_WX_CHECK=#{IS_WX_CHECK}
+			</if>
+			where 
+				ID=#{ID}
+	</update>	
+	<!-- 提交审核 -->
+	<update id="updateStatus" parameterType="pd" >
+		UPDATE
+			CIFM_FLOW_STATUS
+			set 
+				STATUS=#{STATUS}		
+			where 
+				ID=#{ID}
+	</update>	
+	<!-- 删除流程表 -->
+	<delete id="deleteFs" parameterType="pd">
+	    delete from CIFM_FLOW_STATUS
+	    where ID=#{ID}
+	</delete>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+	    delete from CIFM_COMPANY_INFO
+	    where ID=#{ID}
+	</delete>
+</mapper>

@@ -1,0 +1,11 @@
+B2.0.0BH000000000001HBF0000000001120160301123118F2022016030100000001000000000000
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+<Msg>
+<FileName> HBF0000000001120160301F2010010</FileName>
+<ResultCode>AAA000</ResultCode>
+<ResultDesc>查询成功</ResultDesc>
+<StateCode>01</StateCode>
+<StateDesc>文件读取失败</StateDesc>
+</Msg>
+</Document>

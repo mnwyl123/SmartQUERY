@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrawlerPerInterfaceMapper">
+	<!-- 贷款  -->
+	<select id="loanDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+            replace(SERIAL,'null','') SERIAL,
+            replace(LOANS_DATE,'null','') LOANS_DATE,
+            replace(LOANS_ORG,'null','') LOANS_ORG,
+            replace(LOANS_AMOUNT,'null','') LOANS_AMOUNT,
+            replace(LOANS_USE,'null','') LOANS_USE,
+            replace(REPAY_NUM,'null','') REPAY_NUM,
+            replace(REPAY_TYPE,'null','') REPAY_TYPE,
+            replace(EXPIRY_DATE,'null','') EXPIRY_DATE,
+            replace(STOP_DATE,'null','') STOP_DATE,
+            replace(ACC_STATUS,'null','') ACC_STATUS,
+            replace(FIVE_TYPE,'null','') FIVE_TYPE,
+            replace(PRINCIPAL_BALANCE,'null','') PRINCIPAL_BALANCE,
+            replace(REST_REPAY_NUM,'null','') REST_REPAY_NUM,
+            replace(CUR_REPAY_AMOUT,'null','') CUR_REPAY_AMOUT,
+            replace(PLAN_REPAY_DATE,'null','') PLAN_REPAY_DATE,
+            replace(ACTUAL_REPAY_AMOUT,'null','') ACTUAL_REPAY_AMOUT,
+            replace(LAST_REPAY_DATE,'null','') LAST_REPAY_DATE,
+            replace(CUR_OVER_NUM,'null','') CUR_OVER_NUM,
+            replace(CUR_OVER_AMOUNT,'null','') CUR_OVER_AMOUNT,
+            replace(T_N_REPAY_PRINCIPAL,'null','') T_N_REPAY_PRINCIPAL,
+            replace(S_N_REPAY_PRINCIPAL,'null','') S_N_REPAY_PRINCIPAL,
+            replace(N_N_REPAY_PRINCIPAL,'null','') N_N_REPAY_PRINCIPAL,
+            replace(L_N_REPAY_PRINCIPAL,'null','') L_N_REPAY_PRINCIPAL,
+            replace(REPAY_RECORD,'null','') REPAY_RECORD,
+            replace(BUSSID,'null','') BUSSID,
+            replace(VOUCHTYPE,'null','') VOUCHTYPE,
+            replace(CURRENCYTYPE,'null','') CURRENCYTYPE,
+            replace(STATEBTIME,'null','') STATEBTIME,
+            replace(STATEETIME,'null','') STATEETIME,
+            replace(OVERDUE_BDATE,'null','') OVERDUE_BDATE,
+            replace(OVERDUE_EDATE,'null','') OVERDUE_EDATE,
+            replace(BALANCE,'null','') BALANCE,
+            replace(BANK_TYPE,'null','') BANK_TYPE
+		FROM
+			PER_LOAN_DETAIL A
+		WHERE
+			REPORT_ID = #{rpid}
+		order by SERIAL 
+			
+	</select>
+	<!-- 贷记卡 -->
+	<select id="creditDetail" parameterType="String" resultType="Map">
+		SELECT
+			replace(CARDTYPE,'null','') CARDTYPE,
+            replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+            replace(SERIAL,'null','') SERIAL,
+            replace(CR_REL_CARD_DATE,'null','') CR_REL_CARD_DATE,
+            replace(CR_REL_CARD_ORG,'null','') CR_REL_CARD_ORG,
+            replace(CR_CREDIT_SUM,'null','') CR_CREDIT_SUM,
+            replace(CR_SHARE_CREDIT_SUM,'null','') CR_SHARE_CREDIT_SUM,
+            replace(CR_STOP_DATE,'null','') CR_STOP_DATE,
+            replace(CR_ACC_STATUS,'null','') CR_ACC_STATUS,
+            replace(CR_USED_SUM,'null','') CR_USED_SUM,
+            replace(CR_AVG_USED_SUM,'null','') CR_AVG_USED_SUM,
+            replace(CR_USED_MAX_SUM,'null','') CR_USED_MAX_SUM,
+            replace(CR_SHOULD_REPAY_AMOUT,'null','') CR_SHOULD_REPAY_AMOUT,
+            replace(CR_BILL_DATE,'null','') CR_BILL_DATE,
+            replace(CR_ACTUAL_REPAY_AMOUT,'null','') CR_ACTUAL_REPAY_AMOUT,
+            replace(CR_LAST_REPAY_DATE,'null','') CR_LAST_REPAY_DATE,
+            replace(CR_CUR_OVER_NUM,'null','') CR_CUR_OVER_NUM,
+            replace(CR_CUR_OVER_AMOUT,'null','') CR_CUR_OVER_AMOUT,
+            replace(CR_REPAY_RECORD,'null','') CR_REPAY_RECORD,
+            replace(BUSSID,'null','') BUSSID,
+            replace(VOUCHTYPE,'null','') VOUCHTYPE,
+            replace(CURRENCYTYPE,'null','') CURRENCYTYPE,
+            replace(STATEBTIME,'null','') STATEBTIME,
+            replace(STATEETIME,'null','') STATEETIME,
+            replace(OVERDUE_BDATE,'null','') OVERDUE_BDATE,
+            replace(OVERDUE_EDATE,'null','') OVERDUE_EDATE,
+            replace(BALANCE,'null','') BALANCE,
+            replace(BANK_TYPE,'null','') BANK_TYPE
+		FROM
+			PER_CREDIT_DETAIL A
+		WHERE
+			REPORT_ID = #{rpid}
+		order by SERIAL
+			
+	</select>
+	<!-- 准贷记卡 -->
+	<select id="qCredit" parameterType="String" resultType="Map">
+		SELECT
+			replace(CARDTYPE,'null','') CARDTYPE,
+            replace(SERIAL_NUMBER,'null','') SERIAL_NUMBER,
+            replace(SERIAL,'null','') SERIAL,
+            replace(Q_CR_REL_CARD_DATE,'null','') Q_CR_REL_CARD_DATE,
+            replace(Q_CR_REL_CARD_ORG,'null','') Q_CR_REL_CARD_ORG,
+            replace(Q_CR_CREDIT_SUM,'null','') Q_CR_CREDIT_SUM,
+            replace(Q_CR_SHARE_CREDIT_SUM,'null','') Q_CR_SHARE_CREDIT_SUM,
+            replace(Q_CR_STOP_DATE,'null','') Q_CR_STOP_DATE,
+            replace(Q_CR_ACC_STATUS,'null','') Q_CR_ACC_STATUS,
+            replace(Q_CR_USED_SUM,'null','') Q_CR_USED_SUM,
+            replace(Q_CR_AVG_USED_SUM,'null','') Q_CR_AVG_USED_SUM,
+            replace(Q_CR_USED_MAX_SUM,'null','') Q_CR_USED_MAX_SUM,
+            replace(Q_CR_SHOULD_REPAY_AMOUT,'null','') Q_CR_SHOULD_REPAY_AMOUT,
+            replace(Q_CR_BILL_DATE,'null','') Q_CR_BILL_DATE,
+            replace(Q_CR_ACTUAL_REPAY_AMOUT,'null','') Q_CR_ACTUAL_REPAY_AMOUT,
+            replace(Q_CR_LAST_REPAY_DATE,'null','') Q_CR_LAST_REPAY_DATE,
+            replace(Q_CR_CUR_OVER_NUM,'null','') Q_CR_CUR_OVER_NUM,
+            replace(Q_CR_CUR_OVER_AMOUT,'null','') Q_CR_CUR_OVER_AMOUT,
+            replace(Q_CR_REPAY_RECORD,'null','') Q_CR_REPAY_RECORD,
+            replace(BUSSID,'null','') BUSSID,
+            replace(VOUCHTYPE,'null','') VOUCHTYPE,
+            replace(CURRENCYTYPE,'null','') CURRENCYTYPE,
+            replace(STATEBTIME,'null','') STATEBTIME,
+            replace(STATEETIME,'null','') STATEETIME,
+            replace(UNREPAY_BALANCE,'null','') UNREPAY_BALANCE,
+            replace(OVERDUE_BDATE,'null','') OVERDUE_BDATE,
+            replace(OVERDUE_EDATE,'null','') OVERDUE_EDATE,
+            replace(BALANCE,'null','') BALANCE,
+            replace(BANK_TYPE,'null','') BANK_TYPE
+		FROM
+			PER_Q_CREDIT_DETAIL A
+		WHERE
+			REPORT_ID = #{rpid}
+		order by SERIAL
+			
+	</select>
+</mapper>

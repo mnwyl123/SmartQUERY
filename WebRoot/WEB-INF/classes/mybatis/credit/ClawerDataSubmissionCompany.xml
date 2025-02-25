@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ClawerDataSubmissionCompany">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		"CIFM_COMPANY_DETAIL"
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		A.ID,	
+		A.ORG_CODE,
+		C.ORG_ID_COMBANK,
+		C.NAME ORG_NAME,
+		A.BRANCH_CODE,	
+		A.BRANCH_NAME,	
+		A.USER_SYS_NAME,	
+		A.USER_REAL_NAME,
+		(SELECT NAME FROM SYS_DICTIONARIES SD INNER JOIN SYS_DICT ST ON ST.DIC_IDVALUE=SD.PARENT_ID WHERE DIC_CODE='DeptCode' AND A.DEPT_CODE=SD.DICT_CODE) DEPARTMENT_NAME,	
+		date_format(A.QUERY_TIME,'%Y-%m-%d %H:%i:%s') QUERY_TIME,	
+		A.COMPANY_NAME COMPANY_NAME,	
+		A.QUERY_REASON,
+		A.CHINA_CREDIT_CODE CHINA_CREDIT_CODE,	
+		A.IS_GET,	
+		date_format(A.CHECK_TIME,'%Y-%m-%d %H:%i:%s') CHECK_TIME,
+		A.IP,
+		B.SEND_STATUS
+	</sql>
+	
+	<!-- 根据条件获取列表 -->
+	<select id="listPage" parameterType="page" resultType="pd">
+		select
+		A.ID,	
+		A.ORG_CODE,
+		C.ORG_ID_COMBANK,
+		C.NAME ORG_NAME,
+		A.BRANCH_CODE,	
+		A.BRANCH_NAME,	
+		A.USER_SYS_NAME,	
+		A.USER_REAL_NAME,
+		(SELECT NAME FROM SYS_DICTIONARIES SD INNER JOIN SYS_DICT ST ON ST.DIC_IDVALUE=SD.PARENT_ID WHERE DIC_CODE='DeptCode' AND A.DEPT_CODE=SD.DICT_CODE) DEPARTMENT_NAME,	
+		TO_CHAR(A.QUERY_TIME,'YYYY-MM-DD HH24:MI:SS') QUERY_TIME,	
+		DECRYPT_DEC(A.COMPANY_NAME) COMPANY_NAME,	
+		A.QUERY_REASON,
+		DECRYPT_DEC(A.CHINA_CREDIT_CODE) CHINA_CREDIT_CODE,	
+		A.IS_GET,	
+		TO_CHAR(A.CHECK_TIME,'YYYY-MM-DD HH24:MI:SS') CHECK_TIME,
+		A.IP,
+		B.SEND_STATUS
+		  FROM CIFM_COMPANY_DETAIL A,
+		       CIFM_FLOW_STATUS    B,
+		       SYS_ORG             C,
+		       SYS_USER_ORG		   D
+		 WHERE A.ID = B.ID
+		   AND B.USER_SYS_ID = D.USER_ID
+		   AND D.ORG_ID = C.ORG_ID
+		   <if test="pd.COMPANY_NAME!=null and pd.COMPANY_NAME!=''">
+			    AND DECRYPT_DEC(A.COMPANY_NAME) = #{pd.COMPANY_NAME}
+			</if>
+			<if test="pd.CHINA_CREDIT_CODE!=null and pd.CHINA_CREDIT_CODE!=''">
+			    AND DECRYPT_DEC(A.CHINA_CREDIT_CODE) = #{pd.CHINA_CREDIT_CODE}
+			</if>
+	</select>
+	
+	<!-- 根据查询变号（id）获取 -->
+	<select id="listObjectById" parameterType="String" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		 FROM  CIFM_COMPANY_DETAIL A,
+		       CIFM_FLOW_STATUS   B,
+		       SYS_ORG            C,
+		       SYS_USER_ORG      D
+		 WHERE A.ID = B.ID
+		   AND B.USER_SYS_ID = D.USER_ID
+		   AND D.ORG_ID = C.ORG_ID
+		   AND A.ID = #{ID}
+		   order by query_time desc limit 1
+	</select>
+	<!-- 报文发送失败，将状态改为 07 -->
+	<update id="updateStatus" parameterType="String">
+		UPDATE
+			CIFM_FLOW_STATUS
+		SET
+			SEND_STATUS = #{SENDSTATUS}
+		WHERE
+			ID = #{QUERYID}
+	</update>
+</mapper>
