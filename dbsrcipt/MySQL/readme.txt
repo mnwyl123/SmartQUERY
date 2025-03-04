@@ -1,0 +1,1 @@
+查看一下oracle版本中手动执行部分以及相关的function和procedure

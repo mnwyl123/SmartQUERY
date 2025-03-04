@@ -1,0 +1,1 @@
+create database QUERY_XXXX;

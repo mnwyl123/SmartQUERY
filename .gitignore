@@ -2,4 +2,6 @@
 *.log
 
 # 忽略特定文件夹
-SmartQUERY/WebRoot/WEB-INF/classes/
+WebRoot/WEB-INF/classes/
+build/
+WebContent/

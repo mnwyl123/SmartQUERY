@@ -50,8 +50,7 @@ public class IServiceUtil {
 		String responsemessage = null;
 		try {
 			IServiceAcceptWSPwd serviceAcceptWSQuery = new IServiceAcceptWSPwd_Service().getServiceAcceptWSPwdImplPort();			
-			responsemessage = serviceAcceptWSQuery.passwordModifReq(querymessage);		
-			//西安银行方式
+			responsemessage = serviceAcceptWSQuery.passwordModifReq(querymessage);		//西安银行方式
 //			IServiceAcceptWSPwdProxy serviceAcceptWSQuery = new IServiceAcceptWSPwdProxy();			
 //			responsemessage = serviceAcceptWSQuery.passwordModifReq(querymessage);	
 		} catch (Exception e) {
