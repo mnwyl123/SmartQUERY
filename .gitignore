@@ -5,3 +5,5 @@
 WebRoot/WEB-INF/classes/
 build/
 WebContent/
+classes/
+.idea/
